@@ -1,0 +1,48 @@
+<meta>
+    <info author="ClawSuit + PandFort" name="Modern-Library" type="script" version="1.0"/>
+    <oop>true</oop>
+	
+	<min_mta_version server="1.5.9-9" client='1.5.9-9'/>
+
+    <script src="handler/util.lua" type="client" cache="false"/>
+    <script src="handler/keys.lua" type="client" cache="false"/>
+    <script src="handler/events.lua" type="client" cache="false"/>
+    <script src="handler/element.lua" type="client" cache="false"/>
+
+    <script src="elements/window.lua" type="client" cache="false"/>
+    <script src="elements/button.lua" type="client" cache="false"/>
+    <script src="elements/edit.lua" type="client" cache="false"/>
+    <script src="elements/scroll.lua" type="client" cache="false"/>
+    <script src="elements/checkbox.lua" type="client" cache="false"/>
+    <script src="elements/list.lua" type="client" cache="false"/>
+    <script src="elements/gridlist.lua" type="client" cache="false"/>
+    <script src="elements/progressbar.lua" type="client" cache="false"/>
+    <script src="elements/label.lua" type="client" cache="false"/>
+    <script src="elements/image.lua" type="client" cache="false"/>
+
+    <script src="draw/window.lua" type="client" cache="false"/>
+    <script src="draw/button.lua" type="client" cache="false"/>
+    <script src="draw/edit.lua" type="client" cache="false"/>
+    <script src="draw/scroll.lua" type="client" cache="false"/>
+    <script src="draw/checkbox.lua" type="client" cache="false"/>
+    <script src="draw/list.lua" type="client" cache="false"/>
+    <script src="draw/gridlist.lua" type="client" cache="false"/>
+    <script src="draw/progressbar.lua" type="client" cache="false"/>
+    <script src="draw/label.lua" type="client" cache="false"/>
+    <script src="draw/image.lua" type="client" cache="false"/>
+
+    <script src="examples.lua" type="client" cache="false"/>
+
+    <file src='files/font/Basic-Regular.ttf' />
+
+    <export function="dxGetScreen" type="client" />
+    <export function="dxButton" type="client" />
+    <export function="dxCheckBox" type="client" />
+    <export function="dxEdit" type="client" />
+    <export function="dxProgressBar" type="client" />
+    <export function="dxWindow" type="client" />
+    <export function="dxCheckBoxGetState" type="client" />
+    <export function="dxCheckBoxSetState" type="client" />
+    <export function="dxScroll" type="client" />
+    
+</meta>
