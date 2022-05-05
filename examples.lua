@@ -41,21 +41,19 @@ addEventHandler( "onClientResourceStart", resourceRoot,
 		img1 = dxImage(561, 92, 116, 92, ":admin/client/images/map.png", win)
 		img2 = dxImage(561, 92*2 + 5, 116, 92, ":admin/client/images/map.png", win, true)
 		
-		
-
-		addEventHandler( "onClick", root, sexo )
 
 	end
 )
 
-function sexo()
-	if source == sex then
-	 	if dxGet(source, 'state') then
-	 		dxSet(edit1, 'text', math.random(100000, 999999)..'')
-	 	else
-	 		dxSet(edit1, 'text', '')
-	 	end
+addEventHandler( "onClick", root, 
+	function ()
+		if source == sex then
+	 		if dxGet(source, 'state') then
+	 			dxSet(edit1, 'text', math.random(100000, 999999)..'')
+	 		else
+	 			dxSet(edit1, 'text', '')
+	 		end
+		end
 	end
-end
-
+)
 
