@@ -67,6 +67,8 @@ if TEST then
 		 	else
 		 		dxImageRemoveMask(img2)
 		 	end
+		elseif source == bot then
+			outputChatBox( "Button 1", 255, 255, 255 )
 		end
 	end
 
