@@ -34,10 +34,6 @@ function Render.dxButton(element, parent)
 
 		if self.update then
 
-			if isElement(self.rendertarget) then
-			--	_destroyElement(self.rendertarget)
-			end
-			--
 			if not isElement(self.rendertarget) then
 				self.rendertarget = DxRenderTarget(self.w, self.h, true)
 			end
@@ -62,7 +58,7 @@ function Render.dxButton(element, parent)
 		if isElement(self.rendertarget) then
 			dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, false)
 		end
-		dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+		dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
 
 		self.click = getKeyState( 'mouse1' )
 	end

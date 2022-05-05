@@ -6,6 +6,9 @@ end
 
 addEventHandler( "onClientRender", getRootElement(),
 	function()
+        if not CLIENT_INIT then
+            return
+        end
 		-- dxDrawText(inspect(Cache), 0, 0)
 		for element, v in pairs(Cache) do
 			if isElement( element ) then
@@ -54,17 +57,34 @@ addEventHandler( "onClientKey", getRootElement(),
 addEventHandler( "onClientRestore", getRootElement(),
     function()
         CLIENT_RESTORE = true
-        Timer(function() CLIENT_RESTORE = nil end, 50, 1)
+        Timer(function() CLIENT_RESTORE = nil end, 100, 1)
     end
 )
 
 addEventHandler( "onClientResourceStart", resourceRoot,
     function()
+        CLIENT_INIT = true
         CLIENT_RESTORE = true
-        Timer(function() CLIENT_RESTORE = nil end, 50, 1)
+        Timer(function() CLIENT_RESTORE = nil end, 1000, 1)
     end
 , true, 'low-1000')
 
+addEventHandler('onClientElementDestroy', root, 
+    function() 
+        if Cache[source] then 
+            dxDelete(source)
+        end 
+    end
+, true, 'low')
+
+addEventHandler('onClientResourceStop', root, 
+    function(res)
+        local element = table.find(Cache, 'resource', res)
+        if isElement(element) then 
+            dxDelete(element)
+        end 
+    end
+, true, 'normal')
 
 
 

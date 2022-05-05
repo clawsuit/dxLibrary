@@ -19,7 +19,7 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 		self.colorbackground = tocolor(14, 14, 23, 255)
 		self.colortitle = tocolor(255, 255, 255, 255)
 		--
-		self.colorline = tocolor(51, 33, 112, 255)
+		self.colorborder = tocolor(51, 33, 112, 255)
 		self.colorselected = tocolor(120, 95, 205, 255)
 		--
 		self.masked = nil

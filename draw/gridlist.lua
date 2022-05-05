@@ -46,7 +46,7 @@ function Render.dxGridList( element, parent )
 		if self.update or CLIENT_RESTORE then
 
 			if isElement( self.rendertarget ) then
-				_destroyElement(self.rendertarget)
+				self.rendertarget:destroy()
 			end
 
 			if not isElement( self.rendertarget ) then
@@ -110,7 +110,7 @@ function Render.dxGridList( element, parent )
 		if self.update2 then
 
 			if isElement( self.rendertarget2 ) then
-				_destroyElement(self.rendertarget2)
+				self.rendertarget2:destroy()
 			end
 
 			if not isElement( self.rendertarget2 ) then

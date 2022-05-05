@@ -11,8 +11,7 @@ function Render.dxWindow(element)
 		self.rendertarget:setAsTarget(true)
 		dxSetBlendMode( 'modulate_add' )
 
-			local update = self.update
-			if update or CLIENT_RESTORE then
+			if self.update or CLIENT_RESTORE then
 
 				if not isElement(self.rendertarget2) then
 					self.rendertarget2 = DxRenderTarget(self.w, self.h, true)
@@ -35,7 +34,7 @@ function Render.dxWindow(element)
 				self.update = nil
 			end
 
-			if isElement(self.rendertarget2--[[self.renderTexture]]) then
+			if isElement(self.rendertarget2) then
 				dxDrawImage(0, 0, self.w, self.h, self.rendertarget2, 0, 0, 0, -1, false)
 			end
 --

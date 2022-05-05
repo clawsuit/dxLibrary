@@ -9,6 +9,7 @@ function createElement(type, parent, resource)
         Cache[element].isVisible = true
         Cache[element].isDisabled = false
         Cache[element].isMoved = true
+        Cache[element].resource = resource
 
         if ElementTypeChildrenAvailable[type] then
             Cache[element].childs = {}
@@ -32,36 +33,39 @@ function createElement(type, parent, resource)
 
         end
 
-        addEventHandler('onClientElementDestroy', element, function() if Cache[source] then destroyElement(source, true) end end)
         return Cache[element], element
     end
 end
 
-_destroyElement = destroyElement
-function destroyElement(element, bool)
-    local array = Cache[element]
-    if array then
+function dxDelete(element)
+    local self = Cache[element]
+    if self then
 
-        if array.childs then
+        self.isVisible = nil
 
-            for i, element in pairs(array.childs) do
-
-                if Cache[element] then
-                    Cache[element] = nil
-                end
-
-                table.remove(array.childs, i)
-                --if bool then
-                    _destroyElement(element)
-                --end
-
+        if self.childs then
+            for i, child in pairs(self.childs) do
+                dxDelete(child)
             end
+        end
 
+        for _, k in pairs({'svg', 'rendertarget', 'rendertarget2', 'texture', 'shader', 'textureMask'}) do
+            if isElement(self[k]) then
+                self[k]:destroy()
+            end
+        end
+
+        if isElement(self.scrollV) then
+            dxDelete(self.scrollV)
+        end
+
+        if isElement(self.scrollH) then
+            dxDelete(self.scrollH)
         end
 
         Cache[element] = nil
-        if not bool then
-            _destroyElement(element)
+        if isElement( element ) then
+            element:destroy()
         end
 
     end
@@ -76,29 +80,19 @@ function dxSet(element, key, value)
         local warn
 
         if elementType == 'dxCheckBox' then
-
             if key == 'model' then
-
                 dxCheckBoxSetStyle(element, value)
-                
             else
                 self[key] = value
             end
-
         elseif elementType == 'dxEdit' then
-
             if key == 'text' then
-
                 dxSetText(element, value)
-
             else
                 self[key] = value
             end
-
         else
-        
             self[key] = value
-        
         end
 
         return true
@@ -259,6 +253,18 @@ function dxSetColorSelected(element, r, g, b, a)
     if self then
         if self.colorselected then
             self.colorselected = tocolor(r, g, b, a)
+            self.update = true
+            return true
+        end
+    end
+    return false
+end
+
+function dxSetColorBorder(element, r, g, b, a)
+    local self = Cache[element]
+    if self then
+        if self.colorselected then
+            self.colorborder = tocolor(r, g, b, a)
             self.update = true
             return true
         end

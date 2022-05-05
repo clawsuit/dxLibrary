@@ -12,7 +12,7 @@ function Render.dxEdit(element, parent)
 			x, y = self.offsetX, self.offsetY
 			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
 		end
-		local color = self.colorline
+		local color = self.colorborder
 
 		if onBox == element then
 			color = self.colorselected
