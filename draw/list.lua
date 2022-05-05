@@ -65,11 +65,6 @@ function Render.dxList( element, parent )
 					end
 
 					if self.selected == i then
-						--dxDrawRectangle(0, (Y-(self.mul)), self.w-(20*sw), 1, self.colorselected, false) -- up
-						--dxDrawRectangle(0, (Y-(self.mul))+((self.h-1)/4), self.w-(20*sw), 1, self.colorselected, false) -- down
-						--
-						--dxDrawRectangle(0, (Y-(self.mul)), 1, (H), self.colorselected, false) -- left
-						--dxDrawRectangle(((self.w-1)-(20*sw)), (Y-(self.mul)), 1, (H), self.colorselected, false) -- left
 						dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorselected, false)
 					else
 						if i%2 == 1 then
@@ -81,26 +76,18 @@ function Render.dxList( element, parent )
 
 					dxDrawText( tostring(self.items[i] or ''), 0, (Y-(self.mul)), (self.w-(20*sw)), (H)+(Y-(self.mul)), self.colortext, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
 
-
-					if Y+(H)+ (7*sh) >= self.h-(20*sh) then
-
-						if i == #self.items then
-							restY = restY + H
-						else
-							restY = restY + H + (7*sh)
-						end
-
+					Y = Y + H + ( i == #self.items and 0 or (7*sh))
+					if Y >= self.h-(20*sh) then
+						restY = Y - (self.h-(20*sh))
 					end
-
-					Y = Y + H + (7*sh)
 
 				end
 				
 				self.scroll = restY
 
 
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
@@ -112,8 +99,6 @@ function Render.dxList( element, parent )
 			dxDrawImage(x+(10*sw), y+(10*sh), self.w-(20*sw), self.h-(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
 		end
 		
-
-
 
 		if isCursorShowing( ) then
 

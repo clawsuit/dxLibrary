@@ -54,8 +54,8 @@ function Render.dxScroll(element, parent)
 					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false, false, 90)
 				end
 
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end

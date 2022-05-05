@@ -36,8 +36,8 @@ function Render.dxEdit(element, parent)
 					dxDrawRectangle(0, 0, 1.5, self.h, -1, false) -- left
 					dxDrawRectangle((-.75)+self.w, 0, 1.5/2, self.h, -1, false) -- left
 				end
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end

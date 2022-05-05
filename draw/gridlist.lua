@@ -92,8 +92,8 @@ function Render.dxGridList( element, parent )
 					end
 				end
 
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
@@ -177,8 +177,8 @@ function Render.dxGridList( element, parent )
 
 				end
 
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end

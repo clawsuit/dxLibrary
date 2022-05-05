@@ -37,7 +37,7 @@ end
 function dxListAddItem(element, item)
 	local self = Cache[element]
 	if self then
-		table.insert(self.columns, item)
+		table.insert(self.items, item)
 		self.update = true
 		return true
 	end
@@ -76,35 +76,6 @@ function dxListSetItemSelected(element, index)
 	return false
 end
 
-function dxListSetColorBackground(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colorbackground = tocolor(r, g, b, a)
-		self.update = true
-		return true
-	end
-	return false
-end
-
-function dxListSetColorText(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colortext = tocolor(r, g, b, a)
-		self.update = true
-		return true
-	end
-	return false
-end
-
-function dxListSetColorSelected(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colorselected = tocolor(r, g, b, a)
-		self.update = true
-		return true
-	end
-	return false
-end
 
 function dxListSetColorFilaItem(element, r, g, b, a, r2, g2, b2, a2)
 	local self = Cache[element]

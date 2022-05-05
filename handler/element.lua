@@ -22,6 +22,8 @@ function createElement(type, parent, resource)
                 if parentCache.childs then
 
                     Cache[element].parent = parent
+                    Cache[element].rootParent = dxGetRootParent(parent) or parent
+
                     table.insert(parentCache.childs, element)
 
                 end
@@ -164,6 +166,102 @@ function dxSetEnabled(element, bool, miliseconds)
         end
 
         return true
+    end
+    return false
+end
+
+
+function dxSetPosition(element, x, y)
+    local self = Cache[element]
+    if self then
+
+        self.x = x
+        self.y = y
+
+        if self.parent then
+            self.offsetX = self.x - Cache[self.parent].x
+            self.offsetY = self.y - Cache[self.parent].y
+        end
+
+        return true
+    end
+    return false
+end
+
+function dxGetPosition(element)
+    local self = Cache[element]
+    if self then
+        return self.x, self.y
+    end
+    return false
+end
+
+function dxSetSize(element, w, h)
+    local self = Cache[element]
+    if self then
+
+        self.w = w
+        self.h = h
+
+        return true
+    end
+    return false
+end
+
+function dxGetSize(element)
+    local self = Cache[element]
+    if self then
+        return self.w, self.h
+    end
+    return false
+end
+
+function dxGetRootParent(element, sub)
+    local self = Cache[element]
+    if self then
+        if self.parent then
+            if Cache[self.parent].parent then
+                return dxGetRootParent(self.parent, true)
+            else
+                return self.parent
+            end
+        else
+            if sub then
+                return element 
+            end
+        end
+    end
+    return false
+end
+
+function dxSetColorBackground(element, r, g, b, a)
+    local self = Cache[element]
+    if self then
+        self.colorbackground = tocolor(r, g, b, a)
+        self.update = true
+        return true
+    end
+    return false
+end
+ 
+function dxSetColorText(element, r, g, b, a)
+    local self = Cache[element]
+    if self then
+        self.colortext = tocolor(r, g, b, a)
+        self.update = true
+        return true
+    end
+    return false
+end
+
+function dxSetColorSelected(element, r, g, b, a)
+    local self = Cache[element]
+    if self then
+        if self.colorselected then
+            self.colorselected = tocolor(r, g, b, a)
+            self.update = true
+            return true
+        end
     end
     return false
 end

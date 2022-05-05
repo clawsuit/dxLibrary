@@ -42,7 +42,7 @@ function Render.dxButton(element, parent)
 				self.rendertarget = DxRenderTarget(self.w, self.h, true)
 			end
 
-			self.rendertarget:setAsTarget(false)
+			self.rendertarget:setAsTarget(true)
 			dxSetBlendMode( 'modulate_add' )
 				if self.svg then
 					dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, -1, false)
@@ -50,8 +50,8 @@ function Render.dxButton(element, parent)
 					dxDrawRectangle(0, 0, self.w, self.h, -1, false)
 				end
 
-			if parent then
-				dxSetRenderTarget(Cache[parent].rendertarget)
+			if self.rootParent then
+				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end

@@ -34,6 +34,9 @@
     <script src="examples.lua" type="client" cache="false"/>
 
     <file src='files/font/Basic-Regular.ttf' />
+    <file src="files/fx/hud_mask.fx" />
+    <file src="files/fx/tex_matrix.fx" />
+    <file src="files/image/circle_mask.png" />
 
     <export function="dxGetScreen" type="client" />
     <export function="dxButton" type="client" />

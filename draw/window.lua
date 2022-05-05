@@ -78,8 +78,10 @@ function Render.dxWindow(element)
 		if isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
 			if getKeyState( 'mouse1' ) and not self.click then
 
-				self.isVisible = false
 				triggerEvent('onClose', element)
+				if not wasEventCancelled(  ) then
+					self.isVisible = false
+				end
 				
 			end
 		end

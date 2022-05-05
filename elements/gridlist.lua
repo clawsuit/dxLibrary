@@ -22,6 +22,8 @@ function dxGridList( x, y, w, h, parent)
   		self.scrollV = dxScroll(x+w-17*sw, y, h, true, parent)
   		self.scrollH = dxScroll(x, y+h-17*sh, w-17*sw, false, parent)
 
+  		Cache[self.scrollH].isVisible = false
+  		Cache[self.scrollV].isVisible = false
   		Cache[self.scrollV].gridlist = element
 
         self.from = nil
@@ -47,7 +49,7 @@ end
 function dxGridListAddItem(element, ...)
 	local self = Cache[element]
 	if self then
-		table.insert(self.columns, {...})
+		table.insert(self.items, {...})
 		self.update2 = true
 		return true
 	end
@@ -105,33 +107,6 @@ function dxGridListSetItemSelected(element, index)
 			self.update = true
 			return true
 		end
-	end
-	return false
-end
-
-function dxGridListSetColorBackground(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colorbackground = tocolor(r, g, b, a)
-		return true
-	end
-	return false
-end
-
-function dxGridListSetColorText(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colortext = tocolor(r, g, b, a)
-		return true
-	end
-	return false
-end
-
-function dxGridListSetColorSelected(element, r, g, b, a)
-	local self = Cache[element]
-	if self then
-		self.colorselected = tocolor(r, g, b, a)
-		return true
 	end
 	return false
 end
