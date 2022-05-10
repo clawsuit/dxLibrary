@@ -57,6 +57,7 @@ Modern Library For MTA
   * dxGridListRemoveColumn
   * dxGridListGetItemSelected
   * dxGridListSetItemSelected
+  * dxGridListGetScrollHV
 * Image
   * dxImage
   * dxImageApplyMask
@@ -77,6 +78,7 @@ Modern Library For MTA
 * Scroll
   * dxScroll
   * dxScrollGetCurrentPosition
+  * dxScrollSetColorButton
 
 ## Usage Example :heavy_check_mark:
 ```lua
