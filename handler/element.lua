@@ -49,7 +49,7 @@ function dxDelete(element)
             end
         end
 
-        for _, k in pairs({'svg', 'rendertarget', 'rendertarget2', 'texture', 'shader', 'textureMask'}) do
+        for _, k in pairs({'svg', 'svg2', 'rendertarget', 'rendertarget2', 'texture', 'shader', 'textureMask'}) do
             if isElement(self[k]) then
                 self[k]:destroy()
             end
@@ -269,7 +269,19 @@ function dxSetColorSelected(element, r, g, b, a)
     if self then
         if self.colorselected then
             self.colorselected = tocolor(r, g, b, a)
-            self.update = true
+            
+
+            if self.svg2 then
+
+                local svgXML = svgGetDocumentXML(self.svg2)
+                local rect = xmlNodeGetChildren(svgXML)[1]
+                xmlNodeSetAttribute(rect, "stroke", ""..colorToHex(self.colorselected))
+                svgSetDocumentXML(self.svg2, svgXML)
+                
+            else
+                self.update = true
+            end
+ 
             return true
         end
     end
@@ -338,11 +350,6 @@ function dxSetFont(element, name, size)
                             self.rendertarget2:destroy()
                         end
                     elseif self.type == 'dxScroll' then
-                        if self.vertical then
-                            self.pos = self.y + self.fontH
-                        else
-                            self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
-                        end
                     end
 
                     self.update = true
@@ -354,6 +361,31 @@ function dxSetFont(element, name, size)
     return false
 end
 
+function dxGetText(element)
+    local self = Cache[element]
+    if self then
+        return self.text
+    end
+    return false
+end
+
+function dxGetTitle(element)
+    local self = Cache[element]
+    if self then
+        return self.title
+    end
+    return false
+end
+
+function dxSetTitle(element, title)
+    local self = Cache[element]
+    if self then
+        if self.title then
+            self.title = title
+        end
+    end
+    return false
+end
 
 local resource = getThisResource(  )
 local resourceName = resource.name
