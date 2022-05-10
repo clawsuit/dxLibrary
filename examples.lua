@@ -1,4 +1,3 @@
-
 local TEST = false
 
 
@@ -6,24 +5,31 @@ if TEST then
 
 	addEventHandler( "onClientResourceStart", resourceRoot,
 		function()
+			local sx, sx, x, y = dxGetScreen(1366, 768)
+
+			dxFont('files/font/letterbold.otf', 12, true)
+			
 			showCursor(true)
 
-			win = dxWindow(251, 21, 783, 635, 'Window DEMO', false, true)
-			bot = dxButton(277, 126, 100, 40, 'Button DEMO 2', win, true)
-			bot2 = dxButton(276, 80, 100, 40, 'Button DEMO', win, true)
-			bar = dxProgressBar(312, 583, 295, 41, win, false)
+			win = dxWindow(251*x, 21*y, 783*x, 635*y, 'Window DEMO', false, true)
+			dxSetFont(win, 'letterbold', 12)
 
-			scrollH = dxScroll(302, 317, 677, false, win, true)
-			scrollV = dxScroll(277, 317, 317, true, win, false)
+			bot = dxButton(276*x, 80*y, 100*x, 40*y, 'Button demo', win, false)
+			bot2 = dxButton(276*x, 126*y, 100*x, 40*y, 'Button demo 2', win, false)
 
-			edit1 = dxEdit(277, 184, 197, 46, 'edit demo 1', win, false)
-			edit2 = dxEdit(277, 240, 197, 46, 'edit demo 2', win, false)
+			bar = dxProgressBar(312*x, 583*y, 295*x, 41*y, win, false)
 
-			sex = dxCheckBox(432, 83, 32, 32, win)
-			sex1 = dxCheckBox(432+40, 83, 32, 32, win, true)
+			scrollH = dxScroll(302*x, 317*y, 677*x, false, win, true)
+			scrollV = dxScroll(277*x, 317*y, 317*y, true, win, false)
+
+			edit1 = dxEdit(277*x, 184*y, 197*x, 46*y, 'edit demo 1', win, false)
+			edit2 = dxEdit(277*x, 240*y, 197*x, 46*y, 'edit demo 2', win, false)
+
+			sex = dxCheckBox(432*x, 83*y, 32*x, 32*x, win)
+			sex1 = dxCheckBox((432+40)*x, 83*y, 32*x, 32*x, win, true)
 
 			-----
-			list1 = dxList( 312, 347, 250, 203, win)
+			list1 = dxList( 312*x, 347*y, 250*x, 203*y, win)
 
 			for i = 1, 20 do
 	        	dxListAddItem(list1, 'Row '..i)
@@ -31,7 +37,7 @@ if TEST then
 			-----
 
 			---------
-			list2 = dxGridList( 588, 349, 351, 120, win)
+			list2 = dxGridList( 588*x, 349*y, 351*x, 120*y, win)
 
 			for _, c in ipairs({{'Vehiculo', 2}, {'Dueño', 2}, {'Costo', 3}}) do
 				dxGridListAddColumn(list2, c[1], c[2])
@@ -42,10 +48,13 @@ if TEST then
 			end
 			---------
 
-			label1 = dxLabel(251, 50, 783+251, fontH+50, 'Label DEMO', win, 'center', 'center')
+			
 
-			img1 = dxImage(561, 92, 116, 92, ":admin/client/images/map.png", win)
-			img2 = dxImage(561, 92*2 + 5, 116, 92, ":admin/client/images/map.png", win)
+			label1 = dxLabel(251*x, 50*y, (783+251)*x, 17+(50*y), 'Label DEMO', win, 'center', 'center')
+			dxSetFont(label1, 'letterbold', 10)
+
+			img1 = dxImage(561*x, 92*y, 116*x, 92*y, ":admin/client/images/map.png", win)
+			img2 = dxImage(561*x, (92*2 + 5)*y, 116*x, 92*y, ":admin/client/images/map.png", win)
 			
 			
 
@@ -69,7 +78,10 @@ if TEST then
 		 	end
 		elseif source == bot then
 			outputChatBox( "Button 1", 255, 255, 255 )
+			iprint( dxWindowGetCloseState( win ) )
 		end
 	end
 
 end
+
+

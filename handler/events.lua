@@ -57,7 +57,7 @@ addEventHandler( "onClientKey", getRootElement(),
 addEventHandler( "onClientRestore", getRootElement(),
     function()
         CLIENT_RESTORE = true
-        Timer(function() CLIENT_RESTORE = nil end, 100, 1)
+        Timer(function() CLIENT_RESTORE = nil end, 500, 1)
     end
 )
 
@@ -75,16 +75,26 @@ addEventHandler('onClientElementDestroy', root,
             dxDelete(source)
         end 
     end
-, true, 'low')
+, true, 'low-10')
 
 addEventHandler('onClientResourceStop', root, 
     function(res)
-        local element = table.find(Cache, 'resource', res)
-        if isElement(element) then 
-            dxDelete(element)
-        end 
+        
+        for element,v in pairs(Cache) do
+            if v.resource == res then
+                dxDelete(element)
+            end
+        end
+        
+        if resourceFonts[res] then
+            for i, font in pairs(resourceFonts[res]) do
+                if isElement(font) then
+                    font:destroy()
+                end
+            end
+        end
     end
-, true, 'normal')
+, true, 'low-10')
 
 
 

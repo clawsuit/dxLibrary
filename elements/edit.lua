@@ -3,10 +3,10 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 	local self, element = createElement('dxEdit', parent, sourceResource)
 	if self then
 
-		self.x = x
-		self.y = y
-		self.w = w
-		self.h = h
+		self.x = math.round(x)
+		self.y = math.round(y)
+		self.w = math.round(w)
+		self.h = math.round(h)
 		self.title = title
 		self.rounded = rounded and 6 or false
 
@@ -21,6 +21,9 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 		--
 		self.colorborder = tocolor(51, 33, 112, 255)
 		self.colorselected = tocolor(120, 95, 205, 255)
+		--
+		self.font = Files['font']['Basic-Regular'][10]
+		self.fontH = dxGetFontHeight( 1, self.font )
 		--
 		self.masked = nil
 		self.maxCharacters = nil
@@ -46,7 +49,7 @@ function dxEdit(x, y, w, h, title, parent, rounded)
     
 
       --   	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end) --svgCreateRoundedRectangle(self.w, self.h, self.rounded, tocolor(255,255,255, 0), 1.5,  self.colorbackground)
-      --   	setTimer(function() self.update = true end, 100, 1)
+      --   	setTimer(function() self.update = true end, 500, 1)
         else
         	self.update = true
         end

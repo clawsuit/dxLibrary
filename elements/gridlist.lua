@@ -4,10 +4,10 @@ function dxGridList( x, y, w, h, parent)
 	
 	if self then
 		
-		self.x = x 
-		self.y = y
-		self.w = w
-		self.h = h
+		self.x = math.round(x)
+		self.y = math.round(y)
+		self.w = math.round(w)
+		self.h = math.round(h)
 		self.parent = parent
 
 		self.colorbackground = tocolor( 20, 20, 30, 255 )
@@ -19,8 +19,11 @@ function dxGridList( x, y, w, h, parent)
         	self.offsetY = self.y - Cache[self.parent].y
         end
 
-  		self.scrollV = dxScroll(x+w-17*sw, y, h, true, parent)
-  		self.scrollH = dxScroll(x, y+h-17*sh, w-17*sw, false, parent)
+        self.font = Files['font']['Basic-Regular'][10]
+        self.fontH = dxGetFontHeight( 1, self.font )
+        --
+  		self.scrollV = dxScroll(self.x+self.w-math.round(17*sh), self.y, self.h, true, parent)
+  		self.scrollH = dxScroll(self.x, self.y+self.h-math.round(17*sh), self.w-math.round(17*sh), false, parent)
 
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
@@ -37,8 +40,9 @@ function dxGridList( x, y, w, h, parent)
         self.scrollY = 0
         --
         self.selected = -1
-
         self.update = true
+        Timer(function() self.update = true end, 600, 1)
+        Timer(function() self.update = true end, 1200, 1)
 
         return element
 	

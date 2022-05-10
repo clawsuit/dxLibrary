@@ -3,10 +3,10 @@ function dxWindow(x, y, w, h, title, closebutton, rounded, border)
 	local self, element = createElement('dxWindow', false, sourceResource)
 	if self then
 
-		self.x = x
-		self.y = y
-		self.w = w
-		self.h = h
+		self.x = math.round(x)
+		self.y = math.round(y)
+		self.w = math.round(w)
+		self.h = math.round(h)
 		self.title = title
 		self.closebutton = (closebutton == nil and true) or (closebutton == false and false) or (closebutton == true and true)
 		self.rounded = rounded and 10 or false
@@ -16,27 +16,40 @@ function dxWindow(x, y, w, h, title, closebutton, rounded, border)
 		self.colorborder = tocolor(14, 14, 23, 255)
 		
 		self.rendertarget = DxRenderTarget(self.w, self.h, true)
+		self.font = Files['font']['Basic-Regular'][10]
+		self.fontH = dxGetFontHeight( 1, self.font )
 
 		if self.parent then
- 
 			self.offsetX = self.x - Cache[self.parent].x
         	self.offsetY = self.y - Cache[self.parent].y
-
         end
 
         if tonumber(self.rounded) then
-        	self.svg = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorborder or false)
-        	setTimer(function() self.update = true end, 100, 1)
+        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorborder or false)
+        	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
         else
         	self.update = true
         end
 
-       	
         return element
 
 	end
 
 end
 
+function dxWindowGetCloseState( element )
+	local self = Cache[element]
+	if self then
+		return self.closebutton
+	end
+end
 
-bindKey('m', 'down', function() showCursor(not isCursorShowing()) end)
+function dxWindowSetCloseState( element, bool )
+	local self = Cache[ element ]
+	if self then
+		self.closebutton = bool
+		return true
+	end
+end
+
+--bindKey('m', 'down', function() showCursor(not isCursorShowing()) end)

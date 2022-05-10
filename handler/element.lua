@@ -214,11 +214,12 @@ function dxGetRootParent(element, sub)
     local self = Cache[element]
     if self then
         if self.parent then
-            if Cache[self.parent].parent then
-                return dxGetRootParent(self.parent, true)
-            else
-                return self.parent
-            end
+           -- if Cache[self.parent].parent then
+             --   return dxGetRootParent(self.parent, true)
+           -- else
+           --     return self.parent
+           -- end
+            return dxGetRootParent(self.parent, true)
         else
             if sub then
                 return element 
@@ -271,3 +272,71 @@ function dxSetColorBorder(element, r, g, b, a)
     end
     return false
 end
+
+function dxFont(path, size, bold)
+    if fileExists( path ) then
+        if tonumber(size) then
+
+            Files['font'] = Files['font'] or {}
+            resourceFonts[(sourceResource or resource)] = resourceFonts[(sourceResource or resource)] or {}
+            --
+            local last = getLastLetterPos(path)
+            local name = path:sub(last, path:find('%.', last)-1)
+            --
+            Files['font'][name] = Files['font'][name] or {}
+            --
+            if not isElement(Files['font'][name][tonumber(size)]) then
+                Files['font'][name][tonumber(size)] = DxFont(path, tonumber(size), bold )
+                table.insert(resourceFonts[(sourceResource or resource)], Files['font'][name][tonumber(size)])
+            end
+
+            return true
+        end
+    end
+    return false
+end
+
+function dxSetFont(element, name, size)
+    local self = Cache[element]
+    if self then
+        if Files['font'][name] then
+            if tonumber(size) then
+                if Files['font'][name][tonumber(size)] then
+
+                    self.font = Files['font'][name][tonumber(size)]
+                    self.fontH = dxGetFontHeight( 1, self.font )
+
+                    if self.type == 'dxEdit' then
+                        if isElement( self.rendertarget ) then
+                            self.rendertarget:destroy()
+                        end
+                        if isElement( self.rendertarget2 ) then
+                            self.rendertarget2:destroy()
+                        end
+                    elseif self.type == 'dxScroll' then
+                        if self.vertical then
+                            self.pos = self.y + self.fontH
+                        else
+                            self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
+                        end
+                    end
+
+                    self.update = true
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+
+local resource = getThisResource(  )
+local resourceName = resource.name
+function dxGetLibrary()
+    local string = [[]]
+    for i, func in ipairs(getResourceExportedFunctions( resource )) do
+        string = string..'\n'..func..' = function(...) return call ( getResourceFromName ( "'..resourceName..'" ), "'..func..'", ... ) end'
+    end
+    return string   
+end 

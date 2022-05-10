@@ -43,7 +43,7 @@ function Render.dxCheckBox( element, parent )
 				else
 					dxDrawImage(0, 0, self.w, self.h, self.svg)
 				end
-				dxDrawText( self.text, 0, 0, self.w, self.h, tocolor(120, 95, 205, 255), 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+				dxDrawText( self.text, 0, 0, self.w, self.h, tocolor(120, 95, 205, 255), 1, self.font, 'center', 'center', true, true, false, false)
 
 
 			if self.rootParent then

@@ -21,9 +21,9 @@ function Render.dxLabel(element, parent)
 			self.rendertarget:setAsTarget(true)
 			dxSetBlendMode( 'modulate_add' )
 				if self.border then
-					dxDrawBorderedText (self.border, self.text, 0, 0, self.w-self.x, self.h-self.y, self.colortext, (self.colorborder or self.colortext), 1, Files['font']['Basic-Regular.ttf'][10], self.alignX, self.alignY, false, false, false, true, false)
+					dxDrawBorderedText (self.border, self.text, 0, 0, self.w-self.x, self.h-self.y, self.colortext, (self.colorborder or self.colortext), 1, self.font, self.alignX, self.alignY, false, false, false, true, false)
 				else
-					dxDrawText(self.text, 0, 0, self.w-self.x, self.h-self.y, self.colortext, 1, Files['font']['Basic-Regular.ttf'][10], self.alignX, self.alignY, false, false, false, true, false)
+					dxDrawText(self.text, 0, 0, self.w-self.x, self.h-self.y, self.colortext, 1, self.font, self.alignX, self.alignY, false, false, false, true, false)
 				end
 
 			if self.rootParent then

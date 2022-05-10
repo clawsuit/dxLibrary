@@ -3,10 +3,10 @@ function dxImage( x, y, w, h, path, parent,colorformat, mipmaps, textureType)
 	local self, element = createElement( 'dxImage', parent, sourceResource )
 	if self then
 		
-		self.x = x 
-		self.y = y
-		self.w = w
-		self.h = h
+		self.x = math.round(x)
+		self.y = math.round(y)
+		self.w = math.round(w)
+		self.h = math.round(h)
 		self.path = path
 		self.parent = parent
 		

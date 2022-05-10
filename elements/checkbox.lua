@@ -3,10 +3,10 @@ function dxCheckBox( x, y, w, h, parent, rounded)
 	local self, element = createElement( 'dxCheckBox', parent, sourceResource )
 	if self then
 		
-		self.x = x 
-		self.y = y
-		self.w = w
-		self.h = h
+		self.x = math.round(x)
+		self.y = math.round(y)
+		self.w = math.round(w)
+		self.h = math.round(h)
 		self.parent = parent
 
 		self.colorbackground = tocolor( 25, 25, 35, 255 )
@@ -17,6 +17,9 @@ function dxCheckBox( x, y, w, h, parent, rounded)
         	self.offsetY = self.y - Cache[self.parent].y
         end
 
+        self.font = Files['font']['Basic-Regular'][10]
+        self.fontH = dxGetFontHeight( 1, self.font )
+        --
         self.style = 1
         self.text = ""
         self.state = false

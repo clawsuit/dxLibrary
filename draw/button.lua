@@ -56,9 +56,12 @@ function Render.dxButton(element, parent)
 		end
 
 		if isElement(self.rendertarget) then
+		
 			dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, false)
+		
 		end
-		dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+	
+		dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
 
 		self.click = getKeyState( 'mouse1' )
 	end

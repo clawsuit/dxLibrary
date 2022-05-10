@@ -1,5 +1,6 @@
 Cache = {}
 Render = {}
+resourceFonts = {}
 
 Files = {}
 checkBoxTypes = {'✔', '●', '✕'}
@@ -7,6 +8,7 @@ ElementTypeChildrenAvailable = {['dxWindow'] = true}
 
 filesAvailables = {
     {'Basic-Regular.ttf', {10, false}, {11, true}},
+    {'letterbold.otf', {9, true}, {10, true}},
     --'boton.png',
 }
 
@@ -20,11 +22,12 @@ addEventHandler( "onClientResourceStart", resourceRoot,
             if type(v) == 'table' then
                 if fileExists( 'files/font/'..v[1] ) then
 
+                    local name = v[1]:sub(0, v[1]:find('%.')-1)
                     Files['font'] = Files['font'] or {}
-                    Files['font'][v[1]] = {}
+                    Files['font'][name] = {}
                     --
                     for i = 2, #v do
-                        Files['font'][v[1]][v[i][1]] = DxFont('files/font/'..v[1], v[i][1], v[i][2] )
+                        Files['font'][name][v[i][1]] = DxFont('files/font/'..v[1], v[i][1], v[i][2] )
                     end
 
                 end
@@ -39,15 +42,8 @@ addEventHandler( "onClientResourceStart", resourceRoot,
 
         end
 
-        fontH = dxGetFontHeight( 1, Files['font']['Basic-Regular.ttf'][10] )
     end
 )
-
--- local rawSvg = [[
---     <svg width="64" height="64" viewBox="0 0 20 20" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M13.354 3.646a.5.5 0 010 .708L7.707 10l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
--- </svg>
--- ]]
--- Flecha = svgCreate(64, 64, rawSvg, function()  end)
 
 
 function svgCreateRoundedRectangle(width, height, ratio, color1, borderWidth, color2)
@@ -57,14 +53,13 @@ function svgCreateRoundedRectangle(width, height, ratio, color1, borderWidth, co
     local r2,g2,b2,a2 = bitExtract((color2 or color1),16,8),bitExtract((color2 or color1),8,8), bitExtract((color2 or color1),0,8), bitExtract((color2 or color1),24,8)
     local _color2 = string.format("#%.2X%.2X%.2X", r2,g2,b2)
     --
-    local rawSvgData = [[
+   return [[
         <svg width="]]..(width+0)..[[" height="]]..(height+0)..[[">
             <rect x="0" y="0" rx="]]..ratio..[[" ry="]]..ratio..[[" width="]]..(width-0)..[[" height="]]..(height-0)..[["
             fill="]].._color1..[[" stroke="]].._color2..[[" stroke-width="]]..(borderWidth or 0)..[[" stroke-opacity="]]..(a2/255)..[[" opacity="]]..(a/255)..[[" />
         </svg>
     ]]
     --
-    return svgCreate(width, height, rawSvgData)
 end
 
 function isCursorOver(x,y,w,h)
@@ -129,6 +124,13 @@ function dxGetScreen( x, y )
     return sx, sy, sx/(x or sx), sy/(y or sy)
 end
 
+function dxFont( font, arg )
+    if font and arg then
+        return DxFont( font, arg )
+    end
+end
+
+
 function table.find(t, i, f)
     --print(debug.traceback())
     if (not f) then
@@ -155,3 +157,20 @@ function dxDrawBorderedText (outline, text, left, top, right, bottom, color, col
     end
     dxDrawText (text, left, top, right, bottom, color, scale, font, alignX, alignY, clip, wordBreak, postGUI, colorCoded, subPixelPositioning, fRotation, fRotationCenterX, fRotationCenterY)
 end
+
+function math.round(number, decimals)
+    return tonumber(string.format(("%."..(decimals or 0).."f"), number))
+end
+
+function getLastLetterPos(str)
+    local last = 0
+    local f = str:find('/', last)
+    while f do
+        last = f+1
+        if last >= #str then break end
+        f = str:find('/', last)
+    end
+    return last
+end
+
+

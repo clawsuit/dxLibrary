@@ -20,7 +20,7 @@ function Render.dxScroll(element, parent)
 			end
 		end
 
-		local xw,xh = dxGetTextWidth( "▲", 1, Files['font']['Basic-Regular.ttf'][10] ), dxGetFontHeight( 1, Files['font']['Basic-Regular.ttf'][10] )
+		local xw,xh = 8.5*sh, 17*sh
 
 		if self.update or CLIENT_RESTORE then
 
@@ -38,8 +38,8 @@ function Render.dxScroll(element, parent)
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
 
-					dxDrawText('➤', 0, 0.5, xw*2, self.h+.5, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false, false, 178)
-					dxDrawText('➤', self.w-xw*2, 0, (xw*2)+self.w-xw*2, self.h-2.5, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+					dxDrawText('➤', 0, 0.5, xw*2, self.h+.5, -1, 1, self.font, 'center', 'center', true, true, false, false, false, 178)
+					dxDrawText('➤', self.w-xw*2, 0, (xw*2)+self.w-xw*2, self.h-2.5, -1, 1, self.font, 'center', 'center', true, true, false, false)
 				else
 					if self.svg then
 						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, -1, false)
@@ -48,10 +48,10 @@ function Render.dxScroll(element, parent)
 					end
  					
  
-					dxDrawText('➤', -1, 0, self.w-1, xh, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false, false, -90)
-					--dxDrawText('▲', 0, -1, self.w, xh-1, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
-					--dxDrawText('▼', 0, self.h-xh, self.w, self.h, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
-					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, -1, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false, false, 90)
+					dxDrawText('➤', -1, 0, self.w-1, xh, -1, 1, self.font, 'center', 'center', true, true, false, false, false, -90)
+					--dxDrawText('▲', 0, -1, self.w, xh-1, -1, 1, self.font, 'center', 'center', true, true, false, false)
+					--dxDrawText('▼', 0, self.h-xh, self.w, self.h, -1, 1, self.font, 'center', 'center', true, true, false, false)
+					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, -1, 1, self.font, 'center', 'center', true, true, false, false, false, 90)
 				end
 
 			if self.rootParent then
@@ -88,7 +88,7 @@ function Render.dxScroll(element, parent)
 
 		if not self.vertical then
 
-			local sizeW = (self.w-xw*2) < 90*sw and self.w / 3 or 40*sw
+			local sizeW = (self.w-xw*2) < 90*sh and self.w / 3 or 40*sh
 			if not self.dist then
 				self.dist = getDistanceBetweenPoints2D( 0, (pos)+sizeW, 0, (x+self.w)-(xw*2))
 			end

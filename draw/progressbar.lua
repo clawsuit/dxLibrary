@@ -34,7 +34,7 @@ function Render.dxProgressBar(element, parent)
 
 		end
 
-		dxDrawText(math.floor(self.progress)..'%', x, y, self.w+x, self.h+y, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+		dxDrawText(math.floor(self.progress)..'%', x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, false, false)
 
 	end
 

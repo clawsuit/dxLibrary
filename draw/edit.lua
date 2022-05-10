@@ -54,7 +54,7 @@ function Render.dxEdit(element, parent)
 		
 
 		if self.text:len() == 0 then
-			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, false, false)
 		else
 
 			local text = self.text:sub(self.caretA, self.caretB)
@@ -62,7 +62,7 @@ function Render.dxEdit(element, parent)
 				text = text:gsub('.', '●')
 			end
 
-			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'left', 'center', false, false, false, false)
+			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, false, false)
 		end
 
 		if getKeyState( 'mouse1' ) and not self.click then
@@ -82,7 +82,7 @@ function Render.dxEdit(element, parent)
 			self.tick = self.tick or getTickCount(  )
 			local a = ((getTickCount(  ) - self.tick)/500)%1
 
-			local m = #self.text == 0 and 0 or dxGetTextWidth(self.text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, Files['font']['Basic-Regular.ttf'][10] )
+			local m = #self.text == 0 and 0 or dxGetTextWidth(self.text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, self.font )
 
 			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(255,255,255,255*a), false)
 
@@ -98,10 +98,10 @@ function Render.dxEdit(element, parent)
 						self.caretC = self.caretC - 1
 						
 
-						local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, Files['font']['Basic-Regular.ttf'][10] )
+						local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
 						while tw >= (self.w-10) and self.caretB > 0 do
 							self.caretB = self.caretB - 1
-							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, Files['font']['Basic-Regular.ttf'][10] )
+							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
 						end
 
 					end
@@ -114,7 +114,7 @@ function Render.dxEdit(element, parent)
 
 					self.caretC = self.caretC + 1
 
-					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, Files['font']['Basic-Regular.ttf'][10] )
+					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
 					
 					--if self.caretA < self.caretA1 then
 						while tw >= (self.w-10) do
@@ -123,7 +123,7 @@ function Render.dxEdit(element, parent)
 							self.caretB = self.caretB + 1
 							self.caretC = self.caretC - 1
 
-							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, Files['font']['Basic-Regular.ttf'][10] )
+							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
 							
 							
 						end
@@ -167,8 +167,8 @@ function writeInBox(element, c)
 		end
 
 		local text = self.text:sub(self.caretA, self.caretB)
-		local lw = dxGetTextWidth(c, 1, Files['font']['Basic-Regular.ttf'][10] )
-		local tw = dxGetTextWidth(text, 1, Files['font']['Basic-Regular.ttf'][10] )+lw
+		local lw = dxGetTextWidth(c, 1, self.font )
+		local tw = dxGetTextWidth(text, 1, self.font )+lw
 		
 		if self.caretC == 0 then
 			self.caretA = math.max(1, self.caretA - 1)
@@ -189,7 +189,7 @@ function writeInBox(element, c)
 			--	self.caretA1 = self.caretA1 + 1
 			end
 
-			tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB), 1, Files['font']['Basic-Regular.ttf'][10] )
+			tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB), 1, self.font )
 
 		end
 
@@ -237,10 +237,10 @@ function deleteTextInBox(element)
 
 					
 
-					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, Files['font']['Basic-Regular.ttf'][10] )
+					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
 					while tw >= (self.w-10) and self.caretB > 0 do
 						self.caretB = self.caretB - 1
-						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, Files['font']['Basic-Regular.ttf'][10] )
+						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
 					end
 
 					if self.text:len() == 0 then

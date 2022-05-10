@@ -3,17 +3,20 @@ function dxScroll(x, y, wh, vertical, parent, rounded)
 	local self, element = createElement('dxScroll', parent, sourceResource)
 	if self then
 
-		self.x = x
-		self.y = y
+		self.x = math.round(x)
+		self.y = math.round(y)
+
+		self.font = Files['font']['Basic-Regular'][10]
+		self.fontH = dxGetFontHeight( 1, self.font )
 
 		if vertical then
-			self.pos = y + dxGetFontHeight( 1, Files['font']['Basic-Regular.ttf'][10] )
-			self.w = 17*sw
-			self.h = wh
+			self.pos = self.y + self.fontH
+			self.w = math.round(17*sh)
+			self.h = math.round(wh)
 		else
-			self.pos = x + dxGetTextWidth( "▲", 1, Files['font']['Basic-Regular.ttf'][10] )*2
-			self.w = wh
-			self.h = 17*sh
+			self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
+			self.w = math.round(wh)
+			self.h = math.round(17*sh)
 		end
 
 		self.vertical = vertical
@@ -38,8 +41,8 @@ function dxScroll(x, y, wh, vertical, parent, rounded)
         end
 
         if tonumber(self.rounded) then
-        	self.svg = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorbackground or false)
-        	setTimer(function() self.update = true end, 100, 1)
+        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorbackground or false)
+        	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
         else
         	self.update = true
         end
@@ -50,3 +53,10 @@ function dxScroll(x, y, wh, vertical, parent, rounded)
 
 end
 
+function dxScrollGetCurrentPosition(element)
+	local self = Cache[element]
+	if self then
+		return self.current
+	end
+	return false
+end

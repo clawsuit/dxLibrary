@@ -7,7 +7,7 @@ function Render.dxWindow(element)
 			return
 		end
 
-		local xw, xh = dxGetTextWidth( "✕", 1, Files['font']['Basic-Regular.ttf'][10] ), dxGetFontHeight( 1, Files['font']['Basic-Regular.ttf'][10] )
+		local xw, xh = dxGetTextWidth( "✕", 1, self.font ), self.fontH
 		self.rendertarget:setAsTarget(true)
 		dxSetBlendMode( 'modulate_add' )
 
@@ -26,8 +26,8 @@ function Render.dxWindow(element)
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
 
-					dxDrawText(self.title, 0, 0, self.w, self.h, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'top', false, false, false, false)
-					dxDrawText("✕", self.w-xw*2, 0, self.w, self.h, self.colortitle, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'top', false, false, false, false)
+					dxDrawText(self.title, 0, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
+					dxDrawText("✕", self.w-xw*2, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
 
 				dxSetRenderTarget(self.rendertarget)
 

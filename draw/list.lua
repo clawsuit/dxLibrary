@@ -31,7 +31,7 @@ function Render.dxList( element, parent )
 		if self.update or CLIENT_RESTORE then
 
 			if not isElement( self.rendertarget ) then
-				self.rendertarget = DxRenderTarget( self.w-(20*sw), self.h-(20*sh), true )
+				self.rendertarget = DxRenderTarget( self.w-math.round(20*sw), self.h-math.round(20*sh), true )
 			end
 
 			self.rendertarget:setAsTarget(true)
@@ -74,7 +74,7 @@ function Render.dxList( element, parent )
 						end
 					end
 
-					dxDrawText( tostring(self.items[i] or ''), 0, (Y-(self.mul)), (self.w-(20*sw)), (H)+(Y-(self.mul)), self.colortext, 1, Files['font']['Basic-Regular.ttf'][10], 'center', 'center', true, true, false, false)
+					dxDrawText( tostring(self.items[i] or ''), 0, (Y-(self.mul)), (self.w-(20*sw)), (H)+(Y-(self.mul)), self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
 
 					Y = Y + H + ( i == #self.items and 0 or (7*sh))
 					if Y >= self.h-(20*sh) then
@@ -96,7 +96,7 @@ function Render.dxList( element, parent )
 		end
 
 		if isElement( self.rendertarget ) then
-			dxDrawImage(x+(10*sw), y+(10*sh), self.w-(20*sw), self.h-(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
 		end
 		
 
