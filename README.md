@@ -35,6 +35,9 @@ Modern Library For MTA
   * dxSetColorBorder
   * dxFont
   * dxSetFont
+  * dxGetText
+  * dxSetTitle
+  * dxGetTitle
 * Window
   * dxWindow
   * dxWindowSetCloseState
