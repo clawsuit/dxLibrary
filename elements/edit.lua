@@ -8,7 +8,7 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 		self.w = math.round(w)
 		self.h = math.round(h)
 		self.title = title
-		self.rounded = rounded and 6 or false
+		self.rounded = rounded and 13 or false
 
 		self.text = ''
 
@@ -36,20 +36,12 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 
         if tonumber(self.rounded) then
 
-      --   	local r2,g2,b2,a2 = bitExtract(self.colorbackground,16,8),bitExtract(self.colorbackground,8,8), bitExtract(self.colorbackground,0,8), bitExtract(self.colorbackground,24,8)
-    		-- local _color2 = string.format("#%.2X%.2X%.2X", r2,g2,b2)
+      		local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, 2, self.colorborder)
+  			self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
 
-      --   	local rawSvgData = [[
-		    --     <svg width="]]..(self.w)..[[" height="]]..(self.h)..[[">
-		    --         <rect x="0" y="0" rx="]]..self.rounded..[[" ry="]]..self.rounded..[[" width="]]..(self.w)..[[" height="]]..(self.h)..[["
-		    --         fill="rgb(0,0,0)" stroke="]].._color2..[[" stroke-width="1.5" stroke-opacity="0.5" opacity="1" />
-		    --     </svg>
-		    -- ]]
-		    -- --
-    
+  			local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, 2, self.colorselected)
+  			self.svg2 = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
 
-      --   	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end) --svgCreateRoundedRectangle(self.w, self.h, self.rounded, tocolor(255,255,255, 0), 1.5,  self.colorbackground)
-      --   	setTimer(function() self.update = true end, 500, 1)
         else
         	self.update = true
         end
