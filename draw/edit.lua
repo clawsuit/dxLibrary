@@ -15,9 +15,18 @@ function Render.dxEdit(element, parent)
 		local color = self.colorborder
 
 		if onBox == element then
-			color = self.colorselected
+			if self.currentColor ~= self.colorselected then
+				self.currentColor = self.colorselected
+				self.update = true
+			end
+		else
+			if self.currentColor ~= self.colorborder then
+				self.currentColor = self.colorborder
+				self.update = true
+			end
 		end
 
+		local color = self.currentColor
 		if self.update or CLIENT_RESTORE then
 
 			if not self.rendertarget then
@@ -27,14 +36,23 @@ function Render.dxEdit(element, parent)
 			self.rendertarget:setAsTarget(false)
 			dxSetBlendMode( 'modulate_add' )
 				if self.svg then
-					dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, -1, false)
+
+					if self.currentColor ~= self.colorselected then 
+						dxDrawImage(1, 1, self.w-2, self.h-2, self.svg, 0, 0, 0, -1, false)
+					else
+						dxDrawImage(1, 1, self.w-2, self.h-2, self.svg2, 0, 0, 0, -1, false)
+					end
+
 				else
 
-					dxDrawRectangle(0, 0, self.w, 1.5, -1, false) -- up
-					dxDrawRectangle(0, (-.75)+self.h, self.w, 1.5/2, -1, false) -- down
+					dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, false) -- up
+
+					dxDrawRectangle(0, 0, self.w, 1.5, color, false) -- up
+					dxDrawRectangle(0, (-.75)+self.h, self.w, 1.5/2, color, false) -- down
 					--
-					dxDrawRectangle(0, 0, 1.5, self.h, -1, false) -- left
-					dxDrawRectangle((-.75)+self.w, 0, 1.5/2, self.h, -1, false) -- left
+					dxDrawRectangle(0, 0, 1.5, self.h, color, false) -- left
+					dxDrawRectangle((-.75)+self.w, 0, 1.5/2, self.h, color, false) -- left
+
 				end
 			if self.rootParent then
 				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
@@ -45,10 +63,9 @@ function Render.dxEdit(element, parent)
 			self.update = nil
 		end
 
-		dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, false) -- up
 
 		if isElement(self.rendertarget) then
-			dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, color, false)
+			dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
 		end
 
 		
