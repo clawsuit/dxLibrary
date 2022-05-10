@@ -19,15 +19,14 @@ addEventHandler( "onResourceStart", resourceRoot,
                               	
                            	function(data, status)
                                 assert(status == 0 and data, resource.name..": Can't download latest release ("..dataTag..") from Github! (Status code: "..tostring(status)..")")
-                                local zip = fileCreate("dxLibrary")
+                                local zip = fileCreate("releases/"..resource.name..'-'..dataTag)
                                 if zip then
                                     fileWrite(zip, data)
                                     fileClose(zip)
                                     iprint(resource.name..": New release ("..dataTag..") available on Github! Automatically downloaded into 'releases' directory inside pAttach, just replace the old one!")
                                 end
                             end
-                        )                
-                        -- end        
+                        )                      
 
                 	end
 
