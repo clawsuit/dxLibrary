@@ -115,3 +115,13 @@ function dxGridListSetItemSelected(element, index)
 	return false
 end
 
+function dxGridListGetScrollHV(element)
+	local self = Cache[element]
+	if self then
+		return self.scrollH, self.scrollV
+	end
+	return false
+end
+
+
+  		

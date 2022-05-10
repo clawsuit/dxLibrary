@@ -107,6 +107,7 @@
         <export function="dxGridListRemoveColumn" type="client" />
         <export function="dxGridListGetItemSelected" type="client" />
         <export function="dxGridListSetItemSelected" type="client" />
+        <export function="dxGridListGetScrollHV" type="client" />
     <!--          -->
 
     <!-- Image -->
@@ -132,11 +133,13 @@
         <export function="dxProgressBar" type="client" />
         <export function="dxProgressBarSetProgress" type="client" />
         <export function="dxProgressBarGetProgress" type="client" />
+        <export function="dxProgressBarSetColor" type="client" />
     <!--             -->
 
     <!-- scroll -->
         <export function="dxScroll" type="client" />
         <export function="dxScrollGetCurrentPosition" type="client" />
+        <export function="dxScrollSetColorButton" type="client" />
     <!--        -->
 
     <!-- scrollpane -->

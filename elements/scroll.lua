@@ -41,7 +41,7 @@ function dxScroll(x, y, wh, vertical, parent, rounded)
         end
 
         if tonumber(self.rounded) then
-        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorbackground or false)
+        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
         	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
         else
         	self.update = true
@@ -57,6 +57,15 @@ function dxScrollGetCurrentPosition(element)
 	local self = Cache[element]
 	if self then
 		return self.current
+	end
+	return false
+end
+
+function dxScrollSetColorButton(element, r, g, b, a)
+	local self = Cache[element]
+	if self then
+		self.colorboton = tocolor(r, g, b, a)
+		return  true
 	end
 	return false
 end

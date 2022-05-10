@@ -233,11 +233,26 @@ function dxSetColorBackground(element, r, g, b, a)
     local self = Cache[element]
     if self then
         self.colorbackground = tocolor(r, g, b, a)
-        self.update = true
+
+        if not self.svg then
+            self.update = true
+        else
+            if self.type ~= 'dxButton' then
+
+                local svgXML = svgGetDocumentXML(self.svg)
+                local rect = xmlNodeGetChildren(svgXML)[1]
+                xmlNodeSetAttribute(rect, "fill", ""..colorToHex(self.colorbackground))
+                svgSetDocumentXML(self.svg, svgXML)
+
+            end
+        end
+
         return true
     end
     return false
 end
+
+
  
 function dxSetColorText(element, r, g, b, a)
     local self = Cache[element]
@@ -264,9 +279,18 @@ end
 function dxSetColorBorder(element, r, g, b, a)
     local self = Cache[element]
     if self then
-        if self.colorselected then
+        if self.colorborder then
             self.colorborder = tocolor(r, g, b, a)
-            self.update = true
+            
+            if not self.svg then
+                self.update = true
+            else
+                local svgXML = svgGetDocumentXML(self.svg)
+                local rect = xmlNodeGetChildren(svgXML)[1]
+                xmlNodeSetAttribute(rect, "stroke", ""..colorToHex(self.colorborder))
+                svgSetDocumentXML(self.svg, svgXML)
+            end
+
             return true
         end
     end

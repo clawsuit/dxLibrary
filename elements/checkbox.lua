@@ -25,10 +25,8 @@ function dxCheckBox( x, y, w, h, parent, rounded)
         self.state = false
 
         if rounded then
-
   			local rawSvg = [[<svg width="]]..(self.w)..[[" height="]]..(self.h)..[["> <circle cx="]]..((self.w)/2)..[[" cy="]]..((self.h)/2)..[[" r="]]..((self.w)/2)..[[" stroke="rgb(51, 33, 112)" fill="rgb(25, 25, 35)" stroke-width="1"></circle> </svg> ]]
   			self.svg = svgCreate(self.w, self.h, rawSvg, function() self.update = true end)
-  		
   		else
   			self.update = true
   		end

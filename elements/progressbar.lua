@@ -59,11 +59,11 @@ function dxProgressBarGetProgress(element, progress)
 	return false
 end
 
-
-addCommandHandler('progress',
-	function(_, num)
-
-		dxProgressBarSetProgress(bar, tonumber(num))
-
+function dxProgressBarSetColor(element, r, g, b, a)
+	local self = Cache[element]
+	if self then
+		self.colorprogress = tocolor(r, g, b, a)
+		return true
 	end
-)
+	return false
+end

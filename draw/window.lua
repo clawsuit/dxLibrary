@@ -27,7 +27,9 @@ function Render.dxWindow(element)
 					end
 
 					dxDrawText(self.title, 0, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
-					dxDrawText("✕", self.w-xw*2, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
+					if self.closebutton then
+						dxDrawText("✕", self.w-xw*2, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
+					end
 
 				dxSetRenderTarget(self.rendertarget)
 
@@ -74,7 +76,7 @@ function Render.dxWindow(element)
 
 		end
 
-		if isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
+		if self.closebutton and isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
 			if getKeyState( 'mouse1' ) and not self.click then
 
 				triggerEvent('onClose', element)
