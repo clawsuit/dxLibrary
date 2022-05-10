@@ -15,15 +15,15 @@ addEventHandler( "onResourceStart", resourceRoot,
 
                 	if dataVersion > VERSION then
                 
-                        fetchRemote(data["tarball_url"], 
+                        fetchRemote(data["zipball_url"], 
                               	
                            	function(data, status)
                                 assert(status == 0 and data, resource.name..": Can't download latest release ("..dataTag..") from Github! (Status code: "..tostring(status)..")")
-                                local zip = fileCreate("releases/"..resource.name..'-'..dataTag)
+                                local zip = fileCreate("releases/"..data['name']..'.zip')
                                 if zip then
                                     fileWrite(zip, data)
                                     fileClose(zip)
-                                    iprint(resource.name..": New release ("..dataTag..") available on Github! Automatically downloaded into 'releases' directory inside pAttach, just replace the old one!")
+                                    iprint(resource.name..": New release ("..dataTag..") available on Github! Automatically downloaded into 'releases' directory inside "..resource.name..", just replace the old one!")
                                 end
                             end
                         )                      
