@@ -46,6 +46,7 @@
 
     <file src='files/font/Basic-Regular.ttf' />
     <file src='files/font/letterbold.otf' />
+    <file src='files/font/Comforta_regular.ttf' />
     
     <file src="files/fx/hud_mask.fx" />
     <file src="files/fx/tex_matrix.fx" />
