@@ -9,6 +9,7 @@ ElementTypeChildrenAvailable = {['dxWindow'] = true}
 filesAvailables = {
     {'Basic-Regular.ttf', {10, false}, {11, true}},
     {'letterbold.otf', {9, true}, {10, true}},
+    {'Comforta_regular.ttf', {10, false}, {11, false}, {12, false}, {13, false}},
     --'boton.png',
 }
 
