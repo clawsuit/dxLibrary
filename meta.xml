@@ -73,6 +73,9 @@
         <export function="dxSetColorBorder" type="client" />
         <export function="dxFont" type="client" />
         <export function="dxSetFont" type="client" />
+        <export function="dxSetTitle" type="client" />
+        <export function="dxGetTitle" type="client" />
+        <export function="dxGetText" type="client" />
 
     <!--         -->
 
