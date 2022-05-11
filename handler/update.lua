@@ -1,4 +1,4 @@
-local VERSION = 100
+local VERSION = 10
 
 addEventHandler( "onResourceStart", resourceRoot,
 	function ( )
