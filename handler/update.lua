@@ -19,7 +19,7 @@ addEventHandler( "onResourceStart", resourceRoot,
                               	
                            	function(data, status)
                                 assert(status == 0 and data, resource.name..": Can't download latest release ("..dataTag..") from Github! (Status code: "..tostring(status)..")")
-                                local zip = fileCreate("releases/"..data['name']..'.zip')
+                                local zip = fileCreate("releases/dxLibrary-"..dataTag..'.zip')
                                 if zip then
                                     fileWrite(zip, data)
                                     fileClose(zip)
