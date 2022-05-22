@@ -118,6 +118,7 @@
         <export function="dxImage" type="client" />
         <export function="dxImageApplyMask" type="client" />
         <export function="dxImageRemoveMask" type="client" />
+	<export function="dxImageLoad" type="client" />
     <!--       -->
 
     <!-- Label -->
