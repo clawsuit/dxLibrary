@@ -1,4 +1,4 @@
-function dxImage( x, y, w, h, path, parent,colorformat, mipmaps, textureType)
+function dxImage( x, y, w, h, path, parent, colorformat, mipmaps, textureType)
 	
 	local self, element = createElement( 'dxImage', parent, sourceResource )
 	if self then
@@ -10,7 +10,11 @@ function dxImage( x, y, w, h, path, parent,colorformat, mipmaps, textureType)
 		self.path = path
 		self.parent = parent
 		
-		self.texture = DxTexture(path, (colorformat or "dxt5"), (mipmaps or true), (textureType or "clamp") )
+		self.colorformat = (colorformat or "dxt5")
+		self.mipmaps = (mipmaps or true)
+		self.textureType = (textureType or "clamp")
+
+		self.texture = DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
 		self.colorbackground = -1
 
 		if self.parent then
@@ -57,6 +61,30 @@ function dxImageRemoveMask(element)
 		if isElement(self.textureMask) then
 			self.textureMask:destroy()
 			self.textureMask = nil
+		end
+
+		return true
+	end
+	return false
+end
+
+function dxImageLoad(element, path)
+	local self = Cache[element]
+	if self then
+
+		if fileExists( path ) then
+			if isElement(self.texture) then
+				self.texture:destroy()
+			end
+
+			self.texture = DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
+
+			if isElement( self.shader ) then
+				self.shader:setValue("sPicTexture", self.texture)
+			end
+
+		else
+			erorr('La imagen especificada en el path no existe')
 		end
 
 		return true
