@@ -11,8 +11,9 @@ function Render.dxImage(element, parent)
 			x, y = self.offsetX, self.offsetY
 			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
 		end
-	
-		dxDrawImage(x, y, self.w, self.h, (self.shader or self.texture), 0, 0, 0, self.colorbackground, false)
-
+		
+		if isElement( self.texture ) then
+			dxDrawImage(x, y, self.w, self.h, (self.shader or self.texture), 0, 0, 0, self.colorbackground, false)
+		end
 	end
 end
