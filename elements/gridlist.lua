@@ -98,7 +98,7 @@ end
 function dxGridListGetItemSelected(element)
 	local self = Cache[element]
 	if self then
-		return self.selected
+		return self.selected, self.items[self.selected]
 	end
 	return false
 end
