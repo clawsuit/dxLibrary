@@ -30,7 +30,8 @@
     <script src="elements/progressbar.lua" type="client" cache="false"/>
     <script src="elements/label.lua" type="client" cache="false"/>
     <script src="elements/image.lua" type="client" cache="false"/>
-
+    <script src="elements/switchButton.lua" type="client" cache="false"/>
+	
     <script src="draw/window.lua" type="client" cache="false"/>
     <script src="draw/button.lua" type="client" cache="false"/>
     <script src="draw/edit.lua" type="client" cache="false"/>
@@ -41,6 +42,7 @@
     <script src="draw/progressbar.lua" type="client" cache="false"/>
     <script src="draw/label.lua" type="client" cache="false"/>
     <script src="draw/image.lua" type="client" cache="false"/>
+    <script src="draw/switchButton.lua" type="client" cache="false"/>
 
     <script src="examples.lua" type="client" cache="false"/>
 
@@ -51,7 +53,9 @@
     <file src="files/fx/hud_mask.fx" />
     <file src="files/fx/tex_matrix.fx" />
     <file src="files/image/circle_mask.png" />
-
+    <file src="files/image/round.png" />
+    <file src="files/image/switch.png" />
+	
     <!-- General -->
 
         <export function="dxGetLibrary" type="client" />
