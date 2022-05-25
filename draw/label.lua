@@ -12,6 +12,10 @@ function Render.dxLabel(element, parent)
 			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
 		end
 
+	 	if isCursorOver(x2, y2, self.w, self.h) and getKeyState( 'mouse1' ) and not self.click then
+	 		triggerEvent('onClick', element)
+	 	end
+
 		if self.update then
 
 			if not isElement(self.rendertarget) then
@@ -39,5 +43,6 @@ function Render.dxLabel(element, parent)
 			dxDrawImage(x, y, self.w-self.x, self.h-self.y, self.rendertarget, 0, 0, 0, -1, false)
 		end
 
+		self.click = getKeyState( 'mouse1' )
 	end
 end
