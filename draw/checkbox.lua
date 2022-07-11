@@ -16,7 +16,7 @@ function Render.dxCheckBox( element, parent )
 		
 		end
 
-		if getKeyState( 'mouse1' ) and not self.click then
+		if getKeyState( 'mouse1' ) and not self.click and not self.isDisabled then
 		
 			if isCursorOver(x2, y2, self.w, self.h) then
 

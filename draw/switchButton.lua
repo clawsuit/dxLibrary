@@ -14,16 +14,16 @@ function Render.dxSwitchButton(element, parent)
 		
 		local w = (self.w < 20*sw and self.w/2.8 or 20*sw)
 		if getKeyState( 'mouse1' ) and not self.click then
-		
-			if isCursorOver(x2, y2, self.w, self.h) then
+			if not self.isDisabled then
+				if isCursorOver(x2, y2, self.w, self.h) then
 
-			 	self.tick = getTickCount(  )
-			 	self.state = not self.state
-			 	triggerEvent('onClick', element)
-				self.update = true
-				
+				 	self.tick = getTickCount(  )
+				 	self.state = not self.state
+				 	triggerEvent('onClick', element)
+					self.update = true
+					
+				end
 			end
-
 		end
 
 		if self.tick then

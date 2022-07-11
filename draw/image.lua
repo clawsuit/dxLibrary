@@ -15,5 +15,11 @@ function Render.dxImage(element, parent)
 		if isElement( self.texture ) then
 			dxDrawImage(x, y, self.w, self.h, (self.shader or self.texture), 0, 0, 0, self.colorbackground, false)
 		end
+
+		if isCursorOver(x2, y2, self.w, self.h) and getKeyState( 'mouse1' ) and not self.click then
+			if not self.isDisabled then
+				triggerEvent('onClick', element)
+			end
+		end
 	end
 end

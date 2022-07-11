@@ -65,7 +65,7 @@
         <export function="dxSetText" type="client" />
         <export function="dxSetTitle" type="client" />
         <export function="dxSetVisible" type="client" />
-        <export function="dxSetEnabled" type="client" />
+        <export function="dxSetDisabled" type="client" />
         <export function="dxSetPosition" type="client" />
         <export function="dxGetPosition" type="client" />
         <export function="dxSetSize" type="client" />
@@ -105,6 +105,7 @@
         <export function="dxEdit" type="client" />
         <export function="dxEditSetMasked" type="client" />
         <export function="dxEditSetMaxCharacters" type="client" />
+        <export function="dxActiveInput" type="client" />
     <!--      -->
 
     <!-- GridList -->

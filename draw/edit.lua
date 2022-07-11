@@ -63,26 +63,29 @@ function Render.dxEdit(element, parent)
 			self.update = nil
 		end
 
-
+		local postgui = true
+		if self.parent then
+			postgui = false
+		end
 		if isElement(self.rendertarget) then
-			dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+			dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 		end
 
 		
 
 		if self.text:len() == 0 then
-			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, false, false)
+			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, postgui, false)
 		else
 
 			local text = self.text:sub(self.caretA, self.caretB)
 			if self.masked then
 				text = text:gsub('.', '●')
 			end
-
-			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, false, false)
+--print(text)
+			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, postgui, false)
 		end
 
-		if getKeyState( 'mouse1' ) and not self.click then
+		if getKeyState( 'mouse1' ) and not self.click and not self.isDisabled then
 			if isCursorOver(x2, y2, self.w, self.h) then
 				onBox = element
 				guiSetInputEnabled(true)
@@ -101,7 +104,7 @@ function Render.dxEdit(element, parent)
 
 			local m = #self.text == 0 and 0 or dxGetTextWidth(self.text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, self.font )
 
-			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(255,255,255,255*a), false)
+			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(90,90,90,255*a), postgui)
 
 			if getKeyState( 'arrow_l' ) and not self.arrow_l then
 
@@ -163,8 +166,20 @@ end
 guiSetInputEnabled(false)
 
 
+function dxActiveInput(element)
+	if isElement(element) then
+		if element.type == 'dxEdit' then
+			onBox = element
+			guiSetInputEnabled(true)
+		end
+	else
+		onBox = nil
+		guiSetInputEnabled(false)
+	end
+end
 
-function writeInBox(element, c)
+
+function writeInBox(element, c, bool)
 	local self = Cache[element]
 	if self then
 
@@ -172,10 +187,10 @@ function writeInBox(element, c)
 			return
 		end
 
-		if self.maxCharacters and self.maxCharacters >= #self.text then
+		if self.maxCharacters and #self.text >= self.maxCharacters then
 			return
 		end
-
+		
 		local parent = self.parent
 		local x, y, x2, y2 = self.x, self.y, self.x, self.y
 		if parent then
@@ -190,12 +205,11 @@ function writeInBox(element, c)
 		if self.caretC == 0 then
 			self.caretA = math.max(1, self.caretA - 1)
 		end
-		--if self.
+		
 		self.text = self.text:sub(1, math.max(1, self.caretC)) .. c .. self.text:sub(self.caretC+1)
 		self.caretB = self.caretB + 1
 		self.caretC = self.caretC + 1
 
-		
 		--print(tw+lw, (self.w-5))
 		while tw >= (self.w-10) do
 
@@ -210,6 +224,27 @@ function writeInBox(element, c)
 
 		end
 
+		-- if (c == 'ň') or (c == 'Ň') then
+		-- 	if self.caretC < #self.text then
+
+		-- 		self.caretC = self.caretC + 2
+
+		-- 		local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
+				
+		-- 		--if self.caretA < self.caretA1 then
+		-- 			while tw >= (self.w-10) do
+
+		-- 				self.caretA = self.caretA + 1
+		-- 				self.caretB = self.caretB + 1
+		-- 				self.caretC = self.caretC - 1
+
+		-- 				tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
+						
+						
+		-- 			end
+		-- 		--end
+		-- 	end
+		-- end
 		
 	end
 end
@@ -227,7 +262,10 @@ function deleteTextInBox(element)
 			function()
 
 				if self.text:len() == 0 then
-					timerDelete:destroy()
+					if timerDelete and timerDelete:isValid() then
+						timerDelete:destroy()
+						return
+					end
 				end
 
 				if self.caretC > 0 then
@@ -261,11 +299,15 @@ function deleteTextInBox(element)
 					end
 
 					if self.text:len() == 0 then
-						timerDelete:destroy()
+						if timerDelete and timerDelete:isValid() then
+							timerDelete:destroy()
+						end
 					end
 
 				else
-					timerDelete:destroy()
+					if timerDelete and timerDelete:isValid() then
+						timerDelete:destroy()
+					end
 				end
 			end,
 		55, 0)

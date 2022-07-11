@@ -16,20 +16,25 @@ function Render.dxButton(element, parent)
 		self.r = self.r or 0
 		local color = self.colorbackground
 
-		if getKeyState('mouse1') then
-			if isCursorOver(x2, y2, self.w, self.h) then
+		if not self.isDisabled then
+			if getKeyState('mouse1') then
+				if isCursorOver(x2, y2, self.w, self.h) then
 
-			 	if getKeyState( 'mouse1' ) and not self.click then
-			 		self.r = 1
-			 		triggerEvent('onClick', element)
-			 	end
+				 	if getKeyState( 'mouse1' ) and not self.click then
+				 		self.r = 1
 
-		 		color = self.colorselected
+				 		triggerEvent('onClick', element)
+				 	end
+
+			 		color = self.colorselected
+				end
+			else
+				if self.r == 1 then
+				 	self.r = 0
+				end
 			end
 		else
-			if self.r == 1 then
-			 	self.r = 0
-			end
+			color = self.colorselected
 		end
 
 		if self.update then

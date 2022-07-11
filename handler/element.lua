@@ -46,6 +46,11 @@ function dxDelete(element)
         if self.childs then
             for i, child in pairs(self.childs) do
                 dxDelete(child)
+                table.remove(self.childs, i)
+
+                if self.childs[i] then
+                    self.childs[i] = nil
+                end
             end
         end
 
@@ -150,7 +155,7 @@ function dxSetVisible(element, bool)
     return false
 end
 
-function dxSetEnabled(element, bool, miliseconds)
+function dxSetDisabled(element, bool, miliseconds)
     local self = Cache[element]
     if self then    
         self.isDisabled = bool
@@ -244,6 +249,14 @@ function dxSetColorBackground(element, r, g, b, a)
                 xmlNodeSetAttribute(rect, "fill", ""..colorToHex(self.colorbackground))
                 svgSetDocumentXML(self.svg, svgXML)
 
+
+                if self.svg2 then
+                    local svgXML = svgGetDocumentXML(self.svg2)
+                    local rect = xmlNodeGetChildren(svgXML)[1]
+                    xmlNodeSetAttribute(rect, "fill", ""..colorToHex(self.colorbackground))
+                    svgSetDocumentXML(self.svg2, svgXML)
+                end
+                
             end
         end
 
@@ -251,7 +264,7 @@ function dxSetColorBackground(element, r, g, b, a)
     end
     return false
 end
-
+ 
 
  
 function dxSetColorText(element, r, g, b, a)

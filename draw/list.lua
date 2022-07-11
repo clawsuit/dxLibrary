@@ -51,7 +51,9 @@ function Render.dxList( element, parent )
 									self.selected = -1
 								else
 									self.selected = i
-									triggerEvent('onClick', element)
+									if not self.isDisabled then
+										triggerEvent('onClick', element)
+									end
 								end
 
 							else

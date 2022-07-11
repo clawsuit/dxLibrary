@@ -13,7 +13,9 @@ function Render.dxLabel(element, parent)
 		end
 
 	 	if isCursorOver(x2, y2, self.w, self.h) and getKeyState( 'mouse1' ) and not self.click then
-	 		triggerEvent('onClick', element)
+	 		if not self.isDisabled then
+	 			triggerEvent('onClick', element)
+	 		end
 	 	end
 
 		if self.update then

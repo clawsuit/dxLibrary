@@ -1,8 +1,10 @@
-Events = {'onClick', 'onClose', 'onScrollChange'}
+Events = {'onClick', 'onClose', 'onScrollChange', }
 
 for _, event in ipairs(Events) do
     addEvent(event)
 end
+
+local isWindowActive
 
 addEventHandler( "onClientRender", getRootElement(),
 	function()
@@ -17,12 +19,80 @@ addEventHandler( "onClientRender", getRootElement(),
 				end
 			end
 		end
+
+        if isMTAWindowActive(  ) then
+            if not isWindowActive then
+                isWindowActive =  true
+            end
+        else if isWindowActive then
+                isWindowActive = false
+                CLIENT_RESTORE = true
+                Timer(function() CLIENT_RESTORE = nil end, 1000, 1)
+            end
+        end
+
+        if getKeyState( 'backspace' ) then
+
+            if not tickDelete or getTickCount(  ) - tickDelete >= 120 then
+
+                local self = Cache[onBox]
+                if self then
+
+                    if not self.isVisible then
+                        return
+                    end
+
+                    if self.text:len() == 0 then
+                        return
+                    end
+
+                    if self.caretC > 0 then
+
+                        self.text = self.text:sub(1, self.caretC-1) .. self.text:sub(self.caretC+1)
+
+                        if self.caretC == 1 then
+
+                            if self.caretA > 0 then
+
+                                if self.text:len() == 0 then
+                                    self.caretA = 0
+                                else
+                                    self.caretA = math.max(0, self.caretA - 1)
+                                end
+
+                            else
+                                self.caretC = self.caretC - 1
+                            end
+
+                        else
+                            self.caretC = self.caretC - 1
+                        end
+
+                        local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+                        while tw >= (self.w-10) and self.caretB > 0 do
+                            self.caretB = self.caretB - 1
+                            tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+                        end
+
+                    end
+                    
+                end
+
+                tickDelete = getTickCount(  )
+
+            end
+        else
+            if tickDelete then
+                tickDelete = nil
+            end
+        end
 	end
-, false, 'low-999')
+, false)
 
 
 addEventHandler( "onClientCharacter", getRootElement(),
     function(c)
+        --print(c, "hola")
         if isElement(onBox) then
 
             local self = Cache[onBox]
@@ -31,33 +101,35 @@ addEventHandler( "onClientCharacter", getRootElement(),
                 if not self.isVisible then
                     return
                 end
+                local c = (c == 'ñ' and 'n') or (c == 'Ñ' and "N") or c
 
                 writeInBox(onBox, c)
             end
 
         end
-    end,
-true)
-
-addEventHandler( "onClientKey", getRootElement(),
-    function(key, pressed)
-        if key == 'backspace' then
-            if pressed then
-                deleteTextInBox()
-            else
-                if timerDelete and timerDelete:isValid() then
-                    timerDelete:destroy()
-                end
-            end
-        end
     end
-, true, 'low-1000')
+)
 
+-- addEventHandler( "onClientKey", getRootElement(), ñ
+--     function(key, pressed)
+--         if key == 'backspace' then
+--             if pressed then
+--                 deleteTextInBox()
+--             else
+--                 if timerDelete and timerDelete:isValid() then
+--                     timerDelete:destroy()
+--                 end
+--             end
+--         end
+--     end
+-- , true, 'low-1000')
 
+ 
 addEventHandler( "onClientRestore", getRootElement(),
     function()
         CLIENT_RESTORE = true
         Timer(function() CLIENT_RESTORE = nil end, 500, 1)
+        print(math.random(500))
     end
 )
 
@@ -71,7 +143,11 @@ addEventHandler( "onClientResourceStart", resourceRoot,
 
 addEventHandler('onClientElementDestroy', root, 
     function() 
-        if Cache[source] then 
+        if Cache[source] then
+            if onBox == source then
+                onBox = nil
+                guiSetInputEnabled(false)
+            end
             dxDelete(source)
         end 
     end
@@ -82,6 +158,10 @@ addEventHandler('onClientResourceStop', root,
         
         for element,v in pairs(Cache) do
             if v.resource == res then
+                if onBox == element then
+                    onBox = nil
+                    guiSetInputEnabled(false)
+                end
                 dxDelete(element)
             end
         end

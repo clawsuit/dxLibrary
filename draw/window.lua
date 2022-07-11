@@ -41,7 +41,11 @@ function Render.dxWindow(element)
 			end
 --
 			for i, v in ipairs(self.childs) do
-				Render[v.type](v, element)
+				if isElement(v) then
+					Render[v.type](v, element)
+				else
+					table.remove(self.childs, i)
+				end
 			end
 			
 		dxSetBlendMode( 'blend' )
