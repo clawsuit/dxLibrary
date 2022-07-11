@@ -8,7 +8,7 @@ function Render.dxScroll(element, parent)
 		end
 
 		local x, y, x2, y2, pos, pos2 = self.x, self.y, self.x, self.y, self.pos, self.pos
-		if parent then
+		if isElement(parent) then
 			x, y = self.offsetX, self.offsetY
 			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
 			pos = self.posOff
@@ -107,9 +107,9 @@ function Render.dxScroll(element, parent)
 
  				if getKeyState( 'mouse1' ) and not self.click then
 					if not self.moved then
-						if isCursorOver((parent and Cache[parent].x or 0)+self.bpos, y2, sizeW, self.h) then
+						if isCursorOver((isElement(parent) and Cache[parent].x or 0)+self.bpos, y2, sizeW, self.h) then
 							local ax = getAbsoluteCursorPosition()
-							self.moved = ax - (parent and Cache[parent].x or 0)
+							self.moved = ax - (isElement(parent) and Cache[parent].x or 0)
 						end
 					end
 				end
@@ -118,7 +118,7 @@ function Render.dxScroll(element, parent)
 					if self.moved then
 						
 						local ax = getAbsoluteCursorPosition()
-						ax = ax - (parent and Cache[parent].x or 0)
+						ax = ax - (isElement(parent) and Cache[parent].x or 0)
 
 						self.bpos = self.bpos + (ax - self.moved)
 
@@ -175,7 +175,7 @@ function Render.dxScroll(element, parent)
 
 				if (isKeyPressed('mouse_wheel_up') or isKeyPressed('mouse_wheel_down')) and (self.gridlist and mouseOnElement == self.gridlist or not mouseOnElement) then
 
-					if parent and isCursorOver(Cache[parent].x, Cache[parent].y, Cache[parent].w, Cache[parent].h) or isCursorOver(x2, y2, self.w, self.h) then
+					if isElement(parent) and isCursorOver(Cache[parent].x, Cache[parent].y, Cache[parent].w, Cache[parent].h) or isCursorOver(x2, y2, self.w, self.h) then
 						self.tick = self.tick or getTickCount(  )
 
 						if isKeyPressed('mouse_wheel_up') then
@@ -204,9 +204,9 @@ function Render.dxScroll(element, parent)
 				else
 					if getKeyState( 'mouse1' ) and not self.click then
 						if not self.moved then
-							if isCursorOver(x2, (parent and Cache[parent].y or 0)+self.bpos, self.w, sizeH) then
+							if isCursorOver(x2, (isElement(parent) and Cache[parent].y or 0)+self.bpos, self.w, sizeH) then
 								local _, ay = getAbsoluteCursorPosition()
-								self.moved = ay - (parent and Cache[parent].y or 0)
+								self.moved = ay - (isElement(parent) and Cache[parent].y or 0)
 							end
 						end
 					end
@@ -224,7 +224,7 @@ function Render.dxScroll(element, parent)
 
 							
 							local _, ay = getAbsoluteCursorPosition()
-							ay = ay - (parent and Cache[parent].y or 0)
+							ay = ay - (isElement(parent) and Cache[parent].y or 0)
 
 							self.bpos = self.bpos + (ay - self.moved)
 

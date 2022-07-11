@@ -1,7 +1,7 @@
 function Render.dxWindow(element)
 	
 	local self = Cache[element]
-	if self then
+	if self and isElement(element) then
 
 		if not self.isVisible then
 			return
@@ -43,15 +43,15 @@ function Render.dxWindow(element)
 			for i, v in ipairs(self.childs) do
 				if isElement(v) then
 					Render[v.type](v, element)
-				else
-					table.remove(self.childs, i)
 				end
 			end
 			
 		dxSetBlendMode( 'blend' )
 		dxSetRenderTarget()
 		
-		dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, true)
+		if isElement(self.rendertarget) then
+			dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, true)
+		end
 
 		if isCursorOver(self.x, self.y, self.w, self.h) or self.moved then
 

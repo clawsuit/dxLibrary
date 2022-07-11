@@ -11,7 +11,7 @@ addEventHandler( "onClientRender", getRootElement(),
         if not CLIENT_INIT then
             return
         end
-		-- dxDrawText(inspect(Cache), 0, 0)
+	    dxDrawText(inspect(Cache), 0, 0)
 		for element, v in pairs(Cache) do
 			if isElement( element ) then
 				if not v.parent then

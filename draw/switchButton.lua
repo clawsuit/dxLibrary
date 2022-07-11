@@ -7,7 +7,7 @@ function Render.dxSwitchButton(element, parent)
 		end
 
 		local x, y, x2, y2 = self.x, self.y, self.x, self.y
-		if parent then
+		if isElement(parent) then
 			x, y = self.offsetX, self.offsetY
 			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
 		end

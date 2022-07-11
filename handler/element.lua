@@ -37,7 +37,7 @@ function createElement(type, parent, resource)
     end
 end
 
-function dxDelete(element)
+function dxDelete(element, check)
     local self = Cache[element]
     if self then
 
@@ -45,13 +45,26 @@ function dxDelete(element)
 
         if self.childs then
             for i, child in pairs(self.childs) do
-                dxDelete(child)
-                table.remove(self.childs, i)
+                dxDelete(child, true)
+            end
+            self.childs = {}
+           -- print(inspect(#self.childs))
+        end
+        --print(inspect(element))
+        if isElement(self.parent) and not check then
 
-                if self.childs[i] then
-                    self.childs[i] = nil
+            local selfParent = Cache[self.parent]
+            if selfParent then
+
+                for i, child in pairs(selfParent.childs) do
+                    if child == element then
+                        table.remove(selfParent.childs, i)
+                        break
+                    end
                 end
             end
+
+            self.parent = nil
         end
 
         for _, k in pairs({'svg', 'svg2', 'rendertarget', 'rendertarget2', 'texture', 'shader', 'textureMask'}) do
