@@ -127,17 +127,24 @@ addEventHandler( "onClientCharacter", getRootElement(),
  
 addEventHandler( "onClientRestore", getRootElement(),
     function()
-        CLIENT_RESTORE = true
-        Timer(function() CLIENT_RESTORE = nil end, 500, 1)
-        print(math.random(500))
+        for element, v in pairs(Cache) do
+            if isElement( element ) then
+                v.update = true
+            end
+        end
     end
 )
 
 addEventHandler( "onClientResourceStart", resourceRoot,
     function()
         CLIENT_INIT = true
-        CLIENT_RESTORE = true
-        Timer(function() CLIENT_RESTORE = nil end, 1000, 1)
+        -- CLIENT_RESTORE = true
+        -- Timer(function() CLIENT_RESTORE = nil end, 1000, 1)
+        for element, v in pairs(Cache) do
+            if isElement( element ) then
+                v.update = true
+            end
+        end
     end
 , true, 'low-1000')
 
