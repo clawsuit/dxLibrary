@@ -112,7 +112,8 @@ function dxSet(element, key, value)
         else
             self[key] = value
         end
-
+        
+        self.update = true
         return true
     end
 end
