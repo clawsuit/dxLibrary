@@ -46,7 +46,7 @@ addEventHandler( "onClientRender", getRootElement(),
                         return
                     end
 
-                    if self.caretC > 0 then
+                    if self.caretC >= 1 then
 
                         self.text = self.text:sub(1, self.caretC-1) .. self.text:sub(self.caretC+1)
 
@@ -61,11 +61,27 @@ addEventHandler( "onClientRender", getRootElement(),
                                 end
 
                             else
-                                self.caretC = self.caretC - 1
+                                self.caretC = math.max(0, self.caretC - 1)
                             end
 
                         else
-                            self.caretC = self.caretC - 1
+                            self.caretC = math.max(0, self.caretC - 1)
+                        end                      
+
+                        local tw = 0
+                        if self.masked then
+                            tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+                        else
+                            tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+                        end
+
+                        while not (tw >= (self.w-10)) and self.caretA > 0 do
+                            self.caretA = self.caretA - 1
+                            if self.masked then
+                                tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+                            else
+                                tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+                            end
                         end
 
                         local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )

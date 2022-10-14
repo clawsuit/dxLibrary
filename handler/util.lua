@@ -3,7 +3,7 @@ Render = {}
 resourceFonts = {}
 
 Files = {}
-checkBoxTypes = {'✔', '●', '✕'}
+checkBoxTypes = {'✓', '●', '✕'}
 ElementTypeChildrenAvailable = {['dxWindow'] = true}
 
 filesAvailables = {
