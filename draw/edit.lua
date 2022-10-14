@@ -71,17 +71,19 @@ function Render.dxEdit(element, parent)
 			dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 		end
 
+		local text = self.text
+		if self.masked then
+			text = text:gsub('.', '*')
+		end
 		
-
 		if self.text:len() == 0 then
 			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, postgui, false)
 		else
 
 			local text = self.text:sub(self.caretA, self.caretB)
 			if self.masked then
-				text = text:gsub('.', '●')
+				text = text:gsub('.', '*')
 			end
---print(text)
 			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, postgui, false)
 		end
 
@@ -102,14 +104,14 @@ function Render.dxEdit(element, parent)
 			self.tick = self.tick or getTickCount(  )
 			local a = ((getTickCount(  ) - self.tick)/500)%1
 
-			local m = #self.text == 0 and 0 or dxGetTextWidth(self.text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, self.font )
+			local m = #text == 0 and 0 or dxGetTextWidth(text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, self.font )
 
 			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(90,90,90,255*a), postgui)
 
 			if getKeyState( 'arrow_l' ) and not self.arrow_l then
 
-				if self.text:sub(self.caretA, math.max(0, self.caretC-1) ):len() > 0 or self.caretA == 0 and self.caretC == 1 then
-					--local t = self.text:sub(self.caretA, math.min(self.caretB, self.caretC))
+				if text:sub(self.caretA, math.max(0, self.caretC-1) ):len() > 0 or self.caretA == 0 and self.caretC == 1 then
+					--local t = text:sub(self.caretA, math.min(self.caretB, self.caretC))
 					self.caretC = math.max(0, self.caretC - 1)
 					
 				else
@@ -118,10 +120,10 @@ function Render.dxEdit(element, parent)
 						self.caretC = self.caretC - 1
 						
 
-						local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+						local tw = dxGetTextWidth(text:sub(self.caretA, self.caretB ), 1, self.font )
 						while tw >= (self.w-10) and self.caretB > 0 do
 							self.caretB = self.caretB - 1
-							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+							tw = dxGetTextWidth(text:sub(self.caretA, self.caretB ), 1, self.font )
 						end
 
 					end
@@ -130,11 +132,11 @@ function Render.dxEdit(element, parent)
 				---print('caretB: '..self.caretC..' | Text: '..t..' | '..(#t))
 			elseif getKeyState( 'arrow_r' ) and not self.arrow_r then
 
-				if self.caretC < #self.text then
+				if self.caretC < #text then
 
 					self.caretC = self.caretC + 1
 
-					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
+					local tw = dxGetTextWidth(text:sub(self.caretA, self.caretC ), 1, self.font )
 					
 					--if self.caretA < self.caretA1 then
 						while tw >= (self.w-10) do
@@ -143,7 +145,7 @@ function Render.dxEdit(element, parent)
 							self.caretB = self.caretB + 1
 							self.caretC = self.caretC - 1
 
-							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
+							tw = dxGetTextWidth(text:sub(self.caretA, self.caretC ), 1, self.font )
 							
 							
 						end
@@ -199,7 +201,11 @@ function writeInBox(element, c, bool)
 		end
 
 		local text = self.text:sub(self.caretA, self.caretB)
-		local lw = dxGetTextWidth(c, 1, self.font )
+		if self.masked then
+			text = text:gsub('.', '*')
+		end
+
+		local lw = dxGetTextWidth((self.masked and '*' or c), 1, self.font )
 		local tw = dxGetTextWidth(text, 1, self.font )+lw
 		
 		if self.caretC == 0 then
@@ -220,7 +226,11 @@ function writeInBox(element, c, bool)
 			--	self.caretA1 = self.caretA1 + 1
 			end
 
-			tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB), 1, self.font )
+			if self.masked then
+				tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB):gsub('.', '*'), 1, self.font )
+			else
+				tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB), 1, self.font )
+			end
 
 		end
 
@@ -291,11 +301,37 @@ function deleteTextInBox(element)
 					end
 
 					
-
-					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
-					while tw >= (self.w-10) and self.caretB > 0 do
-						self.caretB = self.caretB - 1
+					local tw = 0
+					if self.masked then
+						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+					else
 						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+					end
+					-- while (tw >= (self.w-10)) and self.caretB > 0 do
+					-- 	self.caretB = self.caretB - 1
+					-- 	print(self.caretB, 'text')
+					-- 	if self.masked then
+					-- 		tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+					-- 	else
+					-- 		tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+					-- 	end
+					-- end
+
+					local tw = 0
+					if self.masked then
+						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+					else
+						tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+					end
+
+					while (tw >= (self.w-10)) and self.caretA > 0 do
+						self.caretA = self.caretA - 1
+						--print(self.caretB, 'text')
+						if self.masked then
+							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ):gsub('.', '*'), 1, self.font )
+						else
+							tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
+						end
 					end
 
 					if self.text:len() == 0 then
