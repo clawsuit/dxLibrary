@@ -2,6 +2,10 @@ local VERSION = 10
 
 addEventHandler( "onResourceStart", resourceRoot,
 	function ( )
+        if not hasObjectPermissionTo(getThisResource(), "resource."..getResourceName(getThisResource())..".fetchRemote", false ) then
+           outputDebugString("This resource needs permission to 'fetchRemote' for update automatically", 2)
+           return
+        end
         fetchRemote("https://api.github.com/repos/clawsuit/dxLibrary/releases/latest", 
         	function(data, status)
            		assert(status == 0 and data, resource.name..": Can't fetch 'api.github.com' for new releases! ( Status code: "..tostring(status).." ) " )
