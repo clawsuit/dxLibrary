@@ -11,9 +11,13 @@ function dxWindow(x, y, w, h, title, closebutton, rounded, border)
 		self.closebutton = (closebutton == nil and true) or (closebutton == false and false) or (closebutton == true and true)
 		self.rounded = rounded and 10 or false
 
-		self.colorbackground = tocolor(14, 14, 23, 255)
-		self.colortitle = tocolor(255, 255, 255, 255)
-		self.colorborder = tocolor(14, 14, 23, 255)
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.windowbackground
+		self.colortitle = back.windowtitle
+		self.colorborder = front.windowborder
+
 		
 		self.rendertarget = DxRenderTarget(self.w, self.h, true)
 		self.font = Files['font']['Basic-Regular'][10]

@@ -9,8 +9,12 @@ function dxCheckBox( x, y, w, h, parent, rounded)
 		self.h = math.round(h)
 		self.parent = parent
 
-		self.colorbackground = tocolor( 25, 25, 35, 255 )
-		self.colorborder = tocolor( 51, 33, 112, 255 )
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.checkBoxbackground
+		self.colorborder = front.checkBoxborder
+		self.colortext = back.checkBoxtext
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -25,7 +29,7 @@ function dxCheckBox( x, y, w, h, parent, rounded)
         self.state = false
 
         if rounded then
-  			local rawSvg = [[<svg width="]]..(self.w)..[[" height="]]..(self.h)..[["> <circle cx="]]..((self.w)/2)..[[" cy="]]..((self.h)/2)..[[" r="]]..((self.w)/2)..[[" stroke="rgb(51, 33, 112)" fill="rgb(25, 25, 35)" stroke-width="1"></circle> </svg> ]]
+  			local rawSvg = [[<svg width="]]..(self.w)..[[" height="]]..(self.h)..[["> <circle cx="]]..((self.w)/2)..[[" cy="]]..((self.h)/2)..[[" r="]]..((self.w)/2)..[[" stroke="]]..colorToHex(self.colorborder)..[[" fill="]]..colorToHex(self.colorbackground)..[[" stroke-width="1"></circle> </svg> ]]
   			self.svg = svgCreate(self.w, self.h, rawSvg, function() self.update = true end)
   		else
   			self.update = true

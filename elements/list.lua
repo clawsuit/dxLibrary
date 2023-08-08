@@ -9,12 +9,16 @@ function dxList( x, y, w, h, parent, rounded)
 		self.h = math.round(h)
 		self.parent = parent
 
-		self.colorbackground = tocolor( 20, 20, 30, 255 )
-		self.colortext = tocolor(255, 255, 255, 255)
-		self.colorselected = tocolor(120, 95, 205, 255)
-		self.colorrectangle = tocolor(25, 25, 35, 255)
-		self.colorrectangle2 = tocolor(35, 35, 45, 255)
-		
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.listbackground
+		self.colortext = back.listtext
+		self.colorrectangle = back.listrectangle
+		self.colorrectangle2 = back.listrectangle2
+
+		self.colorselected = front.listselected
+
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
         	self.offsetY = self.y - Cache[self.parent].y

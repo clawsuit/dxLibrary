@@ -1,3 +1,8 @@
+function dxSetTheme(back, front)
+    dxLibraryThemeBackSelected = back or 1
+    dxLibraryThemeFrontSelected = front or 1
+end
+
 _createElement = createElement
 function createElement(type, parent, resource)
 
@@ -20,17 +25,23 @@ function createElement(type, parent, resource)
             local parentCache = Cache[parent]
             if parentCache then
 
-                if parentCache.childs then
+                if not (parentCache.type == 'dxTab' and type == 'dxTab') then
+                    if (parentCache.type == 'dxTabPanel' and type == 'dxTab') or parentCache.type ~= 'dxTabPanel' then
 
-                    Cache[element].parent = parent
-                    Cache[element].rootParent = dxGetRootParent(parent) or parent
+                        if parentCache.childs then
 
-                    table.insert(parentCache.childs, element)
+                            --print(parentCache.type, '>', type)
 
+                            Cache[element].parent = parent
+                            Cache[element].rootParent = dxGetRootParent(parent) or parent
+
+                            --print(getElementType(Cache[element].rootParent), type)
+                            table.insert(parentCache.childs, element)
+
+                        end
+                    end
                 end
-
             end
-
         end
 
         return Cache[element], element
@@ -112,7 +123,7 @@ function dxSet(element, key, value)
         else
             self[key] = value
         end
-        
+
         self.update = true
         return true
     end
@@ -233,11 +244,6 @@ function dxGetRootParent(element, sub)
     local self = Cache[element]
     if self then
         if self.parent then
-           -- if Cache[self.parent].parent then
-             --   return dxGetRootParent(self.parent, true)
-           -- else
-           --     return self.parent
-           -- end
             return dxGetRootParent(self.parent, true)
         else
             if sub then

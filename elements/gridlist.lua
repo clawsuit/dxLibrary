@@ -1,7 +1,6 @@
 function dxGridList( x, y, w, h, parent)
 	
 	local self, element = createElement( 'dxGridList', parent, sourceResource )
-	
 	if self then
 		
 		self.x = math.round(x)
@@ -10,9 +9,12 @@ function dxGridList( x, y, w, h, parent)
 		self.h = math.round(h)
 		self.parent = parent
 
-		self.colorbackground = tocolor( 20, 20, 30, 255 )
-		self.colortext = tocolor(255, 255, 255, 255)
-		self.colorselected = tocolor(120, 95, 205, 255)
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.gridlistbackground
+		self.colortext = back.gridlisttext
+		self.colorselected = front.gridlistselected
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -27,7 +29,7 @@ function dxGridList( x, y, w, h, parent)
 
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
-  		Cache[self.scrollV].gridlist = element
+  		Cache[self.scrollV].attached = element
 
         self.from = nil
         self.to = nil
@@ -35,29 +37,39 @@ function dxGridList( x, y, w, h, parent)
 
 		self.columns = {}
         self.items = {}
+        self.colorItems = {}
 
         self.scrollX = 0
         self.scrollY = 0
         --
         self.selected = -1
         self.update = true
-        Timer(function() self.update = true end, 600, 1)
-        Timer(function() self.update = true end, 1200, 1)
+        Timer(function() self.update = true end, 600, 2)
+        --Timer(function() self.update = true end, 1200, 1)
 
         return element
 	
 	end
-
 end
 
 function dxGridListAddItem(element, ...)
 	local self = Cache[element]
 	if self then
 		table.insert(self.items, {...})
+		table.insert(self.colorItems, {255,255,255})
 		self.update2 = true
-		return true
+		return #self.items
 	end
 	return false
+end
+
+function dxGridSetItemColor(element, row, r, g, b)
+	local self = Cache[element]
+	if self then
+		if tonumber(row) and self.colorItems[row] then
+			self.colorItems[row] = {r,g,b}
+		end
+	end
 end
 
 function dxGridListRemoveItem(element, index)
@@ -65,6 +77,7 @@ function dxGridListRemoveItem(element, index)
 	if self then
 		if self.items[index] then
 			table.remove(self.items, index)
+			table.remove(colorItems, index)
 			self.update2 = true
 			return true
 		end
@@ -72,10 +85,10 @@ function dxGridListRemoveItem(element, index)
 	return false
 end
 
-function dxGridListAddColumn(element, name, size)
+function dxGridListAddColumn(element, name, size, alingX)
 	local self = Cache[element]
 	if self then
-		table.insert(self.columns, {name, size})
+		table.insert(self.columns, {name, size, alingX or 'left'})
 		self.update = true
 		return name
 	end

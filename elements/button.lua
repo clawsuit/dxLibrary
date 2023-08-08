@@ -13,9 +13,13 @@ function dxButton(x, y, w, h, text, parent, rounded)
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )
 		--
-		self.colorbackground = tocolor(120, 95, 205, 255)
-		self.colortext = tocolor(255, 255, 255, 255)
-		self.colorselected = tocolor(65, 40, 145, 255)
+
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.buttonbackground
+		self.colortext = back.buttontext
+		self.colorselected = front.buttonselected
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x

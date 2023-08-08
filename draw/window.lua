@@ -18,10 +18,10 @@ function Render.dxWindow(element)
 				end
 
 				self.rendertarget2:setAsTarget(true)
-				--
-
+				--	
 					if self.svg then
-						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, -1, false)
+						local alpha = bitExtract(self.colorbackground,24,8)
+						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), false)
 					else
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
@@ -42,7 +42,9 @@ function Render.dxWindow(element)
 --
 			for i, v in ipairs(self.childs) do
 				if isElement(v) then
-					Render[v.type](v, element)
+					--if v.type ~= 'dxTabPanel' then
+						Render[v.type](v, element)
+					--end
 				end
 			end
 			
@@ -50,7 +52,9 @@ function Render.dxWindow(element)
 		dxSetRenderTarget()
 		
 		if isElement(self.rendertarget) then
-			dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, true)
+			dxSetBlendMode("add")
+				dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+			dxSetBlendMode("blend")
 		end
 
 		if isCursorOver(self.x, self.y, self.w, self.h) or self.moved then

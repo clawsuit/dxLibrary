@@ -1,4 +1,4 @@
-function Render.dxGridList( element, parent )
+function Render.dxGridList( element, parent, offX, offY)
 	
 	local self = Cache[element]
 	if self then
@@ -6,12 +6,20 @@ function Render.dxGridList( element, parent )
 		if not self.isVisible then
 			return
 		end
-
+ 
 		local x, y, x2, y2 = self.x, self.y, self.x, self.y
 		if isElement(parent) then
+
 			x, y = self.offsetX, self.offsetY
-			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+			--
+			if x2 ~= (Cache[parent].x + x) or y2 ~= (Cache[parent].y + y) then
+                x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+                self.x, self.y = x2, y2
+            end
 		end
+
+		x, y = x + (offX or 0), y + (offY or 0)
+		x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 
 		if isCursorOver(x2, y2, self.w, self.h) then
 			if getKeyState( 'mouse1' ) and not self.click then
@@ -46,7 +54,7 @@ function Render.dxGridList( element, parent )
 		if self.update or CLIENT_RESTORE then
 
 			if isElement( self.rendertarget ) then
-				self.rendertarget:destroy()
+				--self.rendertarget:destroy()
 			end
 
 			if not isElement( self.rendertarget ) then
@@ -55,8 +63,8 @@ function Render.dxGridList( element, parent )
 
 			self.rendertarget:setAsTarget(true)
 			dxSetBlendMode( 'modulate_add' )
-
-				local oX = 0--10*sw
+ 
+				local oX = 10*sw
 				local restX = 0
 				if #self.columns > 0 then
 					if not self.updatecolumn or self.scrollH_current ~= scrollH_current then
@@ -65,9 +73,11 @@ function Render.dxGridList( element, parent )
 
 							local c = self.columns[ic]
 							local w = dxGetTextWidth(c[1], 1, self.font ) * (1+c[2])
+							local alingX = c[3]
 
 							--dxDrawRectangle( (0+oX)-(self.scrollX*Cache[self.scrollH].current), 0, w, self.fontH, tocolor(255,50 * (1+c[2]), 0) )
-							dxDrawText( c[1], (0+oX)-(self.scrollX*Cache[self.scrollH].current), 0, ((0+oX)-(self.scrollX*Cache[self.scrollH].current))+w, 0+self.fontH, self.colortext, 1, self.font, 'center', 'center', true, false, false, false)
+							--dxDrawText( c[1], (0*+oX)-(self.scrollX*Cache[self.scrollH].current), 0, ((0+oX)-(self.scrollX*Cache[self.scrollH].current))+w, 0+self.fontH, self.colortext, 1, self.font, alingX, 'center', true, false, false, false)
+							dxDrawText2( c[1], (oX)-(self.scrollX*Cache[self.scrollH].current), 0, w, self.fontH, self.colortext, 1, self.font, alingX, 'center', true, false, false, false)
 
 							oX = oX + w
 							if oX > (self.w-mw) then
@@ -91,8 +101,9 @@ function Render.dxGridList( element, parent )
 					end
 				end
 
-			if self.rootParent then
-				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
+			dxSetBlendMode("blend")
+			if isElement(parent) then
+				dxSetRenderTarget(Cache[parent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
@@ -102,14 +113,15 @@ function Render.dxGridList( element, parent )
 		end
 
 		if isElement( self.rendertarget ) then
-			dxDrawImage(x, y, math.round(self.w-mw), self.fontH, self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("add")
+				dxDrawImage(math.round(x), math.round(y), math.round(self.w-mw), self.fontH, self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("blend")
 		end
-
 
 		if self.update2 then
 
 			if isElement( self.rendertarget2 ) then
-				self.rendertarget2:destroy()
+				--self.rendertarget2:destroy()
 			end
 
 			if not isElement( self.rendertarget2 ) then
@@ -130,7 +142,8 @@ function Render.dxGridList( element, parent )
 					for it = 1, #self.items do
 
 						local item = self.items[it]
-						local oX = 0--10*sw
+						local color = self.colorItems[it]
+						local oX = 10*sw
 
 						if self.selected == it then
 							dxDrawRectangle( 0, oY-(self.scrollY*Cache[self.scrollV].current), (self.w-mw), self.fontH, self.colorselected, false )
@@ -149,7 +162,12 @@ function Render.dxGridList( element, parent )
 
 							local c = self.columns[ic]
 							local w = dxGetTextWidth(c[1], 1, self.font ) * (1+c[2])
-							dxDrawText( tostring(item[ic] or ''), (0+oX)-(self.scrollX*Cache[self.scrollH].current), (lY+oY)-(self.scrollY*Cache[self.scrollV].current), ((0+oX)-(self.scrollX*Cache[self.scrollH].current))+w, lY+oY+self.fontH-(self.scrollY*Cache[self.scrollV].current), self.colortext, 1, self.font, 'center', 'center', false, false, false, false)
+							local alingX = c[3]
+
+
+							--dxDrawText( tostring(item[ic] or ''), (0+oX)-(self.scrollX*Cache[self.scrollH].current), (lY+oY)-(self.scrollY*Cache[self.scrollV].current), ((0+oX)-(self.scrollX*Cache[self.scrollH].current))+w, lY+oY+self.fontH-(self.scrollY*Cache[self.scrollV].current), self.colortext, 1, self.font, alingX 'center', false, false, false, false)
+							--dxDrawRectangle((oX), (lY+oY), w, self.fontH, tocolor(math.random(255),math.random(255),math.random(255)))
+							dxDrawText2( tostring(item[ic] or ''), (oX)-(self.scrollX*Cache[self.scrollH].current), (lY+oY)-(self.scrollY*Cache[self.scrollV].current), w, self.fontH, tocolor(color[1], color[2], color[3]), 1, self.font, alingX, 'center', false, false, false, false)
 
 							oX = oX + w
 						end
@@ -176,8 +194,9 @@ function Render.dxGridList( element, parent )
 
 				end
 
-			if self.rootParent then
-				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
+			dxSetBlendMode("blend")
+			if isElement(parent) then
+				dxSetRenderTarget(Cache[parent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
@@ -186,8 +205,11 @@ function Render.dxGridList( element, parent )
 		end
 
 		if isElement( self.rendertarget2 ) then
-			dxDrawImage(x, y+self.fontH, math.round(self.w-mw), math.round(self.h-mh), self.rendertarget2, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("add")
+				dxDrawImage(math.round(x), math.round(y+self.fontH), math.round(self.w-mw), math.round(self.h-mh), self.rendertarget2, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("blend")
 		end
+
 
 		if isCursorOver(x2, y2, self.w, self.h) and getKeyState( 'mouse1' ) and not self.click then
 			if not self.isDisabled then

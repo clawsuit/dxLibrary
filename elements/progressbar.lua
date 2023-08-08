@@ -10,8 +10,12 @@ function dxProgressBar(x, y, w, h, parent, rounded)
 		self.h = math.round(h)
 		self.rounded = rounded and 4 or false
 
-		self.colorbackground = tocolor(25, 25, 35, 255)
-		self.colorprogress = tocolor(120, 95, 205, 255)
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.progressbarbackground
+		self.colorprogress = front.progressbarprogress
+		self.colortext = back.progressbartext
 		--
 		self.from = 0
 		self.to = 50

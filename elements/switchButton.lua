@@ -9,9 +9,12 @@ function dxSwitchButton(x, y, w, h, parent)
 		self.h = math.min(math.round(h), math.round(23*sh))
 		self.parent = parent
 
-		self.colorbackground = tocolor(255, 255, 255)
-		self.colorOn = tocolor(120, 95, 205)
-		self.colorOff = tocolor(255, 0, 0)
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
+		self.colorbackground = back.switchbuttonbackground
+		self.colorOn = front.switchbuttonOn
+		self.colorOff = front.switchbuttonOff
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x

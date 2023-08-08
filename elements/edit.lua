@@ -15,12 +15,15 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 		self.caretA = 0
 		self.caretB = 0
 		self.caretC = 0
+ 
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = tocolor(14, 14, 23, 255)
-		self.colortitle = tocolor(255, 255, 255, 255)
+		self.colorbackground = back.editbackground
+		self.colortitle = back.edittitle
 		--
-		self.colorborder = tocolor(51, 33, 112, 255)
-		self.colorselected = tocolor(120, 95, 205, 255)
+		self.colorborder = front.editborder
+		self.colorselected = front.editselected
 		--
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )

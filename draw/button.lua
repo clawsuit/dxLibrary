@@ -1,4 +1,4 @@
-function Render.dxButton(element, parent)
+function Render.dxButton(element, parent, offX, offY)
 	
 	local self = Cache[element]
 	if self then
@@ -6,12 +6,19 @@ function Render.dxButton(element, parent)
 		if not self.isVisible then
 			return
 		end
-
+ 
 		local x, y, x2, y2 = self.x, self.y, self.x, self.y
 		if isElement(parent) then
 			x, y = self.offsetX, self.offsetY
-			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+			--
+			if x2 ~= (Cache[parent].x + x) or y2 ~= (Cache[parent].y + y) then
+                x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+                self.x, self.y = x2, y2
+            end
 		end
+
+		x, y = x + (offX or 0), y + (offY or 0)
+		x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 
 		self.r = self.r or 0
 		local color = self.colorbackground
@@ -27,6 +34,7 @@ function Render.dxButton(element, parent)
 				 	end
 
 			 		color = self.colorselected
+			 		--self.update = true
 				end
 			else
 				if self.r == 1 then
@@ -35,6 +43,7 @@ function Render.dxButton(element, parent)
 			end
 		else
 			color = self.colorselected
+			--self.update = true
 		end
 
 		if self.update then
@@ -51,22 +60,29 @@ function Render.dxButton(element, parent)
 					dxDrawRectangle(0, 0, self.w, self.h, -1, false)
 				end
 
-			if self.rootParent then
-				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
+				--dxDrawText2('hola boton', 0, 0, self.w, self.h, self.colortext, 1, self.font, 'center', 'center', false, false, false, false)
+
+			dxSetBlendMode("blend")
+			if isElement(parent) then
+				dxSetRenderTarget(Cache[parent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
 
-			self.update = nil
+			if color == self.colorbackground or self.isDisabled then
+				self.update = nil
+			end
 		end
 
 		if isElement(self.rendertarget) then
-		
-			dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, false)
-		
+			dxSetBlendMode("add")
+				dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, false)
+			dxSetBlendMode("blend")
 		end
-	
-		dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+
+		dxSetBlendMode( 'modulate_add' )
+			dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+		dxSetBlendMode("blend")
 
 		self.click = getKeyState( 'mouse1' )
 	end

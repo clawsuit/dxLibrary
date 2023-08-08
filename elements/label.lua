@@ -10,6 +10,11 @@ function dxLabel( x, y, w, h, text, parent, alignX, alignY, border)
 		self.text = text
 		self.parent = parent
 
+		self.realX, self.realY = self.x, self.y
+
+		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
+        local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
+
 		self.colortext = tocolor(255, 255, 255, 255)
 		self.colorborder = self.colortext
 		--

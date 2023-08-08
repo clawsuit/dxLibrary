@@ -14,6 +14,7 @@
 	
 	<min_mta_version server="1.5.9-9" client='1.5.9-9'/>
 
+    <script src="handler/themes.lua" type="client" cache="false"/>
     <script src="handler/util.lua" type="client" cache="false"/>
     <script src="handler/keys.lua" type="client" cache="false"/>
     <script src="handler/events.lua" type="client" cache="false"/>
@@ -31,6 +32,9 @@
     <script src="elements/label.lua" type="client" cache="false"/>
     <script src="elements/image.lua" type="client" cache="false"/>
     <script src="elements/switchButton.lua" type="client" cache="false"/>
+    <script src="elements/tab.lua" type="client" cache="false"/>
+    <script src="elements/scrollpane.lua" type="client" cache="false"/>
+    <script src="elements/radiobutton.lua" type="client" cache="false"/>
 	
     <script src="draw/window.lua" type="client" cache="false"/>
     <script src="draw/button.lua" type="client" cache="false"/>
@@ -43,6 +47,9 @@
     <script src="draw/label.lua" type="client" cache="false"/>
     <script src="draw/image.lua" type="client" cache="false"/>
     <script src="draw/switchButton.lua" type="client" cache="false"/>
+    <script src="draw/tab.lua" type="client" cache="false"/>
+    <script src="draw/scrollpane.lua" type="client" cache="false"/>
+    <script src="draw/radiobutton.lua" type="client" cache="false"/>
 
     <script src="examples.lua" type="client" cache="false"/>
 
@@ -80,6 +87,7 @@
         <export function="dxSetTitle" type="client" />
         <export function="dxGetTitle" type="client" />
         <export function="dxGetText" type="client" />
+        <export function="dxSetTheme" type="client" />
 
     <!--         -->
 
@@ -110,6 +118,7 @@
 
     <!-- GridList -->
         <export function="dxGridList" type="client" />
+        <export function="dxGridSetItemColor" type="client" />
         <export function="dxGridListAddItem" type="client" />
         <export function="dxGridListRemoveItem" type="client" />
         <export function="dxGridListAddColumn" type="client" />
@@ -123,7 +132,7 @@
         <export function="dxImage" type="client" />
         <export function="dxImageApplyMask" type="client" />
         <export function="dxImageRemoveMask" type="client" />
-	<export function="dxImageLoad" type="client" />
+	    <export function="dxImageLoad" type="client" />
     <!--       -->
 
     <!-- Label -->
@@ -153,16 +162,21 @@
     <!--        -->
 
     <!-- scrollpane -->
+        <export function="dxScrollPane" type="client" />
     <!--            -->
 
-    
-    
-    
-    
-    
-    
-    
+    <!-- tab -->
+        <export function="dxTabPanel" type="client" />
+        <export function="dxAddTab" type="client" />
+        <export function="dxTabPanelSetSelected" type="client" />
+        <export function="dxTabPanelGetSelected" type="client" />
+    <!--     -->
 
-    
+    <!-- dxRadioButton -->
+        <export function="dxRadioButton" type="client" />
+        <export function="dxRadioButtonSetSelected" type="client" />
+        <export function="dxRadioButtonGetSelected" type="client" />
+    <!--               -->
+
     
 </meta>

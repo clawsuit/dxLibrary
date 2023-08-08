@@ -1,4 +1,4 @@
-function Render.dxList( element, parent )
+function Render.dxList( element, parent, offX, offY)
 	
 	local self = Cache[element]
 	if self then
@@ -10,8 +10,15 @@ function Render.dxList( element, parent )
 		local x, y, x2, y2 = self.x, self.y, self.x, self.y
 		if isElement(parent) then
 			x, y = self.offsetX, self.offsetY
-			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+			--
+			if x2 ~= (Cache[parent].x + x) or y2 ~= (Cache[parent].y + y) then
+                x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+                self.x, self.y = x2, y2
+            end
 		end
+
+		x, y = x + (offX or 0), y + (offY or 0)
+		x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 
 		if isCursorOver(x2, y2, self.w, self.h) then
 			if getKeyState( 'mouse1' ) and not self.click then
@@ -87,9 +94,9 @@ function Render.dxList( element, parent )
 				
 				self.scroll = restY
 
-
-			if self.rootParent then
-				dxSetRenderTarget(Cache[self.rootParent].rendertarget)
+			dxSetBlendMode("blend")
+			if isElement(parent) then
+				dxSetRenderTarget(Cache[parent].rendertarget)
 			else
 				dxSetRenderTarget()
 			end
@@ -98,7 +105,9 @@ function Render.dxList( element, parent )
 		end
 
 		if isElement( self.rendertarget ) then
-			dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("add")
+				dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
+			dxSetBlendMode("blend")
 		end
 		
 
@@ -160,5 +169,3 @@ function Render.dxList( element, parent )
 	end
 
 end
-
-

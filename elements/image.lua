@@ -29,6 +29,8 @@ function dxImage( x, y, w, h, path, parent, colorformat, mipmaps, textureType)
 end
 
 
+
+
 function dxImageApplyMask(element, path)
 	local self = Cache[element]
 	if self then

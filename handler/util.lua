@@ -3,14 +3,20 @@ Render = {}
 resourceFonts = {}
 
 Files = {}
-checkBoxTypes = {'✓', '●', '✕'}
-ElementTypeChildrenAvailable = {['dxWindow'] = true}
+checkBoxTypes = {'✔', '●', '✕'}
+ElementTypeChildrenAvailable = {
+    ['dxWindow'] = true,
+    ['dxTabPanel'] = true,
+    ['dxTab'] = true,
+    ['dxScrollPane'] = true
+}
 
 filesAvailables = {
     {'Basic-Regular.ttf', {10, false}, {11, true}},
     {'letterbold.otf', {9, true}, {10, true}},
     {'Comforta_regular.ttf', {10, false}, {11, false}, {12, false}, {13, false}},
-    --'boton.png',
+    'round.png',
+    'switch.png',
 }
 
 sx, sy = GuiElement.getScreenSize(  )
@@ -33,10 +39,10 @@ addEventHandler( "onClientResourceStart", resourceRoot,
 
                 end
             else
-                if fileExists( 'files/image/'..v[1] ) then
+                if fileExists( 'files/image/'..v ) then
 
                     Files['image'] = Files['image'] or {}
-                    Files['image'][v:sub(1, v:find('.')-1)] = DxTexture('files/image/'..v[1], 'argb', false, 'clamp')
+                    Files['image'][v:gsub('%.(%w+)','')] = DxTexture('files/image/'..v, 'argb', false, 'clamp')
 
                 end
             end
@@ -45,6 +51,7 @@ addEventHandler( "onClientResourceStart", resourceRoot,
 
     end
 )
+
 
 
 function svgCreateRoundedRectangle(width, height, ratio, color1, borderWidth, color2)
@@ -57,11 +64,12 @@ function svgCreateRoundedRectangle(width, height, ratio, color1, borderWidth, co
    return [[
         <svg width="]]..(width+0)..[[" height="]]..(height+0)..[[">
             <rect x="0" y="0" rx="]]..ratio..[[" ry="]]..ratio..[[" width="]]..(width-0)..[[" height="]]..(height-0)..[["
-            fill="]].._color1..[[" stroke="]].._color2..[[" stroke-width="]]..(borderWidth or 0)..[[" stroke-opacity="]]..(a2/255)..[[" opacity="]]..(a/255)..[[" />
+            fill="]].._color1..[[" stroke="]].._color2..[[" stroke-width="]]..(borderWidth or 0)..[[" stroke-opacity="]]..(a2/255)..[[" opacity="1" />
         </svg>
     ]]
     --
 end
+
 
 function isCursorOver(x,y,w,h)
 
@@ -158,6 +166,10 @@ function dxDrawBorderedText (outline, text, left, top, right, bottom, color, col
     end
     dxDrawText (text, left, top, right, bottom, color, scale, font, alignX, alignY, clip, wordBreak, postGUI, colorCoded, subPixelPositioning, fRotation, fRotationCenterX, fRotationCenterY)
 end
+ 
+function dxDrawText2(t,x,y,w,h,...)
+    return dxDrawText(t,x,y,w+x,h+y,...)
+end
 
 function math.round(number, decimals)
     return tonumber(string.format(("%."..(decimals or 0).."f"), number))
@@ -193,4 +205,51 @@ end
 function colorToHex(color)
     local red, green, blue, alpha = colorToRgba(color)
     return RGBToHex(red, green, blue)
+end
+
+function dxDrawRoundedRectangle(x, y, rx, ry, color, radius)
+    rx = rx - radius * 2
+    ry = ry - radius * 2
+    x = x + radius
+    y = y + radius
+
+    if (rx >= 0) and (ry >= 0) then
+        dxDrawRectangle(x, y, rx, ry, color)
+        dxDrawRectangle(x, y - radius, rx, radius, color)
+        dxDrawRectangle(x, y + ry, rx, radius, color)
+        dxDrawRectangle(x - radius, y, radius, ry, color)
+        dxDrawRectangle(x + rx, y, radius, ry, color)
+
+        dxDrawCircle(x, y, radius, 180, 270, color, color, 7)
+        dxDrawCircle(x + rx, y, radius, 270, 360, color, color, 7)
+        dxDrawCircle(x + rx, y + ry, radius, 0, 90, color, color, 7)
+        dxDrawCircle(x, y + ry, radius, 90, 180, color, color, 7)
+    end
+end
+
+function dxDrawRounded1(x, y, width, height, radius, color, postGUI, subPixelPositioning)
+    local segmens = 7
+    local color2 = color
+    dxDrawRectangle(x+radius, y+radius, width-(radius), height-(radius*2), color, postGUI, subPixelPositioning)
+    dxDrawCircle(x+radius, y+radius, radius, 180, 270, color2, color2, segmens, 1, postGUI)
+    dxDrawRectangle(x+radius, y, width-(radius), radius, color, postGUI, subPixelPositioning) -- arriba en medio de los circles
+    --dxDrawCircle((x+width)-radius, y+radius, radius, 270, 360, color, color, segmens, 1, postGUI)
+    dxDrawRectangle(x, y+radius, radius, height-(radius*2), color, postGUI, subPixelPositioning)
+
+    dxDrawCircle(x+radius, (y+height)-radius, radius, 90, 180, color2, color2, segmens, 1, postGUI)
+    dxDrawRectangle(x+radius, (y+height)-radius, width-(radius), radius, color, postGUI, subPixelPositioning) -- arriba en medio de los circles
+end
+
+function dxDrawRounded2(x, y, width, height, radius, color, postGUI, subPixelPositioning)
+    local segmens = 7
+    local color2 = color
+    dxDrawRectangle(x, y+radius, width-(radius), height-(radius*2), color, postGUI, subPixelPositioning)
+
+    dxDrawRectangle(x, y, width-(radius), radius, color, postGUI, subPixelPositioning)
+    dxDrawCircle((x+width)-radius, y+radius, radius, 270, 360, color2, color2, segmens, 1, postGUI)
+
+    dxDrawRectangle(x+(width-(radius)), y+radius, radius, height-(radius*2), color, postGUI, subPixelPositioning)
+
+    dxDrawCircle(x+(width-(radius)), y+(height-radius), radius, 0, 90, color2, color2, segmens, 1, postGUI)
+    dxDrawRectangle(x, y+(height-radius), width-(radius), radius, color, postGUI, subPixelPositioning)
 end
