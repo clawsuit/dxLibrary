@@ -126,6 +126,8 @@
         <export function="dxGridListGetItemSelected" type="client" />
         <export function="dxGridListSetItemSelected" type="client" />
         <export function="dxGridListGetScrollHV" type="client" />
+        <export function="dxGridListClear" type="client" />
+         
     <!--          -->
 
     <!-- Image -->
