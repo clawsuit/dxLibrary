@@ -52,6 +52,16 @@ function dxGridList( x, y, w, h, parent)
 	end
 end
 
+function dxGridListClear(element)
+	local self = Cache[element]
+	if self then
+		self.items = {}
+		self.colorItems = {}
+		self.update2 = true
+		return true
+	end
+end
+
 function dxGridListAddItem(element, ...)
 	local self = Cache[element]
 	if self then
