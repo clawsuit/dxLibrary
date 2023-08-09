@@ -1,12 +1,13 @@
-function dxCheckBox( x, y, w, h, parent, rounded)
+function dxCheckBox( x, y, text, parent, rounded)
 	
 	local self, element = createElement( 'dxCheckBox', parent, sourceResource )
 	if self then
 		
 		self.x = math.round(x)
 		self.y = math.round(y)
-		self.w = math.round(w)
-		self.h = math.round(h)
+		self.w = math.round(16*sw)
+		self.h = math.round(16*sw)
+		self.text = text or ''
 		self.parent = parent
 
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
@@ -14,6 +15,7 @@ function dxCheckBox( x, y, w, h, parent, rounded)
 
 		self.colorbackground = back.checkBoxbackground
 		self.colorborder = front.checkBoxborder
+		self.colorchecker = front.checkBoxchecker
 		self.colortext = back.checkBoxtext
 		
 		if self.parent then
@@ -24,15 +26,27 @@ function dxCheckBox( x, y, w, h, parent, rounded)
         self.font = Files['font']['Basic-Regular'][10]
         self.fontH = dxGetFontHeight( 1, self.font )
         --
-        self.style = 1
-        self.text = ""
+        self.style = 2
         self.state = false
 
         if rounded then
-  			local rawSvg = [[<svg width="]]..(self.w)..[[" height="]]..(self.h)..[["> <circle cx="]]..((self.w)/2)..[[" cy="]]..((self.h)/2)..[[" r="]]..((self.w)/2)..[[" stroke="]]..colorToHex(self.colorborder)..[[" fill="]]..colorToHex(self.colorbackground)..[[" stroke-width="1"></circle> </svg> ]]
-  			self.svg = svgCreate(self.w, self.h, rawSvg, function() self.update = true end)
+  			local rawSvgData = ([[
+            <svg width="%dpx" height="%dpx">
+              <circle cx="%d" cy="%d" r="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px"/>
+            </svg>]]):format(self.w+2, self.h+2, (self.w/2)+1, (self.w/2)+1, self.w/2)
+
+            self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
   		else
-  			self.update = true
+
+  			local rawSvgData = ([[
+            <svg width="%d" height="%d">
+			  	<rect x='0.5' y='0.5' width="%d" height="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px" /> 
+				<text x="0" y="2" fill="red">I love SVG!</text>
+			</svg>
+            ]]):format(self.w, self.h, self.w-1, self.h-1)
+
+            self.svg = svgCreate(self.w+2, self.h+2, rawSvgData, function() self.update = true end)
+  			--self.update = true
   		end
 
         return element
@@ -55,18 +69,6 @@ function dxCheckBoxGetState(element, bool)
 	local self = Cache[element]
 	if self then	
 		return self.state
-	end
-	return false
-end
-
-function dxCheckBoxSetStyle(element, style)
-	local self = Cache[element]
-	if self then
-		if checkBoxTypes[style] then
-            self.style = style	
-			self.update = true
-			return true
-		end
 	end
 	return false
 end
