@@ -1,5 +1,5 @@
 <meta>
-    <info author="ClawSuit" name="Modern-Library" type="script" version="1.0"/>
+    <info author="ClawSuit" name="Modern-Library" type="script" version="1.5.3"/>
     <oop>true</oop>
 
 
@@ -127,6 +127,7 @@
         <export function="dxGridListSetItemSelected" type="client" />
         <export function="dxGridListGetScrollHV" type="client" />
         <export function="dxGridListClear" type="client" />
+        <export function="dxGridListFindItem" type="client" />
          
     <!--          -->
 
@@ -160,6 +161,7 @@
     <!-- scroll -->
         <export function="dxScroll" type="client" />
         <export function="dxScrollGetCurrentPosition" type="client" />
+        <export function="dxScrollSetCurrentPosition" type="client" />
         <export function="dxScrollSetColorButton" type="client" />
     <!--        -->
 
