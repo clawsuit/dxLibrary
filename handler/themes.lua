@@ -83,6 +83,7 @@ dxLibraryThemes = {
 
             buttonselected = tocolor(65, 40, 145, 255),
             checkBoxborder = tocolor( 51, 33, 112, 255 ),
+            checkBoxchecker = -1,
 
             editborder = tocolor(51, 33, 112, 255),
             editselected = tocolor(120, 95, 205, 255),
@@ -107,6 +108,7 @@ dxLibraryThemes = {
 
             buttonselected = tocolor(150,150,150),
             checkBoxborder = tocolor( 90, 90, 90, 255 ),
+            checkBoxchecker = -1,
 
             editborder = tocolor(30, 30, 30, 255),
             editselected = tocolor(90, 90, 90, 255),

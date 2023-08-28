@@ -3,7 +3,7 @@ Render = {}
 resourceFonts = {}
 
 Files = {}
-checkBoxTypes = {'✔', '●', '✕'}
+checkBoxTypes = {'✓', '•', '✕'}
 ElementTypeChildrenAvailable = {
     ['dxWindow'] = true,
     ['dxTabPanel'] = true,
@@ -120,13 +120,18 @@ function getAbsoluteCursorPosition()
     end
 end
 
-function DxDrawBorderedRectangle( x, y, width, height, color1, color2, _width, postGUI )
-    local _width = _width or 1
-    dxDrawRectangle ( x+1, y+1, width-1, height-1, color1, postGUI )
-    dxDrawLine ( x, y, x+width, y, color2, _width, postGUI ) -- Top
-    dxDrawLine ( x, y, x, y+height, color2, _width, postGUI ) -- Left
-    dxDrawLine ( x, y+height, x+width, y+height, color2, _width, postGUI ) -- Bottom
-    dxDrawLine ( x+width, y, x+width, y+height, color2, _width, postGUI ) -- Right
+
+function DxDrawBorderedRectangle( x, y, w, h, color1, color2, s, postGUI )
+    local s = s or 1
+    --dxDrawRectangle ( x+1, y+1, width-1, height-1, color1, postGUI )
+    local x, y, w, h = x, y, w, h
+    dxDrawRectangle( x, y, w, h, color1, postGUI)
+
+    dxDrawRectangle( x, y, s, h, color2, postGUI)
+    dxDrawRectangle( x+s, y, w-s*2, s, color2, postGUI)
+
+    dxDrawRectangle( x+w-s, y, s, h, color2, postGUI)
+    dxDrawRectangle( x+s, y+h-s, w-s*2, s, color2, postGUI)
 end
 
 function dxGetScreen( x, y )
