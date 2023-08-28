@@ -1,4 +1,4 @@
-function dxWindow(x, y, w, h, title, closebutton, rounded, border)
+function dxWindow(x, y, w, h, title, closebutton, rounded, border, colorback, colortitle, colorborder)
 
 	local self, element = createElement('dxWindow', false, sourceResource)
 	if self then
@@ -14,9 +14,9 @@ function dxWindow(x, y, w, h, title, closebutton, rounded, border)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.windowbackground
-		self.colortitle = back.windowtitle
-		self.colorborder = front.windowborder
+		self.colorbackground = colorback or back.windowbackground
+		self.colortitle = colortitle or back.windowtitle
+		self.colorborder = colorborder or front.windowborder
 
 		
 		self.rendertarget = DxRenderTarget(self.w, self.h, true)

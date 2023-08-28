@@ -1,4 +1,4 @@
-function dxCheckBox( x, y, text, parent, rounded)
+function dxCheckBox( x, y, text, parent, rounded, colorback, colortext, colorborder, colorchecker)
 	
 	local self, element = createElement( 'dxCheckBox', parent, sourceResource )
 	if self then
@@ -13,10 +13,10 @@ function dxCheckBox( x, y, text, parent, rounded)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.checkBoxbackground
-		self.colorborder = front.checkBoxborder
-		self.colorchecker = front.checkBoxchecker
-		self.colortext = back.checkBoxtext
+		self.colorbackground = colorback or back.checkBoxbackground
+		self.colorborder = colorborder or front.checkBoxborder
+		self.colorchecker = colorchecker or front.checkBoxchecker
+		self.colortext = colortext or back.checkBoxtext
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -26,7 +26,6 @@ function dxCheckBox( x, y, text, parent, rounded)
         self.font = Files['font']['Basic-Regular'][10]
         self.fontH = dxGetFontHeight( 1, self.font )
         --
-        self.style = 2
         self.state = false
 
         if rounded then

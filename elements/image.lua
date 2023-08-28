@@ -1,4 +1,4 @@
-function dxImage( x, y, w, h, path, parent, colorformat, mipmaps, textureType)
+function dxImage( x, y, w, h, path, parent, colorback, colorformat, mipmaps, textureType)
 	
 	local self, element = createElement( 'dxImage', parent, sourceResource )
 	if self then
@@ -14,8 +14,8 @@ function dxImage( x, y, w, h, path, parent, colorformat, mipmaps, textureType)
 		self.mipmaps = (mipmaps or true)
 		self.textureType = (textureType or "clamp")
 
-		self.texture = DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
-		self.colorbackground = -1
+		self.texture = isElement(path) and path or DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
+		self.colorbackground = colorback or -1
 
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -80,7 +80,7 @@ function dxImageLoad(element, path)
 				self.texture:destroy()
 			end
 
-			self.texture = DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
+			self.texture = isElement(path) and path or DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
 
 			if isElement( self.shader ) then
 				self.shader:setValue("sPicTexture", self.texture)

@@ -1,5 +1,5 @@
 
-function dxProgressBar(x, y, w, h, parent, rounded)
+function dxProgressBar(x, y, w, h, parent, rounded, colorback, colorprogress, colortext)
 
 	local self, element = createElement('dxProgressBar', parent, sourceResource)
 	if self then
@@ -13,9 +13,9 @@ function dxProgressBar(x, y, w, h, parent, rounded)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.progressbarbackground
-		self.colorprogress = front.progressbarprogress
-		self.colortext = back.progressbartext
+		self.colorbackground = colorback or back.progressbarbackground
+		self.colorprogress = colorprogress or front.progressbarprogress
+		self.colortext = colortext or back.progressbartext
 		--
 		self.from = 0
 		self.to = 50

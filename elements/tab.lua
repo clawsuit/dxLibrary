@@ -1,4 +1,4 @@
-function dxTabPanel( x, y, w, h, parent, rounded, vertical, width)
+function dxTabPanel( x, y, w, h, parent, rounded, vertical, width, colorback, colortext, colorselected)
 	
 	local self, element = createElement( 'dxTabPanel', parent, sourceResource )
 	if self then
@@ -13,9 +13,9 @@ function dxTabPanel( x, y, w, h, parent, rounded, vertical, width)
         local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.tabbackground
-		self.colortext = back.tabtext
-		self.colorselected = front.tabselected
+		self.colorbackground = colorback or back.tabbackground
+		self.colortext = colortext or back.tabtext
+		self.colorselected = colorselected or front.tabselected
 
         self.font = Files['font']['Basic-Regular'][10]
         self.font2 = Files['font']['letterbold'][10]
@@ -48,7 +48,6 @@ end
 
 
 function dxAddTab(parent, name, section, color, parentsection)
-
     if Cache[parent].type == 'dxTabPanel' then
 
         local self, element = createElement( 'dxTab', parent, sourceResource )
@@ -56,6 +55,8 @@ function dxAddTab(parent, name, section, color, parentsection)
 
             self.x = Cache[parent].x
             self.y = Cache[parent].y
+            self.w = Cache[parent].w
+            self.h = Cache[parent].h
 
             self.text = name
             self.section = section

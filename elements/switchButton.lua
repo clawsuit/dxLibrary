@@ -1,4 +1,4 @@
-function dxSwitchButton(x, y, w, h, parent)
+function dxSwitchButton(x, y, w, h, parent, colorback, coloron, coloroff)
 	
 	local self, element = createElement( 'dxSwitchButton', parent, sourceResource )
 	if self then
@@ -12,9 +12,9 @@ function dxSwitchButton(x, y, w, h, parent)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.switchbuttonbackground
-		self.colorOn = front.switchbuttonOn
-		self.colorOff = front.switchbuttonOff
+		self.colorbackground = colorback or back.switchbuttonbackground
+		self.colorOn = coloron or front.switchbuttonOn
+		self.colorOff = coloroff or front.switchbuttonOff
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x

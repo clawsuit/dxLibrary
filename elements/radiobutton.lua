@@ -1,6 +1,6 @@
 radioButtonSelected = {}
 
-function dxRadioButton( x, y, text, parent)
+function dxRadioButton( x, y, text, parent, colorback, colortext, colorselected, colorborder)
 	
 	local self, element = createElement( 'dxRadioButton', parent, sourceResource )
 	if self then
@@ -16,10 +16,10 @@ function dxRadioButton( x, y, text, parent)
         local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-        self.colortext = back.radiotext
-		self.colorbackground = back.radiobackground
-        self.colorselected = front.radioselected
-		self.colorborder = front.radioborder
+        self.colortext = colortext or back.radiotext
+		self.colorbackground = colorback or back.radiobackground
+        self.colorselected = colorselected or front.radioselected
+		self.colorborder = colorborder or front.radioborder
 
         self.font = Files['font']['Basic-Regular'][10]
         self.fontH = dxGetFontHeight( 1, self.font )
@@ -30,9 +30,10 @@ function dxRadioButton( x, y, text, parent)
             self.offsetY = self.y - Cache[self.parent].y
         end
 
-        if isElement(self.parent) then
-            if not isElement(radioButtonSelected[self.parent]) then
-                radioButtonSelected[self.parent] = element
+
+        if isElement(parent) then
+            if not isElement(radioButtonSelected[parent]) then
+                radioButtonSelected[parent] = element
             end
         else
             if not isElement(radioButtonSelected.noParent) then

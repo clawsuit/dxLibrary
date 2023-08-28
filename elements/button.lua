@@ -1,4 +1,4 @@
-function dxButton(x, y, w, h, text, parent, rounded)
+function dxButton(x, y, w, h, text, parent, rounded, colorback, colortext, colorselected)
 
 	local self, element = createElement('dxButton', parent, sourceResource)
 	if self then
@@ -17,9 +17,9 @@ function dxButton(x, y, w, h, text, parent, rounded)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.buttonbackground
-		self.colortext = back.buttontext
-		self.colorselected = front.buttonselected
+		self.colorbackground = colorback or back.buttonbackground
+		self.colortext = colortext or back.buttontext
+		self.colorselected = colorselected or front.buttonselected
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x

@@ -1,4 +1,4 @@
-function dxLabel( x, y, w, h, text, parent, alignX, alignY, border)
+function dxLabel( x, y, w, h, text, parent, alignX, alignY, border, colortext, colorborder)
 	
 	local self, element = createElement( 'dxLabel', parent, sourceResource )
 	if self then
@@ -15,8 +15,8 @@ function dxLabel( x, y, w, h, text, parent, alignX, alignY, border)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colortext = tocolor(255, 255, 255, 255)
-		self.colorborder = self.colortext
+		self.colortext = colortext or tocolor(255, 255, 255, 255)
+		self.colorborder = colorborder or self.colortext
 		--
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )

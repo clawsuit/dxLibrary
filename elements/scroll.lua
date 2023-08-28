@@ -1,4 +1,4 @@
-function dxScroll(x, y, wh, vertical, parent, rounded)
+function dxScroll(x, y, wh, vertical, parent, rounded, colorback, colorboton, colortext)
 
 	local self, element = createElement('dxScroll', parent, sourceResource)
 	if self then
@@ -26,8 +26,9 @@ function dxScroll(x, y, wh, vertical, parent, rounded)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
         
-		self.colorbackground = back.scrollbackground
-		self.colorboton = front.scrollboton
+		self.colorbackground = colorback or back.scrollbackground
+		self.colorboton = colorboton or front.scrollboton
+		self.colortext = colortext or -1
 		--
 		self.cursorY = 0
 		self.cursorX = 0
@@ -64,6 +65,21 @@ function dxScrollGetCurrentPosition(element)
 	end
 	return false
 end
+
+function dxScrollSetCurrentPosition(element, current)
+	local self = Cache[element]
+	if self then
+
+		local current = tonumber(current)
+		if not current then return end
+		if current > 1 then current = 1 end
+		if current < 0 then current = 0 end
+
+		self.newCurrent = current
+	end
+	return false
+end
+
 
 function dxScrollSetColorButton(element, r, g, b, a)
 	local self = Cache[element]

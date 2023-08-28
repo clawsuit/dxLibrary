@@ -1,4 +1,4 @@
-function dxEdit(x, y, w, h, title, parent, rounded)
+function dxEdit(x, y, w, h, title, parent, rounded, colorback, colortile, colorborder, colorselected)
 
 	local self, element = createElement('dxEdit', parent, sourceResource)
 	if self then
@@ -19,11 +19,11 @@ function dxEdit(x, y, w, h, title, parent, rounded)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.editbackground
-		self.colortitle = back.edittitle
+		self.colorbackground = colorback or back.editbackground
+		self.colortitle = colortile or back.edittitle
 		--
-		self.colorborder = front.editborder
-		self.colorselected = front.editselected
+		self.colorborder = colorborder or front.editborder
+		self.colorselected = colorselected or front.editselected
 		--
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )

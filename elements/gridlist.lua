@@ -1,4 +1,4 @@
-function dxGridList( x, y, w, h, parent)
+function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, colorScrollBack, colorScrollBoton, colorScrollText)
 	
 	local self, element = createElement( 'dxGridList', parent, sourceResource )
 	if self then
@@ -12,9 +12,9 @@ function dxGridList( x, y, w, h, parent)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = back.gridlistbackground
-		self.colortext = back.gridlisttext
-		self.colorselected = front.gridlistselected
+		self.colorbackground = colorback or back.gridlistbackground
+		self.colortext = colortext or back.gridlisttext
+		self.colorselected = colorselected or front.gridlistselected
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -24,8 +24,8 @@ function dxGridList( x, y, w, h, parent)
         self.font = Files['font']['Basic-Regular'][10]
         self.fontH = dxGetFontHeight( 1, self.font )
         --
-  		self.scrollV = dxScroll(self.x+self.w-math.round(17*sh), self.y, self.h, true, parent)
-  		self.scrollH = dxScroll(self.x, self.y+self.h-math.round(17*sh), self.w-math.round(17*sh), false, parent)
+  		self.scrollV = dxScroll(self.x+self.w-math.round(17*sh), self.y, self.h, true, parent, false, colorScrollBack, colorScrollBoton, colorScrollText)
+  		self.scrollH = dxScroll(self.x, self.y+self.h-math.round(17*sh), self.w-math.round(17*sh), false, parent, false, colorScrollBack, colorScrollBoton, colorScrollText)
 
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
@@ -60,6 +60,18 @@ function dxGridListClear(element)
 		self.update2 = true
 		return true
 	end
+end
+
+function dxGridListFindItem(element, column, item)
+	local self = Cache[element]
+	if self then
+		for i, v in ipairs(self.items) do
+			if v[column] == item then
+				return i,v
+			end
+		end
+	end
+	return false
 end
 
 function dxGridListAddItem(element, ...)
@@ -100,7 +112,7 @@ function dxGridListAddColumn(element, name, size, alingX)
 	if self then
 		table.insert(self.columns, {name, size, alingX or 'left'})
 		self.update = true
-		return name
+		return #self.columns
 	end
 	return false
 end
