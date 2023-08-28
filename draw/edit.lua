@@ -326,3 +326,15 @@ end
 
 
 
+addEventHandler("onClientPaste", root, function(text)
+    if isElement(onBox) then
+    	local self = Cache[onBox]
+		if self then
+			if self.isVisible then
+    			for i = 1, #text do
+                    writeInBox(onBox, text:sub(i,i))
+                end
+            end
+        end
+    end
+end)
