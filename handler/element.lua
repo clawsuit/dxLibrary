@@ -355,7 +355,7 @@ function dxFont(path, size, bold)
             Files['font'][name] = Files['font'][name] or {}
             --
             if not isElement(Files['font'][name][tonumber(size)]) then
-                Files['font'][name][tonumber(size)] = DxFont(path, tonumber(size), bold )
+                Files['font'][name][tonumber(size)] = DxFont(path, tonumber(size)*sw, bold )
                 table.insert(resourceFonts[(sourceResource or resource)], Files['font'][name][tonumber(size)])
             end
 
