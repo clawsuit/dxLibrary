@@ -34,7 +34,7 @@ addEventHandler( "onClientResourceStart", resourceRoot,
                     Files['font'][name] = {}
                     --
                     for i = 2, #v do
-                        Files['font'][name][v[i][1]] = DxFont('files/font/'..v[1], v[i][1], v[i][2] )
+                        Files['font'][name][v[i][1]] = DxFont('files/font/'..v[1], v[i][1]*sw, v[i][2] )
                     end
 
                 end
