@@ -1,4 +1,4 @@
-function dxTabPanel( x, y, w, h, parent, rounded, vertical, width, colorback, colortext, colorselected)
+function dxTabPanel( x, y, w, h, parent, rounded, vertical, columnWidth, colorbackground, colortext, colorselected)
 	
 	local self, element = createElement( 'dxTabPanel', parent, sourceResource )
 	if self then
@@ -8,12 +8,12 @@ function dxTabPanel( x, y, w, h, parent, rounded, vertical, width, colorback, co
 		self.w = math.round(w)
 		self.h = math.round(h)
 		self.parent = parent
-        self.rounded = rounded and 10 or false
+        self.rounded = tonumber(rounded) or rounded == true and 10 or false
 
         local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorback or back.tabbackground
+		self.colorbackground = colorbackground or back.tabbackground
 		self.colortext = colortext or back.tabtext
 		self.colorselected = colorselected or front.tabselected
 
@@ -22,7 +22,7 @@ function dxTabPanel( x, y, w, h, parent, rounded, vertical, width, colorback, co
         self.fontH = dxGetFontHeight( 1, self.font )
         --
         self.vertical = vertical
-        self.columnWidth = width or 0
+        self.columnWidth = columnWidth or 0
         self.columnLineVisible = true
 
         --
@@ -33,8 +33,8 @@ function dxTabPanel( x, y, w, h, parent, rounded, vertical, width, colorback, co
             self.offsetY = self.y - Cache[self.parent].y
         end
 
-        if tonumber(self.rounded) and not width then
-            local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, border,  border and self.colorborder or false)
+        if tonumber(self.rounded) and not columnWidth then
+            local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
             self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
         else
             self.update = true

@@ -1,4 +1,4 @@
-function dxSwitchButton(x, y, w, h, parent, colorback, coloron, coloroff)
+function dxSwitchButton(x, y, w, h, parent, colorbackground, colorOn, colorOff)
 	
 	local self, element = createElement( 'dxSwitchButton', parent, sourceResource )
 	if self then
@@ -12,9 +12,9 @@ function dxSwitchButton(x, y, w, h, parent, colorback, coloron, coloroff)
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorback or back.switchbuttonbackground
-		self.colorOn = coloron or front.switchbuttonOn
-		self.colorOff = coloroff or front.switchbuttonOff
+		self.colorbackground = colorbackground or back.switchbuttonbackground
+		self.colorOn = colorOn or front.switchbuttonOn
+		self.colorOff = colorOff or front.switchbuttonOff
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -28,11 +28,13 @@ function dxSwitchButton(x, y, w, h, parent, colorback, coloron, coloroff)
 	
 	end
 end
-
+ 
 function dxSwitchButtonSetState(element, bool)
 	local self = Cache[element]
 	if self then
 		self.state = bool
+		self.tick = getTickCount()
+		self.update = true
 		return true
 	end
 	return false
@@ -50,6 +52,7 @@ function dxSwitchButtonSetColorOn(element, r, g, b, a)
 	local self = Cache[element]
 	if self then
 		self.colorOn = tocolor(r, g, b, a)
+		self.update = true
 		return true
 	end
 	return false
@@ -59,6 +62,7 @@ function dxSwitchButtonSetColorOff(element, r, g, b, a)
 	local self = Cache[element]
 	if self then
 		self.colorOff = tocolor(r, g, b, a)
+		self.update = true
 		return true
 	end
 	return false

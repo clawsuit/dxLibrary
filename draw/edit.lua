@@ -4,6 +4,11 @@ function Render.dxEdit(element, parent, offX, offY)
 	if self then
 
 		if not self.isVisible then
+			if onBox == element or onBoxBackup == element then
+	 			onBox = nil
+				onBoxBackup = nil
+	 			guiSetInputEnabled(false)
+	 		end
 			return
 		end
 
@@ -21,6 +26,12 @@ function Render.dxEdit(element, parent, offX, offY)
 		x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 		
 		local color = self.colorborder
+		local postgui
+		if self.postgui then
+			if not isElement(self.parent) then
+				postgui = true
+			end
+		end
 
 		if onBox == element then
 			if self.currentColor ~= self.colorselected then
@@ -37,8 +48,12 @@ function Render.dxEdit(element, parent, offX, offY)
 		local color = self.currentColor
 		if self.update or CLIENT_RESTORE then
 
-			if not self.rendertarget then
-				self.rendertarget = DxRenderTarget(self.w, self.h, true)
+			if isElement(self.rendertarget) then
+				self.rendertarget:destroy()
+			end
+
+			if not isElement(self.rendertarget) then
+				self.rendertarget = DxRenderTarget(math.round(self.w), math.round(self.h), true)
 			end
 
 			self.rendertarget:setAsTarget(false)
@@ -46,10 +61,14 @@ function Render.dxEdit(element, parent, offX, offY)
 				if self.svg then
 
 					local alpha = bitExtract(self.colorbackground,24,8)
-					if self.currentColor ~= self.colorselected then					
-						dxDrawImage(1, 1, self.w-2, self.h-2, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), false)
+					if self.currentColor ~= self.colorselected then
+						if isElement(self.svg) then			
+							dxDrawImage(1, 1, self.w-2, self.h-2, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), false)
+						end
 					else
-						dxDrawImage(1, 1, self.w-2, self.h-2, self.svg2, 0, 0, 0, tocolor(255,255,255,alpha), false)
+						if isElement(self.svg2) then
+							dxDrawImage(1, 1, self.w-2, self.h-2, self.svg2, 0, 0, 0, tocolor(255,255,255,alpha), false)
+						end
 					end
 
 				else
@@ -77,34 +96,34 @@ function Render.dxEdit(element, parent, offX, offY)
 
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 			dxSetBlendMode("blend")
 		end
 
 		
 		if self.text:len() == 0 then
-			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, false, false)
+			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, postgui, false)
 		else
 
 			local text = self.text:sub(self.caretA, self.caretB)
 			if self.masked then
 				text = text:gsub('.', '●')
 			end
-			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, false, false)
+			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, postgui, false)
 		end
 
 
-		if getKeyState( 'mouse1' ) and not self.click and not self.isDisabled then
-			if isCursorOver(x2, y2, self.w, self.h) then
-				onBox = element
-				guiSetInputEnabled(true)
-			else
-				if onBox == element then
-					onBox = nil
-					guiSetInputEnabled(false)
-				end
-			end
-		end
+		-- if getKeyState( 'mouse1' ) and not self.click and not self.isDisabled then
+		-- 	if isCursorOver(x2, y2, self.w, self.h) then
+		-- 		onBox = element
+		-- 		guiSetInputEnabled(true)
+		-- 	else
+		-- 		if onBox == element then
+		-- 			onBox = nil
+		-- 			guiSetInputEnabled(false)
+		-- 		end
+		-- 	end
+		-- end
 
 		if onBox == element then
 
@@ -200,22 +219,27 @@ function writeInBox(element, c, bool)
 			return
 		end
 		
-		local parent = self.parent
-		local x, y, x2, y2 = self.x, self.y, self.x, self.y
-		if isElement(parent) then
-			x, y = self.offsetX, self.offsetY
-			x2, y2 = Cache[parent].x + x, Cache[parent].y + y
-		end
-
+		
+		-- local parent = self.parent
+		-- local x, y, x2, y2 = self.x, self.y, self.x, self.y
+		-- if isElement(parent) then
+		-- 	x, y = self.offsetX, self.offsetY
+		-- 	x2, y2 = Cache[parent].x + x, Cache[parent].y + y
+		-- end
+		local newText = self.text:sub(1, math.max(1, self.caretC)) .. c .. self.text:sub(self.caretC+1)
 		local text = self.text:sub(self.caretA, self.caretB)
+
 		local lw = dxGetTextWidth(c, 1, self.font )
 		local tw = dxGetTextWidth(text, 1, self.font )+lw
+
+		triggerEvent('onEditChange', element, newText, c)
+		if wasEventCancelled(  ) then return end
 		
 		if self.caretC == 0 then
 			self.caretA = math.max(1, self.caretA - 1)
 		end
 		
-		self.text = self.text:sub(1, math.max(1, self.caretC)) .. c .. self.text:sub(self.caretC+1)
+		self.text = newText
 		self.caretB = self.caretB + 1
 		self.caretC = self.caretC + 1
 
@@ -232,28 +256,6 @@ function writeInBox(element, c, bool)
 			tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB), 1, self.font )
 
 		end
-
-		-- if (c == 'ň') or (c == 'Ň') then
-		-- 	if self.caretC < #self.text then
-
-		-- 		self.caretC = self.caretC + 2
-
-		-- 		local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
-				
-		-- 		--if self.caretA < self.caretA1 then
-		-- 			while tw >= (self.w-10) do
-
-		-- 				self.caretA = self.caretA + 1
-		-- 				self.caretB = self.caretB + 1
-		-- 				self.caretC = self.caretC - 1
-
-		-- 				tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretC ), 1, self.font )
-						
-						
-		-- 			end
-		-- 		--end
-		-- 	end
-		-- end
 		
 	end
 end
@@ -279,6 +281,7 @@ function deleteTextInBox(element)
 
 				if self.caretC > 0 then
 
+					local letra = self.text:sub(self.caretC, self.caretC)
 					self.text = self.text:sub(1, self.caretC-1) .. self.text:sub(self.caretC+1)
 
 					if self.caretC == 1 then
@@ -299,7 +302,7 @@ function deleteTextInBox(element)
 						self.caretC = self.caretC - 1
 					end
 
-					
+					triggerEvent('onEditChange', element, self.text)
 
 					local tw = dxGetTextWidth(self.text:sub(self.caretA, self.caretB ), 1, self.font )
 					while tw >= (self.w-10) and self.caretB > 0 do

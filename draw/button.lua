@@ -29,8 +29,6 @@ function Render.dxButton(element, parent, offX, offY)
 
 				 	if getKeyState( 'mouse1' ) and not self.click then
 				 		self.r = 1
-
-				 		triggerEvent('onClick', element)
 				 	end
 
 			 		color = self.colorselected
@@ -45,21 +43,25 @@ function Render.dxButton(element, parent, offX, offY)
 			color = self.colorselected
 			--self.update = true
 		end
-
+ 
 		if self.update then
 
-			if not isElement(self.rendertarget) then
-				self.rendertarget = DxRenderTarget(self.w, self.h, true)
+			if isElement(self.rendertarget) then
+				self.rendertarget:destroy()
 			end
 
-			self.rendertarget:setAsTarget(true)
+			if not isElement(self.rendertarget) then
+				self.rendertarget = DxRenderTarget(math.round(self.w), math.round(self.h), true)
+			end
+
+			self.rendertarget:setAsTarget()
 			dxSetBlendMode( 'modulate_add' )
-				if self.svg then
+
+				if isElement(self.svg) then
 					dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, -1, false)
 				else
 					dxDrawRectangle(0, 0, self.w, self.h, -1, false)
 				end
-
 				--dxDrawText2('hola boton', 0, 0, self.w, self.h, self.colortext, 1, self.font, 'center', 'center', false, false, false, false)
 
 			dxSetBlendMode("blend")
@@ -74,14 +76,21 @@ function Render.dxButton(element, parent, offX, offY)
 			end
 		end
 
+		local postgui
+		if self.postgui then
+			if not isElement(self.parent) then
+				postgui = true
+			end
+		end
+
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, false)
+				dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, postgui)
 			dxSetBlendMode("blend")
 		end
 
 		dxSetBlendMode( 'modulate_add' )
-			dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+			dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, postgui, false)
 		dxSetBlendMode("blend")
 
 		self.click = getKeyState( 'mouse1' )

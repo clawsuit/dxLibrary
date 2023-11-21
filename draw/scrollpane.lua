@@ -21,16 +21,31 @@ function Render.dxScrollPane(element, parent, offX, offY)
         x, y = x + (offX or 0), y + (offY or 0)
         x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 
+        if isElement(self.rendertarget) then
+            local width, height = dxGetMaterialSize( self.rendertarget )
+            if self.w ~= width or height ~= self.h then
+                self.rendertarget:destroy()
+                self.update = true
+            end
+        end
+
         if not isElement(self.rendertarget) then
             self.rendertarget = DxRenderTarget(self.w, self.h, true)
+        end
+
+        local postgui
+        if self.postgui then
+            if not isElement(self.parent) then
+                postgui = true
+            end
         end
 
         local click = getKeyState( 'mouse1' ) and not self._click and not guiGetInputEnabled(  )
         self._click = getKeyState( 'mouse1' )
 
-        if click and isCursorOver(x2, y2, self.w, self.h) then
-            triggerEvent('onClick', element)
-        end
+        -- if click and isCursorOver(x2, y2, self.w, self.h) then
+        --     triggerEvent('onClick', element)
+        -- end
 
         local restX, restY = 0, 0
         for i, v in ipairs(self.childs) do
@@ -101,6 +116,9 @@ function Render.dxScrollPane(element, parent, offX, offY)
 
             for i, v in ipairs(self.childs) do
                 if isElement(v) then
+
+                    Cache[v].offX = offX
+                    Cache[v].offY = offY
                     Render[v.type](v, element, offX, offY)
                 end
             end
@@ -115,7 +133,7 @@ function Render.dxScrollPane(element, parent, offX, offY)
 
         if isElement(self.rendertarget) then
             dxSetBlendMode("add")
-                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
             dxSetBlendMode("blend")
         end
     end

@@ -1,4 +1,4 @@
-function dxScroll(x, y, wh, vertical, parent, rounded, colorback, colorboton, colortext)
+function dxScroll(x, y, wh, vertical, parent, rounded, colorbackground, colorboton, colortext)
 
 	local self, element = createElement('dxScroll', parent, sourceResource)
 	if self then
@@ -9,24 +9,26 @@ function dxScroll(x, y, wh, vertical, parent, rounded, colorback, colorboton, co
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )
 
-		if vertical then
+		self.vertical = vertical
+		self.rounded = tonumber(rounded) or rounded == true and 4 or false
+		self.wh = math.round(wh)
+
+		if self.vertical then
 			self.pos = self.y + self.fontH
 			self.w = math.round(17*sh)
-			self.h = math.round(wh)
+			self.h = self.wh
 		else
 			self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
-			self.w = math.round(wh)
+			self.w = self.wh
 			self.h = math.round(17*sh)
 		end
 
-		self.vertical = vertical
-		self.rounded = rounded and 4 or false
-		--
+		
 
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
         
-		self.colorbackground = colorback or back.scrollbackground
+		self.colorbackground = colorbackground or back.scrollbackground
 		self.colorboton = colorboton or front.scrollboton
 		self.colortext = colortext or -1
 		--
@@ -58,6 +60,33 @@ function dxScroll(x, y, wh, vertical, parent, rounded, colorback, colorboton, co
 
 end
 
+function dxScrollSetVertical(element, state)
+	local self = Cache[element]
+	if self then
+		self.vertical = state
+
+		if self.vertical then
+			self.pos = self.y + self.fontH
+			self.w = math.round(17*sh)
+			self.h = self.wh
+		else
+			self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
+			self.w = self.wh
+			self.h = math.round(17*sh)
+		end
+
+		if self.parent then
+			if not self.vertical then
+	    		self.posOff = self.pos - Cache[self.parent].x
+	    	else
+	    		self.posOff = self.pos - Cache[self.parent].y
+	    	end
+	    end
+
+		self.update = true
+	end
+	return false
+end
 function dxScrollGetCurrentPosition(element)
 	local self = Cache[element]
 	if self then

@@ -1,5 +1,5 @@
-dxLibraryThemeBackSelected = 2
-dxLibraryThemeFrontSelected = 2
+dxLibraryThemeBackSelected = 1
+dxLibraryThemeFrontSelected = 1
 
 dxLibraryThemes = {
     back = {
@@ -13,14 +13,14 @@ dxLibraryThemes = {
             radiotext = tocolor(255, 255, 255, 255),
             radiobackground = tocolor( 36, 36, 53, 255 ),
 
-            buttonbackground = tocolor(120, 95, 205, 255),
+            buttonbackground = tocolor(70, 46, 150, 255),
             buttontext = tocolor(255, 255, 255, 255),
             
             checkBoxbackground = tocolor( 25, 25, 35, 255 ),
             checkBoxtext = tocolor( 255, 255, 255 ),
 
-            editbackground = tocolor(14, 14, 23, 255),
-            edittitle = tocolor(255, 255, 255, 255),
+            editbackground = tocolor(255,255,255,255),
+            edittitle = tocolor(0, 0, 0, 255),
 
             gridlistbackground = tocolor( 20, 20, 30, 255 ),
             gridlisttext = tocolor(255, 255, 255, 255),
@@ -76,27 +76,27 @@ dxLibraryThemes = {
     front = {
         [1] = {
             windowborder = tocolor(14, 14, 23, 255),
-            tabselected = tocolor(120, 95, 205, 255),
+            tabselected = tocolor(70, 46, 150, 255),
 
-            radioselected = tocolor(120, 95, 205, 255),
-            radioborder = tocolor(120, 95, 205, 255),
+            radioselected = tocolor(70, 46, 150, 255),
+            radioborder = tocolor(70, 46, 150, 255),
 
             buttonselected = tocolor(65, 40, 145, 255),
             checkBoxborder = tocolor( 51, 33, 112, 255 ),
             checkBoxchecker = -1,
 
             editborder = tocolor(51, 33, 112, 255),
-            editselected = tocolor(120, 95, 205, 255),
+            editselected = tocolor(70, 46, 150, 255),
 
-            gridlistselected = tocolor(120, 95, 205, 255),
+            gridlistselected = tocolor(70, 46, 150, 255),
 
-            listselected = tocolor(120, 95, 205, 255),
+            listselected = tocolor(70, 46, 150, 255),
 
-            progressbarprogress = tocolor(120, 95, 205, 255),
+            progressbarprogress = tocolor(70, 46, 150, 255),
 
-            scrollboton = tocolor(120, 95, 205, 255),
+            scrollboton = tocolor(70, 46, 150, 255),
 
-            switchbuttonOn = tocolor(120, 95, 205),
+            switchbuttonOn = tocolor(70, 46, 150),
             switchbuttonOff = tocolor(255, 0, 0),
         },
         [2] = {

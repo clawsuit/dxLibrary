@@ -6,6 +6,10 @@ function Render.dxScroll(element, parent, offX, offY)
 		if not self.isVisible then
 			return
 		end
+ 
+		if self.forcedVisibleFalse then
+			return
+		end
 
 		local x, y, x2, y2, pos, pos2 = self.x, self.y, self.x, self.y, self.pos, self.pos
 		if isElement(parent) then
@@ -32,13 +36,36 @@ function Render.dxScroll(element, parent, offX, offY)
 
 		local xw,xh = 8.5*sh, 17*sh
 
+		if isElement(self.subParent) and Cache[self.subParent].postgui and not Cache[self.subParent].isVisible then
+			return
+		end
+
+		local postgui
+        if self.postgui or isElement(self.subParent) and Cache[self.subParent].postgui then
+            if not isElement(self.parent) then
+                postgui = true
+            end
+        end
+
+        if isElement(self.rendertarget) then
+			local width, height = dxGetMaterialSize( self.rendertarget )
+			if self.w ~= width or height ~= self.h then
+				--self.rendertarget:destroy()
+				self.update = true
+			end
+		end
+
 		if self.update then--or CLIENT_RESTORE then
 
-			if not isElement(self.rendertarget) then
-				self.rendertarget = DxRenderTarget(self.w, self.h, true)
+			if isElement(self.rendertarget) then
+				self.rendertarget:destroy()
 			end
 
-			self.rendertarget:setAsTarget(true)
+			if not isElement(self.rendertarget) then
+				self.rendertarget = DxRenderTarget(math.round(self.w), math.round(self.h), true)
+			end
+
+			self.rendertarget:setAsTarget()
 			dxSetBlendMode( 'modulate_add' )
 
 				local alpha = bitExtract(self.colorbackground,24,8)
@@ -49,8 +76,8 @@ function Render.dxScroll(element, parent, offX, offY)
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
 
-					dxDrawText('➤', 0, 0.5, xw*2, self.h+.5, -1, 1, self.font, 'center', 'center', true, true, false, false, false, 178)
-					dxDrawText('➤', self.w-xw*2, 0, (xw*2)+self.w-xw*2, self.h-2.5, -1, 1, self.font, 'center', 'center', true, true, false, false)
+					dxDrawText('➤', 0, 0.5, xw*2, self.h+.5, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, 178)
+					dxDrawText('➤', self.w-xw*2, 0, (xw*2)+self.w-xw*2, self.h-2.5, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
 				else
 					if self.svg then
 						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha))
@@ -59,10 +86,10 @@ function Render.dxScroll(element, parent, offX, offY)
 					end
  					
  
-					dxDrawText('➤', -1, 0, self.w-1, xh, -1, 1, self.font, 'center', 'center', true, true, false, false, false, -90)
-					--dxDrawText('▲', 0, -1, self.w, xh-1, -1, 1, self.font, 'center', 'center', true, true, false, false)
-					--dxDrawText('▼', 0, self.h-xh, self.w, self.h, -1, 1, self.font, 'center', 'center', true, true, false, false)
-					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, -1, 1, self.font, 'center', 'center', true, true, false, false, false, 90)
+					dxDrawText('➤', -1, 0, self.w-1, xh, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, -90)
+					--dxDrawText('▲', 0, -1, self.w, xh-1, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+					--dxDrawText('▼', 0, self.h-xh, self.w, self.h, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, 90)
 				end
 
 			dxSetBlendMode("blend")
@@ -77,7 +104,7 @@ function Render.dxScroll(element, parent, offX, offY)
 
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 			dxSetBlendMode("blend")
 		end
 
@@ -107,8 +134,18 @@ function Render.dxScroll(element, parent, offX, offY)
 				self.dist = getDistanceBetweenPoints2D( 0, (pos)+sizeW, 0, (x+self.w)-(xw*2))
 			end
 
+			if self.newCurrent then
+
+				local diff = (x+self.w)-(sizeW+xw*2) - (x+xw*2)
+				self.bpos = (x+xw*2) + (diff*self.newCurrent)
+
+				self.newCurrent = nil
+			end
+
 			self.bpos = self.bpos or pos
-			dxDrawRectangle(self.bpos, y, sizeW, self.h, self.colorboton, false)
+			--print((x+xw*2), self.bpos, (x+self.w)-(sizeW+xw*2))
+
+			dxDrawRectangle(self.bpos, y, sizeW, self.h, self.colorboton, postgui)
 
 			local current = 1-math.min(1, getDistanceBetweenPoints2D( 0, self.bpos+sizeW, 0, (x+self.w)-(xw*2))/self.dist)
 
@@ -158,8 +195,16 @@ function Render.dxScroll(element, parent, offX, offY)
 				self.dist = getDistanceBetweenPoints2D( 0, (y+xh)+sizeH, 0, (y+self.h)-(xh))
 			end
 
+			if self.newCurrent then
+
+				local diff = (y+self.h)-(sizeH+xh) - (y+xh)
+				self.bpos = (y+xh) + (diff*self.newCurrent)
+
+				self.newCurrent = nil
+			end
+
 			self.bpos = self.bpos or (y+xh)
-			dxDrawRectangle(x, self.bpos, self.w, sizeH, self.colorboton, false)
+			dxDrawRectangle(x, self.bpos, self.w, sizeH, self.colorboton, postgui)
 
 			local current = 1-math.min(1, getDistanceBetweenPoints2D( 0, self.bpos+sizeH, 0, (y+self.h)-(xh))/self.dist)
 			
@@ -183,13 +228,13 @@ function Render.dxScroll(element, parent, offX, offY)
 
 					
 				end
-			end
+			end 
 
 			if isCursorShowing( ) then
 
 				if (isKeyPressed('mouse_wheel_up') or isKeyPressed('mouse_wheel_down')) and (self.attached and mouseOnElement == self.attached or not mouseOnElement) then
 
-					if isElement(parent) and isCursorOver(Cache[parent].x, Cache[parent].y, Cache[parent].w, Cache[parent].h) or isCursorOver(x2, y2, self.w, self.h) then
+					if isElement(parent) and isCursorOver(Cache[parent].x, Cache[parent].y, Cache[parent].w, Cache[parent].h) or isCursorOver(x2, y2, self.w, self.h) or isElement(self.subParent) and isCursorOver(Cache[self.subParent].x, Cache[self.subParent].y, Cache[self.subParent].w, Cache[self.subParent].h)then
 						self.tick = self.tick or getTickCount(  )
 
 						if isKeyPressed('mouse_wheel_up') then

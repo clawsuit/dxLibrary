@@ -15,8 +15,11 @@ function createElement(type, parent, resource)
         Cache[element].isDisabled = false
         Cache[element].isMoved = true
         Cache[element].resource = resource
+        Cache[element].postgui = true
 
-        if ElementTypeChildrenAvailable[type] then
+        table.insert(Order, element)
+
+        if dxElements.parentAvailable[type] then
             Cache[element].childs = {}
         end
 
@@ -48,10 +51,25 @@ function createElement(type, parent, resource)
     end
 end
 
+function dxIsElementParent(element)
+    return Cache[element] and dxElements.parentAvailable[Cache[element].type]
+end
+
 function dxDelete(element, check)
     local self = Cache[element]
     if self then
 
+        if onBox == element or onBoxBackup == element then
+            onBox = nil
+            onBoxBackup = nil
+            guiSetInputEnabled(false)
+        end
+
+        if self.type == 'dxMemo' then
+            memoCreated[tostring(element)] = nil
+        end
+
+        table.removeValue(Order, element)
         self.isVisible = nil
 
         if self.childs then
@@ -100,8 +118,29 @@ function dxDelete(element, check)
     end
 end
 
+function dxSetPostGui(element, bool)
+    local self = Cache[element]
+    if self then
+        self.postgui = bool
+    end
+end
 
-function dxSet(element, key, value)
+function dxSetToFront(element)
+	local self = Cache[ element ]
+	if self then
+		table.removeValue(Order, element)
+        table.insert(Order, element)
+        --
+        if self.childs then
+            for i, child in pairs(self.childs) do
+                table.removeValue(Order, child)
+                table.insert(Order, child)
+            end
+        end
+	end
+end
+
+function dxSetProperty(element, key, value)
     local self = Cache[element]
     if self then
 
@@ -120,8 +159,26 @@ function dxSet(element, key, value)
             else
                 self[key] = value
             end
+        elseif elementType:find('color') or key == 'border' then
+            self[key] = value
+            dxCreateRoundedSVG(element)
+        elseif elementType == 'dxMemo' and key == 'title' then
+
+            cefSetProperty(element, 'placeholder', value)
+            self[key] = value
+
         else
             self[key] = value
+        end
+
+        if key == 'parent' then
+            if isElement(self.parent) then
+                self.offsetX = self.x - Cache[self.parent].x
+                self.offsetY = self.y - Cache[self.parent].y
+            else
+                self.offsetX = nil
+                self.offsetY = nil
+            end
         end
 
         self.update = true
@@ -129,7 +186,7 @@ function dxSet(element, key, value)
     end
 end
 
-function dxGet(element, key)
+function dxGetProperty(element, key)
     return Cache[element] and Cache[element][key]
 end
 
@@ -150,6 +207,32 @@ function dxSetText(element, text)
                     writeInBox(element, text:sub(i,i))
                 end
             end
+        elseif self.type == 'dxMemo' then
+           -- self.webBrowser:executeJavascript("cefSetProperty('"..toJSON({key=tostring(element), property='value', value = text}).."')")
+           self.text = text
+
+            -- if self.readonly then
+            --     self.webBrowser:executeJavascript(([[
+            --     document.getElementById('%s').readonly = "false";
+            --     ]]):format(tostring(element)) )
+            -- end
+
+            -- self.webBrowser:executeJavascript(([[
+            --     document.getElementById('%s').innerHTML = `%s`;
+            -- ]]):format(tostring(element), tostring(text)))
+
+            -- if self.readonly then
+            --     self.webBrowser:executeJavascript(([[
+            --     document.getElementById('%s').readonly = "true";
+            --     ]]):format(tostring(element)) )
+            -- end
+
+            cefSetPropertyMulti(element, {
+                readonly = 'false',
+                innerHTML = tostring(text),
+                readonly = 'true'
+            })
+ 
         else
             self.text = text
         end
@@ -212,6 +295,48 @@ function dxSetPosition(element, x, y)
     return false
 end
 
+function dxSetParent(element, parent)
+    local self = Cache[element]
+    if self then
+        if isElement( parent ) then
+            if dxIsElementParent(parent) then
+
+                self.parent = parent
+                self.offsetX = self.x - Cache[parent].x
+                self.offsetY = self.y - Cache[parent].y
+                
+                if isElement( parent ) then
+
+                    local parentCache = Cache[parent]
+                    if parentCache then
+
+                        if not (parentCache.type == 'dxTab' and type == 'dxTab') then
+                            if (parentCache.type == 'dxTabPanel' and type == 'dxTab') or parentCache.type ~= 'dxTabPanel' then
+
+                                if parentCache.childs then
+
+                                    --print(parentCache.type, '>', type)
+
+                                    Cache[element].parent = parent
+                                    Cache[element].rootParent = dxGetRootParent(parent) or parent
+
+                                    --print(getElementType(Cache[element].rootParent), type)
+                                    table.insert(parentCache.childs, element)
+
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            self.parent = nil
+            self.offsetX = nil
+            self.offsetY = nil
+        end
+    end
+end
+
 function dxGetPosition(element)
     local self = Cache[element]
     if self then
@@ -224,12 +349,204 @@ function dxSetSize(element, w, h)
     local self = Cache[element]
     if self then
 
-        self.w = w
-        self.h = h
+        if not (self.type == 'dxCheckBox' or self.type == 'dxRadioButton') then
 
-        return true
+            if w or h then
+
+                if w then 
+                    self.w = math.round(w)
+                end
+                if h then
+                    self.h = math.round(h)
+                end
+
+                if self.type == 'dxSwitchButton' then
+                    self.w = math.min(self.w, math.round(53*sw))
+                    self.h = math.min(self.h, math.round(23*sh))
+                elseif self.type == 'dxMemo' and self.ready then
+
+                    resizeBrowser(self.webBrowser, self.w, self.h )
+                    cefSetStylePropertyMulti(element,{
+                        width = tostring(self.w)..'px',
+                        height = tostring(self.h)..'px'
+                    })
+
+                end
+
+                if self.type ~= 'dxScrollPane' then
+                    if isElement(self.renderTarget) then
+                        self.rendertarget:destroy()
+                    end
+                    if isElement(self.renderTarget2) then
+                        self.rendertarget2:destroy()
+                    end
+                    --self.rendertarget = DxRenderTarget(self.w, self.h, true)
+                end
+
+                if tonumber(self.rounded) then
+                    dxCreateRoundedSVG(element)
+
+                else
+
+                    if self.type == 'dxScrollPane' then
+
+                        local new = DxRenderTarget(self.w, self.h, true)
+                        local old = self.rendertarget
+
+                        self.rendertarget = new
+                        if isElement(old) then
+                            old:destroy()
+                        end
+                       
+                    end
+                end
+
+                self.update = true
+                return true
+
+            end
+        end
     end
     return false
+end
+
+function dxSetRounded(element, rounded)
+    local self = Cache[element]
+    if self then
+
+        if not dxElements.defaultRounded[self.type] then return false end
+
+        self.rounded = rounded
+
+        if self.type == 'dxMemo' then
+
+            local round = self.rounded or 0
+            cefSetStyleProperty(element, 'border-radius', tostring(round)..'px')
+
+            return
+        end
+        
+        if isElement(self.svg) then
+            self.svg:destroy()
+            self.svg = nil
+        end
+
+        if isElement(self.svg2) then
+            self.svg2:destroy()
+            self.svg2 = nil
+        end
+
+        -- if isElement(self.rendertarget2) then
+        --     self.rendertarget2:destroy()
+        -- end
+
+        -- if isElement(self.rendertarget) then
+        --     self.rendertarget:destroy()
+        -- end
+
+        if not rounded then
+            self.update = true
+            return 
+        end
+
+        if rounded == true then
+            self.rounded = dxElements.defaultRounded[self.type]
+        elseif tonumber(rounded) then
+            self.rounded = tonumber(rounded)
+        end
+        
+        if self.rounded then
+            dxCreateRoundedSVG(element)
+        end
+    end
+end
+
+function dxCreateRoundedSVG(element)
+    local self = Cache[element]
+    if self then
+
+        if self.type == 'dxMemo' then return end;
+
+        if self.rounded then
+            local color = self.colorbackground
+
+            if self.type == 'dxButton' or self.type == 'dxProgressBar' then
+                color = -1
+            end
+
+            if isElement(self.svg) then
+                self.svg:destroy()
+                self.svg = nil
+            end
+    
+            if isElement(self.svg2) then
+                self.svg2:destroy()
+                self.svg2 = nil
+            end
+    
+            -- if isElement(self.rendertarget2) then
+            --     self.rendertarget2:destroy()
+            -- end
+    
+            -- if isElement(self.rendertarget) then
+            --     self.rendertarget:destroy()
+            -- end
+
+            local rawSvgData
+
+            if self.type == 'dxCheckBox' then
+                rawSvgData = ([[
+                <svg width="%dpx" height="%dpx">
+                <circle cx="%d" cy="%d" r="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px"/>
+                </svg>]]):format(self.w+2, self.h+2, (self.w/2)+1, (self.w/2)+1, self.w/2)
+
+            elseif self.type == 'dxEdit' then
+
+                rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
+                --
+                local rawSvgData2 = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, 2, self.colorselected)
+  			    self.svg2 = svgCreate(self.w, self.h, rawSvgData2, function() self.update = true end)
+
+            elseif self.type == 'dxRadioButton' then
+
+                rawSvgData = ([[
+                <svg width="%dpx" height="%dpx">
+                <circle cx="%d" cy="%d" r="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px"/>
+                </svg>]]):format(self.w+2, self.h+2, self.rounded+1,self.rounded+1,self.rounded)
+
+                local rawSvgData2 = ([[
+                <svg width="%dpx" height="%dpx">
+                <circle cx="%d" cy="%d" r="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px"/>
+                <circle cx="%d" cy="%d" r="%d" fill="]]..colorToHex(self.colorselected)..[["/>
+                </svg>]]):format(self.w+2, self.h+2, self.rounded+1, self.rounded+1, self.rounded, self.rounded+1, self.rounded+1, self.rounded/2)
+
+                self.svg2 = svgCreate(self.w, self.h, rawSvgData2, function() self.update = true end)
+
+            elseif self.type == 'dxTabPanel' and (not self.columnWidth or self.columnWidth == 0) then
+                rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
+            else
+                rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, color, self.border,  self.border and self.colorborder or false)
+            end
+
+            if rawSvgData then
+                self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
+            end
+        else
+            if self.type == 'dxCheckBox' then
+                local rawSvgData = ([[
+                <svg width="%d" height="%d">
+                    <rect x='0.5' y='0.5' width="%d" height="%d" fill="]]..colorToHex(self.colorbackground)..[[" stroke="]]..colorToHex(self.colorborder)..[[" stroke-width="2px" /> 
+                    <text x="0" y="2" fill="red">I love SVG!</text>
+                </svg>
+                ]]):format(self.w, self.h, self.w-1, self.h-1)
+
+                self.svg = svgCreate(self.w+2, self.h+2, rawSvgData, function() self.update = true end)
+            end
+
+            self.update = true
+        end
+
+    end
 end
 
 function dxGetSize(element)
@@ -429,3 +746,120 @@ function dxGetLibrary()
     end
     return string   
 end 
+
+function dxDuplicateElement(element, includeChilds, parent)
+    local self = Cache[element]
+    if self then
+        
+        local new = _createElement(self.type)
+        Cache[new] = table.deepcopy(self)
+        
+        if isElement(parent) then
+            Cache[new].parent = parent
+            Cache[new].offsetX = Cache[new].x - Cache[parent].x
+            Cache[new].offsetY = Cache[new].y - Cache[parent].y
+        end
+
+        if isElement(Cache[new].parent) then
+            table.insert(Cache[ Cache[new].parent ].childs, new)
+        end
+
+        if self.type == 'dxMemo' then
+            memoCreated[tostring(new)] = new
+        end
+
+        for _, k in ipairs({'svg', 'svg2', 'rendertarget', 'rendertarget2', 'texture', 'shader', 'textureMask'}) do
+            --if isElement(Cache[new][k]) then
+                Cache[new][k] = nil
+            --end
+        end 
+
+        if self.type == 'dxImage' then
+            self.texture = isElement(self.path) and self.path or DxTexture(self.path, self.colorformat, self.mipmaps, self.textureType )
+        end
+
+        if tonumber(Cache[new].rounded) then
+            dxCreateRoundedSVG(new)
+        end
+
+        if includeChilds then
+            if self.childs then
+
+                Cache[new].childs = {}
+                for i, v in ipairs(self.childs) do
+                    table.insert(Cache[new].childs, dxDuplicateElement(v, includeChilds), new)
+                end
+
+            end
+        else
+            if self.childs then
+                Cache[new].childs = {}
+            else
+                Cache[new].childs = nil
+            end
+        end
+        
+        table.insert(Order, new)
+        setTimer(
+            function(new)
+                Cache[new].update = true
+            end,
+        500, 1, new) 
+        return new
+    end
+end
+
+
+function cefSetProperty(element, property, value)
+    local self = Cache[element]
+    if self then
+        self.webBrowser:executeJavascript(([[
+            document.getElementById('%s')['%s'] = `%s`;
+        ]]):format(tostring(element), tostring(property), tostring(value)))
+    end
+end
+
+function cefSetPropertyMulti(element, propertys)
+    local self = Cache[element]
+    if self then
+
+        local element = tostring(element)
+        local code = ''
+        for property, value in pairs(propertys) do
+            if code:len() == 0 then
+                code = ('document.getElementById("%s")["%s"] = `%s`;'):format(element, tostring(property), tostring(value))
+            else
+                code = code..'\n'..('document.getElementById("%s")["%s"] = `%s`;'):format(element, tostring(property), tostring(value))
+            end
+        end
+
+        self.webBrowser:executeJavascript(code)
+    end
+end
+
+function cefSetStyleProperty(element, property, value)
+    local self = Cache[element]
+    if self then
+        self.webBrowser:executeJavascript(([[
+            document.getElementById('%s').style['%s'] = `%s`;
+        ]]):format(tostring(element), tostring(property), tostring(value)))
+    end
+end
+
+function cefSetStylePropertyMulti(element, propertys)
+    local self = Cache[element]
+    if self then
+
+        local element = tostring(element)
+        local code = ''
+        for property, value in pairs(propertys) do
+            if code:len() == 0 then
+                code = ('document.getElementById("%s").style["%s"] = `%s`;'):format(element, tostring(property), tostring(value))
+            else
+                code = code..'\n'..('document.getElementById("%s").style["%s"] = `%s`;'):format(element, tostring(property), tostring(value))
+            end
+        end
+
+        self.webBrowser:executeJavascript(code)
+    end
+end

@@ -1,12 +1,18 @@
-function dxLabel( x, y, w, h, text, parent, alignX, alignY, border, colortext, colorborder)
+function dxLabel( x, y, w, h, text, parent, alignX, alignY, border, colortext, colorborder, guiCoord)
 	
 	local self, element = createElement( 'dxLabel', parent, sourceResource )
 	if self then
+
+		local w, h = w, h
+		if guiCoord then
+			w = w + x
+			h = h + y
+		end
 		
 		self.x = math.round(x)
 		self.y = math.round(y)
-		self.w = math.round(w)
-		self.h = math.round(h)
+		self.w = math.max(0, math.round(w) - math.round(x))
+		self.h = math.max(0, math.round(h) - math.round(y))
 		self.text = text
 		self.parent = parent
 

@@ -1,4 +1,4 @@
-function dxScrollPane( x, y, w, h, parent, colorback)
+function dxScrollPane( x, y, w, h, parent, colorbackground)
 	
 	local self, element = createElement( 'dxScrollPane', parent, sourceResource )
 	if self then
@@ -21,7 +21,7 @@ function dxScrollPane( x, y, w, h, parent, colorback)
         self.w = math.round(w-math.round(17*sh))
         self.h = math.round(h-math.round(17*sh))
 
-        self.colorbackground = colorback or tocolor(255,255,255,0)
+        self.colorbackground = colorbackground or tocolor(255,255,255,0)
 
         self.scrollX = 0
         self.scrollY = 0

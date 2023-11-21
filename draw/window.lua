@@ -8,18 +8,56 @@ function Render.dxWindow(element)
 		end
 
 		local xw, xh = dxGetTextWidth( "✕", 1, self.font ), self.fontH
+
+		if isElement(self.rendertarget) then
+			local width, height = dxGetMaterialSize( self.rendertarget )
+			if self.w ~= width or height ~= self.h then
+				self.rendertarget:destroy()
+				self.update = true
+			end
+		end
+
+		if not isElement(self.rendertarget) then
+			self.rendertarget = DxRenderTarget(self.w, self.h, true)
+		end
+
+		local postgui = true
+        -- if self.postgui then
+        --     if not isElement(self.parent) then
+        --         postgui = true
+        --     end
+        -- end
+
+		-- if isElement(self.svg) then
+		-- 	local alpha = bitExtract(self.colorbackground,24,8)
+		-- 	dxDrawImage(self.x, self.y, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), postgui)
+		-- else
+		-- 	dxDrawRectangle(self.x, self.y, self.w, self.h, self.colorbackground, postgui)
+		-- end
+
+		-- dxDrawText2(self.title, self.x, self.y, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, postgui, false)
+		-- if self.closebutton then
+		-- 	dxDrawText2("✕", self.w-xw*2+self.x, self.y, self.w, self.h, -1, 1, self.font, 'left', 'top', false, false, postgui, false)
+		-- end
+
 		self.rendertarget:setAsTarget(true)
 		dxSetBlendMode( 'modulate_add' )
 
+			--
 			if self.update or CLIENT_RESTORE then
+
+				if isElement(self.rendertarget2) then
+					self.rendertarget2:destroy()
+				end
 
 				if not isElement(self.rendertarget2) then
 					self.rendertarget2 = DxRenderTarget(self.w, self.h, true)
 				end
 
-				self.rendertarget2:setAsTarget(true)
+				self.rendertarget2:setAsTarget(false)
 				--	
-					if self.svg then
+				--dxSetBlendMode( 'modulate_add' )
+					if isElement(self.svg) then
 						local alpha = bitExtract(self.colorbackground,24,8)
 						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), false)
 					else
@@ -31,6 +69,7 @@ function Render.dxWindow(element)
 						dxDrawText("✕", self.w-xw*2, 0, self.w, self.h, self.colortitle, 1, self.font, 'center', 'top', false, false, false, false)
 					end
 
+					--dxSetBlendMode( 'blend' )
 				dxSetRenderTarget(self.rendertarget)
 
 				self.update = nil
@@ -39,7 +78,8 @@ function Render.dxWindow(element)
 			if isElement(self.rendertarget2) then
 				dxDrawImage(0, 0, self.w, self.h, self.rendertarget2, 0, 0, 0, -1, false)
 			end
---
+			--]]
+
 			for i, v in ipairs(self.childs) do
 				if isElement(v) then
 					--if v.type ~= 'dxTabPanel' then
@@ -50,10 +90,12 @@ function Render.dxWindow(element)
 			
 		dxSetBlendMode( 'blend' )
 		dxSetRenderTarget()
+
+		
 		
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, false)
+				dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 			dxSetBlendMode("blend")
 		end
 
@@ -84,16 +126,16 @@ function Render.dxWindow(element)
 
 		end
 
-		if self.closebutton and isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
-			if getKeyState( 'mouse1' ) and not self.click then
+		-- if self.closebutton and isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
+		-- 	if getKeyState( 'mouse1' ) and not self.click then
 
-				triggerEvent('onClose', element)
-				if not wasEventCancelled(  ) then
-					self.isVisible = false
-				end
+		-- 		triggerEvent('onClose', element)
+		-- 		if not wasEventCancelled(  ) then
+		-- 			self.isVisible = false
+		-- 		end
 				
-			end
-		end
+		-- 	end
+		-- end
 
 		self.click = getKeyState( 'mouse1' )
 	end

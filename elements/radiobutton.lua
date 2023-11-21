@@ -1,6 +1,6 @@
 radioButtonSelected = {}
 
-function dxRadioButton( x, y, text, parent, colorback, colortext, colorselected, colorborder)
+function dxRadioButton( x, y, text, parent, colorbackground, colortext, colorselected, colorborder)
 	
 	local self, element = createElement( 'dxRadioButton', parent, sourceResource )
 	if self then
@@ -17,7 +17,7 @@ function dxRadioButton( x, y, text, parent, colorback, colortext, colorselected,
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
         self.colortext = colortext or back.radiotext
-		self.colorbackground = colorback or back.radiobackground
+		self.colorbackground = colorbackground or back.radiobackground
         self.colorselected = colorselected or front.radioselected
 		self.colorborder = colorborder or front.radioborder
 

@@ -33,81 +33,102 @@ function Render.dxList( element, parent, offX, offY)
 			end
 		end
 
-		dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, false)
-
-		if self.update or CLIENT_RESTORE then
-
-			if not isElement( self.rendertarget ) then
-				self.rendertarget = DxRenderTarget( self.w-math.round(20*sw), self.h-math.round(20*sh), true )
+		local postgui
+		if self.postgui then
+			if not isElement(self.parent) then
+				postgui = true
 			end
-
-			self.rendertarget:setAsTarget(true)
-			dxSetBlendMode( 'modulate_add' )
-
-				local Y = 0
-				local restY = 0
-
-				for i = 1, #self.items do
-					
-					local H = self.h/5
-					if getKeyState( 'mouse1' ) and not self.click then
-						if isCursorOver(x2, y2, self.w, self.h) then
-							if isCursorOver(x2+(10*sw), (y2+(10*sh))+(Y-(self.mul)), (self.w-(20*sw)), H) then
-
-								if self.selected == i then
-									self.selected = -1
-								else
-									self.selected = i
-									if not self.isDisabled then
-										triggerEvent('onClick', element)
-									end
-								end
-
-							else
-
-								if self.selected == i then
-									self.selected = -1
-								end
-
-							end
-						end
-					end
-
-					if self.selected == i then
-						dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorselected, false)
-					else
-						if i%2 == 1 then
-							dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorrectangle, false)
-						else
-							dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorrectangle2, false)
-						end
-					end
-
-					dxDrawText( tostring(self.items[i] or ''), 0, (Y-(self.mul)), (self.w-(20*sw)), (H)+(Y-(self.mul)), self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
-
-					Y = Y + H + ( i == #self.items and 0 or (7*sh))
-					if Y >= self.h-(20*sh) then
-						restY = Y - (self.h-(20*sh))
-					end
-
-				end
-				
-				self.scroll = restY
-
-			dxSetBlendMode("blend")
-			if isElement(parent) then
-				dxSetRenderTarget(Cache[parent].rendertarget)
-			else
-				dxSetRenderTarget()
-			end
-
-			self.update = nil
 		end
 
-		if isElement( self.rendertarget ) then
-			dxSetBlendMode("add")
-				dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), false)
-			dxSetBlendMode("blend")
+		if isElement(self.rendertarget) then
+			local width, height = dxGetMaterialSize( self.rendertarget )
+			if self.w ~= width or height ~= self.h then
+				self.rendertarget:destroy()
+				self.update = true
+			end
+		end
+
+		dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, postgui)
+
+		if self.w-20*sw >= 1 and self.h-20*sh >= 1 then
+			if self.update or CLIENT_RESTORE then
+
+				if isElement(self.rendertarget) then
+					self.rendertarget:destroy()
+				end
+
+				if not isElement(self.rendertarget) then
+					self.rendertarget = DxRenderTarget(math.round(self.w-20*sw), math.round(self.h-20*sh), true)
+				end
+
+				self.rendertarget:setAsTarget()
+				dxSetBlendMode( 'modulate_add' )
+
+					local Y = 0
+					local restY = 0
+
+					for i = 1, #self.items do
+						
+						local H = self.h/5
+						if getKeyState( 'mouse1' ) and not self.click then
+							if isCursorOver(x2, y2, self.w, self.h) then
+								if isCursorOver(x2+(10*sw), (y2+(10*sh))+(Y-(self.mul)), (self.w-(20*sw)), H) then
+
+									if self.selected == i then
+										self.selected = -1
+									else
+										self.selected = i
+										-- if not self.isDisabled then
+										-- 	triggerEvent('onClick', element)
+										-- end
+									end
+
+								else
+
+									if self.selected == i then
+										self.selected = -1
+									end
+
+								end
+							end
+						end
+
+						if self.selected == i then
+							dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorselected, false)
+						else
+							if i%2 == 1 then
+								dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorrectangle, false)
+							else
+								dxDrawRectangle(0, (Y-(self.mul)), (self.w-(20*sw)), H, self.colorrectangle2, false)
+							end
+						end
+
+						dxDrawText( tostring(self.items[i] or ''), 0, (Y-(self.mul)), (self.w-(20*sw)), (H)+(Y-(self.mul)), self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
+
+						Y = Y + H + ( i == #self.items and 0 or (7*sh))
+						if Y >= self.h-(20*sh) then
+							restY = Y - (self.h-(20*sh))
+						end
+
+					end
+					
+					self.scroll = restY
+
+				dxSetBlendMode("blend")
+				if isElement(parent) then
+					dxSetRenderTarget(Cache[parent].rendertarget)
+				else
+					dxSetRenderTarget()
+				end
+
+				self.update = nil
+			end
+
+			if isElement( self.rendertarget ) then
+				dxSetBlendMode("add")
+					dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), postgui)
+				dxSetBlendMode("blend")
+			end
 		end
 		
 

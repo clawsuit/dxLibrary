@@ -1,5 +1,5 @@
 
-function dxProgressBar(x, y, w, h, parent, rounded, colorback, colorprogress, colortext)
+function dxProgressBar(x, y, w, h, parent, rounded, colorbackground, colorprogress, colortext)
 
 	local self, element = createElement('dxProgressBar', parent, sourceResource)
 	if self then
@@ -8,12 +8,12 @@ function dxProgressBar(x, y, w, h, parent, rounded, colorback, colorprogress, co
 		self.y = math.round(y)
 		self.w = math.round(w)
 		self.h = math.round(h)
-		self.rounded = rounded and 4 or false
+		self.rounded = tonumber(rounded) or rounded == true and 4 or false
 
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorback or back.progressbarbackground
+		self.colorbackground = colorbackground or back.progressbarbackground
 		self.colorprogress = colorprogress or front.progressbarprogress
 		self.colortext = colortext or back.progressbartext
 		--
@@ -30,7 +30,7 @@ function dxProgressBar(x, y, w, h, parent, rounded, colorback, colorprogress, co
         end
 
         if tonumber(self.rounded) then
-        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, tocolor(255,255,255), border,  border and tocolor(255,255,255) or false)
+        	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, tocolor(255,255,255))
         	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
         else
         	self.update = true

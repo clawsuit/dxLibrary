@@ -1,4 +1,4 @@
-function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, colorScrollBack, colorScrollBoton, colorScrollText)
+function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, colorLine, colorScrollBack, colorScrollBoton, colorScrollText)
 	
 	local self, element = createElement( 'dxGridList', parent, sourceResource )
 	if self then
@@ -15,6 +15,7 @@ function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, co
 		self.colorbackground = colorback or back.gridlistbackground
 		self.colortext = colortext or back.gridlisttext
 		self.colorselected = colorselected or front.gridlistselected
+		self.colorLine = colorLine or tocolor(35, 35, 45, 255)
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
@@ -30,6 +31,9 @@ function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, co
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
   		Cache[self.scrollV].attached = element
+
+  		Cache[self.scrollH].subParent = element
+  		Cache[self.scrollV].subParent = element
 
         self.from = nil
         self.to = nil
@@ -99,7 +103,7 @@ function dxGridListRemoveItem(element, index)
 	if self then
 		if self.items[index] then
 			table.remove(self.items, index)
-			table.remove(colorItems, index)
+			table.remove(self.colorItems, index)
 			self.update2 = true
 			return true
 		end

@@ -15,20 +15,20 @@ if TEST then
 			--win = dxScrollPane(251*x, 21*y, 783*x, 635*y)
 			win = dxWindow(251*x, 21*y, 783*x, 635*y, 'Window DEMO', false, true)
 
-			radioB = dxRadioButton(270*x, 40*y, 'Modo de dia', win)
-			radioB2 = dxRadioButton(270*x, 65*y, 'Modo de tarde', win)
-			radioB3 = dxRadioButton(270*x, 90*y, 'Modo de noche', win)
-
 			--tabpanel = dxTabPanel(281*x, 170*y, 500*x, 400*y, win, true, false, 80*x)
-			tabpanel = dxTabPanel(281*x, 170*y, 500*x, 400*y, win, true, true, 100*x)
+			tabpanel = dxTabPanel(281*x, 170*y, 500*x, 400*y, win, true, false, 100*x)
 			
 
 			for _, c in ipairs({{'Opcions'}, {'Botones', false, false}, {'Listas'}, {'Images'}}) do
 				panes[_] = dxAddTab(tabpanel, c[1], c[2], c[3], c[4])
 			end
+
+			radioB = dxRadioButton(290*x, 220*y, 'Modo de dia', panes[3])
+			radioB2 = dxRadioButton(290*x, 245*y, 'Modo de tarde', panes[3])
+			radioB3 = dxRadioButton(290*x, 270*y, 'Modo de noche', panes[3])
 			
-			--list2 = dxGridList( 373*x, 180*y, 380*x, 150*y, win)
-			list2 = dxGridList( 1250*x, 800*y, 380*x, 150*y, win)
+			list2 = dxGridList( 373*x, 180*y, 380*x, 150*y, panes[1])
+			--list2 = dxGridList( 1250*x, 800*y, 380*x, 150*y, win)
 			bot = dxButton(1300*x, (80+149)*y, 100*x, 40*y, 'Button demo', win, true)
 
 			--if true then return end
@@ -42,10 +42,10 @@ if TEST then
 			end
 
 			--bot = dxButton(380*x, (80+149)*y, 100*x, 40*y, 'Button demo', panes[2], true)
-			bot2 = dxButton(380*x, (126+149)*y, 100*x, 40*y, 'Button demo 2', panes[2], false)
+			bot2 = dxButton(400*x, (126+149)*y, 100*x, 40*y, 'Button demo 2', panes[3], false)
 
-			sex = dxCheckBox(270*x, 120*y, 26*x, 26*x, win)
-			sex1 = dxCheckBox((270+40)*x, 120*y, 26*x, 26*x, win, true)
+			-- sex = dxCheckBox(270*x, 120*y, 26*x, 26*x, win)
+			-- sex1 = dxCheckBox((270+40)*x, 120*y, 26*x, 26*x, win, true)
 
 			edit1 = dxEdit(400*x, 40*y, 150*x, 35*y, 'edit demo 1', win, true)
 			edit2 = dxEdit(400*x, 100*y, 150*x, 35*y, 'edit demo 2', win, false)
@@ -56,7 +56,7 @@ if TEST then
 
 			bar = dxProgressBar(283*x, 596*y, 270*x, 38*y, win, true)
 
-			label1 = dxLabel(251*x, 50*y, (783+251)*x, 17+(50*y), 'Label DEMO', win, 'center', 'center')
+			label1 = dxLabel(282, 212, 780, 226, 'Label DEMO', panes[2], 'center', 'center')
 			dxSetFont(label1, 'letterbold', 10)
 
 			for i = 1, 20 do
@@ -97,8 +97,9 @@ if TEST then
 		 	end
 		elseif source == bot2 then
 			outputChatBox( "Button 2", 255, 255, 255 )
-			iprint( dxWindowGetCloseState( win ) )
-			destroyElement( win )
+			--iprint( dxRadioButtonGetSelected( radioB ) )
+			iprint( dxRadioButtonGetSelected( radioB2 ) )
+			--destroyElement( win )
 		end
 	end
 

@@ -1,4 +1,4 @@
-function dxList( x, y, w, h, parent, rounded, colorback, colortext, colorRec1, colorRec2)
+function dxList( x, y, w, h, parent, rounded, colorbackground, colortext, colorrectangle, colorrectangle2)
 	
 	local self, element = createElement( 'dxList', parent, sourceResource )
 	if self then
@@ -12,10 +12,10 @@ function dxList( x, y, w, h, parent, rounded, colorback, colortext, colorRec1, c
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorback or back.listbackground
+		self.colorbackground = colorbackground or back.listbackground
 		self.colortext = colortext or back.listtext
-		self.colorrectangle = colorRec1 or back.listrectangle
-		self.colorrectangle2 = colorRec2 or back.listrectangle2
+		self.colorrectangle = colorrectangle or back.listrectangle
+		self.colorrectangle2 = colorrectangle2 or back.listrectangle2
 
 		self.colorselected = front.listselected
 

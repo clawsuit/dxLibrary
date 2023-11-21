@@ -1,4 +1,4 @@
-function dxImage( x, y, w, h, path, parent, colorback, colorformat, mipmaps, textureType)
+function dxImage( x, y, w, h, path, parent, colorbackground, colorformat, mipmaps, textureType)
 	
 	local self, element = createElement( 'dxImage', parent, sourceResource )
 	if self then
@@ -15,7 +15,7 @@ function dxImage( x, y, w, h, path, parent, colorback, colorformat, mipmaps, tex
 		self.textureType = (textureType or "clamp")
 
 		self.texture = isElement(path) and path or DxTexture(path, self.colorformat, self.mipmaps, self.textureType )
-		self.colorbackground = colorback or -1
+		self.colorbackground = colorbackground or -1
 
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x

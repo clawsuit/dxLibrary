@@ -1,15 +1,29 @@
 Cache = {}
+Order = {}
+
 Render = {}
 resourceFonts = {}
 
 Files = {}
 checkBoxTypes = {'✓', '•', '✕'}
-ElementTypeChildrenAvailable = {
-    ['dxWindow'] = true,
-    ['dxTabPanel'] = true,
-    ['dxTab'] = true,
-    ['dxScrollPane'] = true
+
+dxElements = {
+    defaultRounded = {
+        ['dxButton'] = 6,
+        ['dxEdit'] = 13,
+        ['dxProgressBar'] = 4,
+        ['dxTabPanel'] = 10,
+        ['dxWindow'] = 10,
+        ['dxMemo'] = 5,
+    },
+
+    parentAvailable = {
+        ['dxWindow'] = true,
+        ['dxTabPanel'] = true,
+        ['dxTab'] = true,
+    }
 }
+
 
 filesAvailables = {
     {'Basic-Regular.ttf', {10, false}, {11, true}},
@@ -68,6 +82,20 @@ function svgCreateRoundedRectangle(width, height, ratio, color1, borderWidth, co
         </svg>
     ]]
     --
+end
+
+function isEventHandlerAdded( sEventName, pElementAttachedTo, func )
+    if type( sEventName ) == 'string' and isElement( pElementAttachedTo ) and type( func ) == 'function' then
+        local aAttachedFunctions = getEventHandlers( sEventName, pElementAttachedTo )
+        if type( aAttachedFunctions ) == 'table' and #aAttachedFunctions > 0 then
+            for i, v in ipairs( aAttachedFunctions ) do
+                if v == func then
+                    return true
+                end
+            end
+        end
+    end
+    return false
 end
 
 
@@ -163,6 +191,37 @@ function table.find(t, i, f)
     return false
 end
 
+function table.removeValue(t, i, v)
+    local index, value = table.find(t, i, v)
+    if index then
+        if tonumber(index) then
+            table.remove(t, index)
+        else
+            t[index] = nil
+        end
+        return value
+    end
+end
+
+function table.deepcopy(t)
+	local known = {}
+	local function _deepcopy(t)
+		local result = {}
+		for k,v in pairs(t) do
+			if type(v) == 'table' then
+				if not known[v] then
+					known[v] = _deepcopy(v)
+				end
+				result[k] = known[v]
+			else
+				result[k] = v
+			end
+		end
+		return result
+	end
+	return _deepcopy(t)
+end
+
 function dxDrawBorderedText (outline, text, left, top, right, bottom, color, color2, scale, font, alignX, alignY, clip, wordBreak, postGUI, colorCoded, subPixelPositioning, fRotation, fRotationCenterX, fRotationCenterY)
     for oX = (outline * -1), outline do
         for oY = (outline * -1), outline do
@@ -211,6 +270,7 @@ function colorToHex(color)
     local red, green, blue, alpha = colorToRgba(color)
     return RGBToHex(red, green, blue)
 end
+
 
 function dxDrawRoundedRectangle(x, y, rx, ry, color, radius)
     rx = rx - radius * 2

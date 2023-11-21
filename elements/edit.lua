@@ -1,4 +1,4 @@
-function dxEdit(x, y, w, h, title, parent, rounded, colorback, colortile, colorborder, colorselected)
+function dxEdit(x, y, w, h, title, parent, rounded, colorbackground, colortile, colorborder, colorselected)
 
 	local self, element = createElement('dxEdit', parent, sourceResource)
 	if self then
@@ -8,7 +8,7 @@ function dxEdit(x, y, w, h, title, parent, rounded, colorback, colortile, colorb
 		self.w = math.round(w)
 		self.h = math.round(h)
 		self.title = title
-		self.rounded = rounded and 13 or false
+		self.rounded = tonumber(rounded) or rounded == true and 13 or false
 
 		self.text = ''
 
@@ -19,7 +19,7 @@ function dxEdit(x, y, w, h, title, parent, rounded, colorback, colortile, colorb
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorback or back.editbackground
+		self.colorbackground = colorbackground or back.editbackground
 		self.colortitle = colortile or back.edittitle
 		--
 		self.colorborder = colorborder or front.editborder
@@ -39,7 +39,7 @@ function dxEdit(x, y, w, h, title, parent, rounded, colorback, colortile, colorb
 
         if tonumber(self.rounded) then
 
-      		local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, 2, self.colorborder)
+      		local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)--, 2, self.colorborder)
   			self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
 
   			local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground, 2, self.colorselected)

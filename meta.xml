@@ -14,6 +14,11 @@
 	
 	<min_mta_version server="1.5.9-9" client='1.5.9-9'/>
 
+    <file src="cef/cef.html" type="client" cache="false"/>
+    <file src="cef/cef.css" type="client" cache="false"/>
+    <file src="cef/cef.js" type="client" cache="false"/>
+    <file src="cef/util.js" type="client" cache="false"/>
+
     <script src="handler/themes.lua" type="client" cache="false"/>
     <script src="handler/util.lua" type="client" cache="false"/>
     <script src="handler/keys.lua" type="client" cache="false"/>
@@ -35,6 +40,7 @@
     <script src="elements/tab.lua" type="client" cache="false"/>
     <script src="elements/scrollpane.lua" type="client" cache="false"/>
     <script src="elements/radiobutton.lua" type="client" cache="false"/>
+    <script src="elements/memo.lua" type="client" cache="false"/>
 	
     <script src="draw/window.lua" type="client" cache="false"/>
     <script src="draw/button.lua" type="client" cache="false"/>
@@ -50,6 +56,8 @@
     <script src="draw/tab.lua" type="client" cache="false"/>
     <script src="draw/scrollpane.lua" type="client" cache="false"/>
     <script src="draw/radiobutton.lua" type="client" cache="false"/>
+    <script src="draw/memo.lua" type="client" cache="false"/>
+
 
     <script src="examples.lua" type="client" cache="false"/>
 
@@ -67,8 +75,8 @@
 
         <export function="dxGetLibrary" type="client" />
         <export function="dxGetScreen" type="client" />
-        <export function="dxSet" type="client" />
-        <export function="dxGet" type="client" />
+        <export function="dxSetProperty" type="client" />
+        <export function="dxGetProperty" type="client" />
         <export function="dxSetText" type="client" />
         <export function="dxSetTitle" type="client" />
         <export function="dxSetVisible" type="client" />
@@ -88,6 +96,13 @@
         <export function="dxGetTitle" type="client" />
         <export function="dxGetText" type="client" />
         <export function="dxSetTheme" type="client" />
+        <export function="dxSetPostGui" type="client" />
+        <export function="dxSetToFront" type="client" />
+        <export function="dxSetRounded" type="client" />
+        <export function="dxIsElementParent" type="client" />
+        <export function="dxSetParent" type="client" />
+        <export function="dxDuplicateElement" type="client" />
+
 
     <!--         -->
 
@@ -163,6 +178,7 @@
         <export function="dxScrollGetCurrentPosition" type="client" />
         <export function="dxScrollSetCurrentPosition" type="client" />
         <export function="dxScrollSetColorButton" type="client" />
+        <export function="dxScrollSetVertical" type="client" />
     <!--        -->
 
     <!-- scrollpane -->
@@ -182,5 +198,16 @@
         <export function="dxRadioButtonGetSelected" type="client" />
     <!--               -->
 
-    
+    <!-- dxSwitchButton -->
+        <export function="dxSwitchButton" type="client" />
+        <export function="dxSwitchButtonSetState" type="client" />
+        <export function="dxSwitchButtonGetState" type="client" />
+        <export function="dxSwitchButtonSetColorOn" type="client" />
+        <export function="dxSwitchButtonSetColorOff" type="client" />
+    <!--            -->
+
+    <!-- dxMemo -->
+        <export function="dxMemo" type="client" />
+        <export function="dxMemoSetReadOnly" type="client" />
+    <!--               -->
 </meta>

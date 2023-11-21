@@ -8,7 +8,7 @@ function dxButton(x, y, w, h, text, parent, rounded, colorback, colortext, color
 		self.w = math.round(w)
 		self.h = math.round(h)
 		self.text = text
-		self.rounded = rounded and 6 or false
+		self.rounded = tonumber(rounded) or rounded == true and 6 or false
 		--
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )
@@ -25,7 +25,7 @@ function dxButton(x, y, w, h, text, parent, rounded, colorback, colortext, color
 			self.offsetX = self.x - Cache[self.parent].x
         	self.offsetY = self.y - Cache[self.parent].y
         end
-
+ 
         if tonumber(self.rounded) then
         	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, tocolor(255,255,255))
         	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
