@@ -31,9 +31,10 @@ function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, co
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
   		Cache[self.scrollV].attached = element
+  		Cache[self.scrollH].attached = element
 
-  		Cache[self.scrollH].subParent = element
-  		Cache[self.scrollV].subParent = element
+  		-- Cache[self.scrollH].subParent = element
+  		-- Cache[self.scrollV].subParent = element
 
         self.from = nil
         self.to = nil

@@ -66,7 +66,7 @@ if TEST then
 	        img1 = dxImage(439*x, 186*y, 222*x, 132*y, ":admin/client/images/map.png", panes[4])
 			img2 = dxImage(439*x, 419*y, 222*x, 132*y, ":admin/client/images/map.png", panes[4])
 
-			addEventHandler( "onClick", root, sexo )
+			addEventHandler( "onClick", root, _fEvent )
 
 			dxSwitchButton(570*x, 600*y, 50*x, 26*y, win)
 
@@ -82,7 +82,7 @@ if TEST then
 
 
 
-	function sexo()
+	function _fEvent()
 		if source == sex then
 		 	if dxGet(source, 'state') then
 		 		dxSet(edit1, 'text', math.random(100000, 999999)..'')
@@ -104,5 +104,4 @@ if TEST then
 	end
 
 end
-
 

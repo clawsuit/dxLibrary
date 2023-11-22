@@ -21,9 +21,10 @@ dxElements = {
         ['dxWindow'] = true,
         ['dxTabPanel'] = true,
         ['dxTab'] = true,
-    }
+    },
 }
 
+dxElements.click = {}
 
 filesAvailables = {
     {'Basic-Regular.ttf', {10, false}, {11, true}},

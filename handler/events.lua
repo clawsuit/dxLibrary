@@ -120,102 +120,116 @@ addEventHandler( "onClientCharacter", getRootElement(),
 
 addEventHandler( "onClientClick", getRootElement(),
     function(button, state, absoluteX, absoluteY, worldX, worldY, worldZ, clickedWorld)
-        if button == 'left' and state == 'up' then
+        if button == 'left' and state == 'down' then
 
             for i = #Order, 1, -1 do
+
                 local element = Order[i]
-                local self = Cache[element]
-                --
-                if element and self then
-                    if not self.isDisabled then
+                if isElement(element) then
 
-                        local x, y, x2, y2 = self.x, self.y, self.x, self.y
-                        if isElement(self.parent) then
-                            x, y = self.offsetX, self.offsetY
-                            --
-                            if x2 ~= (Cache[self.parent].x + x) or y2 ~= (Cache[self.parent].y + y) then
-                                x2, y2 = Cache[self.parent].x + x, Cache[self.parent].y + y
+                    local self = Cache[element]
+                    if self then
+
+                        if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
+
+                            local x, y, x2, y2 = self.x, self.y, self.x, self.y
+                            if isElement(self.parent) then
+                                x, y = self.offsetX, self.offsetY
+                                --
+                                if x2 ~= (Cache[self.parent].x + x) or y2 ~= (Cache[self.parent].y + y) then
+                                    x2, y2 = Cache[self.parent].x + x, Cache[self.parent].y + y
+                                end
                             end
-                        end
 
-                        local x2, y2 = x2 + (self.offX or 0), y2 + (self.offY or 0)
-                        
-
-                        if self.type == 'dxGridList' then
+                            local x2, y2 = x2 + (self.offX or 0), y2 + (self.offY or 0)
                             
-                            local scrollH_current = Cache[self.scrollH].current
-		                    local scrollV_current = Cache[self.scrollV].current
+                            if self.type == 'dxGridList' then
+                                
+                                local scrollH_current = Cache[self.scrollH].current
+                                local scrollV_current = Cache[self.scrollV].current
 
-                            local mw = (Cache[self.scrollV].isVisible and not Cache[self.scrollH].forcedVisibleFalse) and 17*sh or 0
-                            local mh = (Cache[self.scrollH].isVisible and not Cache[self.scrollH].forcedVisibleFalse) and self.fontH*2 or self.fontH
+                                local mw = (Cache[self.scrollV].isVisible and not Cache[self.scrollH].forcedVisibleFalse) and 17*sh or 0
+                                local mh = (Cache[self.scrollH].isVisible and not Cache[self.scrollH].forcedVisibleFalse) and self.fontH*2 or self.fontH
 
-                            if isCursorOver(x2, y2+self.fontH, self.w-mw, self.h-mh) then
-                                self.selected = (self.itemOver or -1)
+                                if isCursorOver(x2, y2+self.fontH, self.w-mw, self.h-mh) then
+                                    self.selected = (self.itemOver or -1)
+
+                                    triggerEvent('onClick', element)
+                                    break
+                                end
+
+                            elseif self.type == 'dxWindow' then
+                                
+                                local xw, xh = dxGetTextWidth( "✕", 1, self.font ), self.fontH
+                                if isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
+
+                                    triggerEvent('onClose', element)
+                                    if not wasEventCancelled(  ) then
+                                        self.isVisible = false
+                                    end
+                                    return 
+
+                                end
+
+                            elseif isCursorOver(x2, y2, self.w, self.h) then
+
+                                if self.type == 'dxCheckBox' or self.type == 'dxSwitchButton' then
+
+                                    self.state = not self.state
+                                    if self.type == 'dxSwitchButton' then
+
+                                        self.tick = getTickCount(  )
+                                        self.update = true
+                                        
+                                    end
+
+                                elseif self.type == 'dxEdit' then
+                                    
+                                    onBox = element
+                                    onBoxBackup = element
+                                    guiSetInputEnabled(true)
+
+                                elseif self.type == 'dxRadioButton' then
+
+                                    dxRadioButtonSetSelected(element)
+
+                                elseif self.type == 'dxWindow' then
+
+                                    dxSetToFront(element)
+
+                                elseif self.type == 'dxMemo' then
+                                self.webBrowser:focus()
+
+                                    if isElement(onMemo) then
+                                        Cache[onMemo].webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(onMemo), type='blur'}).."')")
+                                    end
+
+                                    onMemo = element
+                                -- onBoxBackup = element
+                                    guiSetInputEnabled(true)
+                                    self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), type='focus'}).."')")
+
+                                elseif self.type == 'dxScroll' then
+                                    
+                                    dxElements.click[self.type](element, absoluteX, absoluteY)
+
+                                end
 
                                 triggerEvent('onClick', element)
+
                                 break
-                            end
-
-                        elseif self.type == 'dxWindow' then
-                            
-                            local xw, xh = dxGetTextWidth( "✕", 1, self.font ), self.fontH
-                            if isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
-
-                                triggerEvent('onClose', element)
-                                if not wasEventCancelled(  ) then
-                                    self.isVisible = false
-                                end
-                                return 
-
-                            end
-
-                        elseif isCursorOver(x2, y2, self.w, self.h) then
-
-                            if self.type == 'dxCheckBox' or self.type == 'dxSwitchButton' then
-
-                                self.state = not self.state
-                                if self.type == 'dxSwitchButton' then
-
-                                    self.tick = getTickCount(  )
-                                    self.update = true
-                                    
-                                end
-
-                            elseif self.type == 'dxEdit' then
-                                onBox = element
-                                onBoxBackup = element
-		 		                guiSetInputEnabled(true)
-                            elseif self.type == 'dxRadioButton' then
-                                dxRadioButtonSetSelected(element)
-                            elseif self.type == 'dxWindow' then
-                                dxSetToFront(element)
-                            elseif self.type == 'dxMemo' and not self.readonly then
-                               self.webBrowser:focus()
-
-                                if isElement(onMemo) then
-                                    Cache[onMemo].webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(onMemo), type='blur'}).."')")
-                                end
-
-                                onMemo = element
-                               -- onBoxBackup = element
-		 		                guiSetInputEnabled(true)
-                                self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), type='focus'}).."')")
-                            end
-
-                            triggerEvent('onClick', element)
-
-                            break
-                        else
-                            if self.type == 'dxEdit' then
-                                if onBox == element then
-                                    onBox = nil
-                                    guiSetInputEnabled(false)
-                                end
-                            elseif self.type == 'dxMemo' then
-                                if onMemo == element then
-                                    onMemo = nil
-                                    guiSetInputEnabled(false)
-                                   self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), type='blur'}).."')")
+                            else
+                                if self.type == 'dxEdit' then
+                                    if onBox == element then
+                                        onBox = nil
+                                        guiSetInputEnabled(false)
+                                    end
+                                elseif self.type == 'dxMemo' then
+                                    if onMemo == element then
+                                        onMemo = nil
+                                        guiSetInputEnabled(false)
+                                    self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), type='blur'}).."')")
+                                    end
                                 end
                             end
                         end
@@ -223,6 +237,12 @@ addEventHandler( "onClientClick", getRootElement(),
                 end
             end
         end
+    end
+)
+
+addEventHandler( "onClientCursorMove", getRootElement(),
+    function(_, _, ax, ay)
+        
     end
 )
 
