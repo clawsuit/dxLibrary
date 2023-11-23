@@ -31,7 +31,7 @@ function Render.dxMemo(element, parent, offX, offY)
         --self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), property='top', value = y2..'px'}).."')")
 
 
-        dxDrawImage(x, y, self.w, self.h, self.webBrowser, 0, 0, 0, -1, postgui)
+        dxDrawImage(x, y, self.w, self.h, self.webBrowser, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
     end 
 end
 

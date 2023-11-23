@@ -15,10 +15,12 @@ dxElements = {
         ['dxTabPanel'] = 10,
         ['dxWindow'] = 10,
         ['dxMemo'] = 5,
+        ['dxScroll'] = 10,
     },
 
     parentAvailable = {
         ['dxWindow'] = true,
+        ['dxScrollPane'] = true,
         ['dxTabPanel'] = true,
         ['dxTab'] = true,
     },

@@ -25,9 +25,12 @@ function cefMemo(json){
     if (value.background){
         memo.style.background = value.background;
     };
+    if (value.colortext){
+      memo.style.color = value.colortext;
+    };
     memo.style.padding = '0';
     memo.style.margin = '0';
-    // memo.style.borderColor = 'transparent';
+    memo.style.borderColor = 'transparent';
     // memo.style.textAlign = value.alignX;
     
 

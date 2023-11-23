@@ -11,7 +11,7 @@ function Render.dxScroll(element, parent, offX, offY)
 			return
 		end
 
-		local x, y, x2, y2, pos, pos2 = self.x, self.y, self.x, self.y, self.pos, self.pos
+		local x, y, x2, y2 = self.x, self.y, self.x, self.y
 		if isElement(parent) then
 			x, y = self.offsetX, self.offsetY
 			--
@@ -19,22 +19,11 @@ function Render.dxScroll(element, parent, offX, offY)
                 x2, y2 = Cache[parent].x + x, Cache[parent].y + y
                 self.x, self.y = x2, y2
             end
-
-			pos = self.posOff
-
-			if not self.vertical then
-				pos = pos + (offX or 0)
-				pos2 = Cache[parent].x + pos
-			else
-				pos = pos + (offY or 0)
-				pos2 = Cache[parent].y + pos
-			end
 		end
  
 		x, y = x + (offX or 0), y + (offY or 0)
 		x2, y2 = x2 + (offX or 0), y2 + (offY or 0)
 
-		local xw,xh = 8.5*sh, 17*sh
 
 		if isElement(self.attached) and not Cache[self.attached].isVisible then
 			return
@@ -63,26 +52,17 @@ function Render.dxScroll(element, parent, offX, offY)
 
 				local alpha = bitExtract(self.colorbackground,24,8)
 				if not self.vertical then
-					if self.svg then
+					if isElement(self.svg) then
 						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha))
 					else
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
-
-					dxDrawText('➤', 0, 0.5, xw*2, self.h+.5, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, 178)
-					dxDrawText('➤', self.w-xw*2, 0, (xw*2)+self.w-xw*2, self.h-2.5, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
 				else
-					if self.svg then
+					if isElement(self.svg) then
 						dxDrawImage(0, 0, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha))
 					else
 						dxDrawRectangle(0, 0, self.w, self.h, self.colorbackground, false)
 					end
- 					
- 
-					dxDrawText('➤', -1, 0, self.w-1, xh, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, -90)
-					--dxDrawText('▲', 0, -1, self.w, xh-1, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
-					--dxDrawText('▼', 0, self.h-xh, self.w, self.h, self.colortext, 1, self.font, 'center', 'center', true, true, false, false)
-					dxDrawText('➤', 1, self.h-xh, self.w+1, self.h, self.colortext, 1, self.font, 'center', 'center', true, true, false, false, false, 90)
 				end
 
 			dxSetBlendMode("blend")
@@ -97,7 +77,7 @@ function Render.dxScroll(element, parent, offX, offY)
 
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
+				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
 			dxSetBlendMode("blend")
 		end
 
@@ -119,8 +99,136 @@ function Render.dxScroll(element, parent, offX, offY)
 			self.cursorX = cx
 		end
 
+		local R,G,B,A = colorToRgba(self.colorboton)
+ 
+		if self.vertical then
+			
+			local sizeH = math.max(self.h / 3, 0)
+			if not self.maxScroll or self.maxScroll ~= self.h - sizeH then
+				self.maxScroll = self.h - sizeH
+			end
+			
+			local posY = y + self.maxScroll * (self.scrollPosition / self.maxScroll)
 
-		if not self.vertical then
+			if isElement(self.svg2) then 
+				dxDrawImage(x, posY, self.w, sizeH, self.svg2, 0, 0, 0, tocolor(255,255,255, A*(self.alpha/255)), postgui)
+			else
+				dxDrawRectangle(x, posY, self.w, sizeH, tocolor(R,G,B, A*(self.alpha/255)), postgui)
+			end
+
+			if self.tick then
+				local ap = math.min(1, (getTickCount()-self.tick)/200)
+				local pos = interpolateBetween( self.from, 0, 0, self.to, 0, 0, ap, "Linear" )
+
+				self.scrollPosition = pos
+
+				if ap >= 1 then
+					self.from = nil
+					self.to = nil
+					self.tick = nil
+				end
+			end
+
+			if isCursorShowing( ) then
+				if getKeyState( 'mouse1' ) then
+					if self.moved then
+
+						if self.tick then
+							self.tick = nil
+							self.bpos = self.to
+
+							self.from = nil
+							self.to = nil
+						end
+						
+						local _, ay = getAbsoluteCursorPosition()
+						ay = ay - (isElement(parent) and Cache[parent].y or 0)
+
+						self.scrollPosition = math.min(math.max(self.scrollPosition + (ay - self.moved), 0), self.maxScroll)
+						self.moved = ay
+
+					end
+				else
+					self.moved = nil
+				end
+			end
+
+		else
+
+			local sizeW = math.max(self.w / 3, 0)
+			if not self.maxScroll or self.maxScroll ~= self.w - sizeW then
+				self.maxScroll = self.w - sizeW
+			end
+
+			local posX = x + self.maxScroll * (self.scrollPosition / self.maxScroll)
+
+			if isElement(self.svg2) then 
+				dxDrawImage(posX, y, sizeW, self.h, self.svg2, 0, 0, 0, tocolor(255,255,255, A*(self.alpha/255)), postgui)
+			else
+				dxDrawRectangle(posX, y, sizeW, self.h, self.colorboton, postgui)
+			end
+
+ 			if isCursorShowing( ) then
+				if getKeyState( 'mouse1' ) then
+					if self.moved then
+						
+						local ax = getAbsoluteCursorPosition()
+						ax = ax - (isElement(parent) and Cache[parent].x or 0)
+
+						self.scrollPosition = math.min(math.max(self.scrollPosition + (ax - self.moved), 0), self.maxScroll)
+						self.moved = ax
+
+					end
+				else
+					self.moved = nil
+				end
+			end
+		end
+
+		if (self.scrollPosition / self.maxScroll) ~= self.current then
+			self.current = self.scrollPosition / self.maxScroll
+			triggerEvent('onScrollChange', element, self.current)
+		end
+
+		self.click = getKeyState( 'mouse1' )
+	end
+end
+
+function dxElements.click.dxScroll(element, ax, ay)
+	local self = Cache[element]
+	if self then
+
+		if isCursorShowing() then
+			local x2, y2 = self.x + (self.offX or 0), self.y + (self.offY or 0)
+
+			if self.vertical then
+				if not self.moved then
+
+					local sizeH = math.max(self.h / 3, 0)
+					local posY = y2 + self.maxScroll * (self.scrollPosition / self.maxScroll)
+
+					if isCursorOver(x2, posY, self.w, sizeH) then
+						self.moved = ay - (isElement(self.parent) and Cache[self.parent].y or 0)
+					end
+				end
+			else
+				if not self.moved then
+
+					local sizeW = math.max(self.w / 3, 0)
+					local posX = x2 + self.maxScroll * (self.scrollPosition / self.maxScroll)
+
+					if isCursorOver(posX, y2, sizeW, self.h) then
+						self.moved = ax - (isElement(self.parent) and Cache[self.parent].x or 0)
+					end
+				end
+			end
+		end
+	end
+end
+
+
+--[[
+if not self.vertical then
 
 			local sizeW = (self.w-xw*2) < 90*sh and self.w / 3 or 40*sh
 			if not self.dist then
@@ -137,7 +245,8 @@ function Render.dxScroll(element, parent, offX, offY)
 
 			self.bpos = self.bpos or pos
 			--print((x+xw*2), self.bpos, (x+self.w)-(sizeW+xw*2))
-			dxDrawRectangle(self.bpos, y, sizeW, self.h, self.colorboton, postgui)
+			local R,G,B = colorToRgba(self.colorboton)
+			dxDrawRectangle(self.bpos, y, sizeW, self.h, tocolor(R,G,B, self.alpha), postgui)
 
 			local current = 1-math.min(1, getDistanceBetweenPoints2D( 0, self.bpos+sizeW, 0, (x+self.w)-(xw*2))/self.dist)
 
@@ -294,67 +403,7 @@ function Render.dxScroll(element, parent, offX, offY)
 			end
 
 		end
-		
-		self.click = getKeyState( 'mouse1' )
-	end
 
-end
+]]
 
-function dxElements.click.dxScroll(element, ax, ay)
-	local self = Cache[element]
-	if self then
 
-		if isCursorShowing() then
-
-			local parent = self.parent
-			local x, y, x2, y2, pos, pos2 = self.x, self.y, self.x, self.y, self.pos, self.pos
-
-			if isElement(parent) then
-				x, y = self.offsetX, self.offsetY
-				--
-				if x2 ~= (Cache[parent].x + x) or y2 ~= (Cache[parent].y + y) then
-					x2, y2 = Cache[parent].x + x, Cache[parent].y + y
-					self.x, self.y = x2, y2
-				end
-
-				pos = self.posOff
-
-				if not self.vertical then
-					pos = pos + (offX or 0)
-					pos2 = Cache[parent].x + pos
-				else
-					pos = pos + (offY or 0)
-					pos2 = Cache[parent].y + pos
-				end
-			end
-	
-			x, y = x + (self.offX or 0), y + (self.offY or 0)
-			x2, y2 = x2 + (self.offX or 0), y2 + (self.offY or 0)
-
-			local xw,xh = 8.5*sh, 17*sh
-
-			if not self.vertical then
-				if not self.moved then
-
-					local sizeW = (self.w-xw*2) < 90*sh and self.w / 3 or 40*sh
-					if isCursorOver((isElement(parent) and Cache[parent].x or 0)+self.bpos, y2, sizeW, self.h) then
-
-						self.moved = ax - (isElement(parent) and Cache[parent].x or 0)
-					end
-				end
-
-			else
-				if not ((isKeyPressed('mouse_wheel_up') or isKeyPressed('mouse_wheel_down')) and (isElement(self.attached) and isElement(mouseOnElement) and mouseOnElement == self.attached or not isElement(mouseOnElement))) then
-					if not self.moved then
-
-						local sizeH = self.h-xh < 90*sh and self.h / 3 or 40*sh
-						if isCursorOver(x2, (isElement(parent) and Cache[parent].y or 0)+self.bpos, self.w, sizeH) then
-
-							self.moved = ay - (isElement(parent) and Cache[parent].y or 0)
-						end
-					end
-				end
-			end
-		end
-	end
-end
