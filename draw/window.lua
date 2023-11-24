@@ -25,12 +25,12 @@ function Render.dxWindow(element)
 		end
 
 		if not isElement(self.rendertarget) then return end;
-		local postgui = true
-        -- if self.postgui then
-        --     if not isElement(self.parent) then
-        --         postgui = true
-        --     end
-        -- end
+		local postgui = false
+        if self.postgui then
+            if not isElement(self.parent) then
+                postgui = true
+            end
+        end
 
 		-- if isElement(self.svg) then
 		-- 	local alpha = bitExtract(self.colorbackground,24,8)
