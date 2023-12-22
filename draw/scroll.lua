@@ -104,8 +104,8 @@ function Render.dxScroll(element, parent, offX, offY)
 		if self.vertical then
 			
 			local sizeH = math.max(self.h / 3, 0)
-			if not self.maxScroll or self.maxScroll ~= self.h - sizeH then
-				self.maxScroll = self.h - sizeH
+			if not self.maxScroll or self.maxScroll ~= (self.h - sizeH) then
+				self.maxScroll = (self.h - sizeH)
 			end
 			
 			local posY = y + self.maxScroll * (self.scrollPosition / self.maxScroll)
@@ -156,8 +156,8 @@ function Render.dxScroll(element, parent, offX, offY)
 		else
 
 			local sizeW = math.max(self.w / 3, 0)
-			if not self.maxScroll or self.maxScroll ~= self.w - sizeW then
-				self.maxScroll = self.w - sizeW
+			if not self.maxScroll or self.maxScroll ~= (self.w - sizeW) then
+				self.maxScroll = (self.w - sizeW)
 			end
 
 			local posX = x + self.maxScroll * (self.scrollPosition / self.maxScroll)

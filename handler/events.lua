@@ -11,6 +11,29 @@ function renderizarElementos()
     if not CLIENT_INIT then
         return
     end
+
+    if isElement(onMemo) then
+        local ele = Cache[onMemo]
+        if ele then
+            if not ele.isDisabled and ele.isVisible and (not isElement(ele.parent) or Cache[ele.parent].isVisible) and (not isElement(ele.rootParent) or Cache[ele.rootParent].isVisible) and (not isElement(ele.attached) or Cache[ele.attached].isVisible) then
+            else
+                guiSetInputEnabled(false)
+                ele.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(onMemo), type='blur'}).."')")
+                onMemo = nil
+            end
+        end
+    end
+
+    if isElement(onBox) then
+        local ele = Cache[onBox]
+        if ele then
+            if not ele.isDisabled and ele.isVisible and (not isElement(ele.parent) or Cache[ele.parent].isVisible) and (not isElement(ele.rootParent) or Cache[ele.rootParent].isVisible) and (not isElement(ele.attached) or Cache[ele.attached].isVisible) then
+            else
+                guiSetInputEnabled(false)
+            end
+        end
+        onBox = nil
+    end
     --dxDrawText(inspect(Cache), 0, 0)
     for _, element in ipairs(Order) do
         if isElement( element ) then
@@ -155,7 +178,7 @@ addEventHandler( "onClientClick", getRootElement(),
                     local self = Cache[element]
                     if self then
 
-                        if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
+                        if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.rootParent) or Cache[self.rootParent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
 
                             local x, y, x2, y2 = self.x, self.y, self.x, self.y
                             if isElement(self.parent) and self.type ~= 'dxTab' then
@@ -197,7 +220,7 @@ addEventHandler( "onClientClick", getRootElement(),
                                             end
                                             return 
 
-                                        elseif self.anim and not self.tick and self.anim.cancelCloseButton then
+                                        elseif self.anim and not self.tick and self.anim.cancelCloseButton and not self.anim.tick then
                                             self.anim.tick = getTickCount()
                                         end
                                     end
@@ -285,7 +308,7 @@ addEventHandler( "onClientKey", getRootElement(),
                     local self = Cache[element]
                     if self then
 
-                        if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
+                        if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.rootParent) or Cache[self.rootParent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
                             if self.type == 'dxScroll' then
 
                                 local x2, y2 = self.x + (self.offX or 0), self.y + (self.offY or 0)

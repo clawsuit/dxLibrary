@@ -39,7 +39,7 @@ function Render.dxTabPanel(element, parent, offX, offY)
             end
         end
 
-        local click = getKeyState( 'mouse1' ) and not self._click and not guiGetInputEnabled(  )
+        local click = getKeyState( 'mouse1' ) and not self._click
         self._click = getKeyState( 'mouse1' )
 
         -- if click and isCursorOver(x2, y2, self.w, self.h) then

@@ -45,3 +45,4 @@ function dxButtonSetFont( element, font )
 		self.font = font
 	end
 end
+
