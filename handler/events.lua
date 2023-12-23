@@ -30,9 +30,9 @@ function renderizarElementos()
             if not ele.isDisabled and ele.isVisible and (not isElement(ele.parent) or Cache[ele.parent].isVisible) and (not isElement(ele.rootParent) or Cache[ele.rootParent].isVisible) and (not isElement(ele.attached) or Cache[ele.attached].isVisible) then
             else
                 guiSetInputEnabled(false)
+                onBox = nil
             end
         end
-        onBox = nil
     end
     --dxDrawText(inspect(Cache), 0, 0)
     for _, element in ipairs(Order) do

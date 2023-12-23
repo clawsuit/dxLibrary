@@ -2,6 +2,8 @@ local TEST = false
 
 
 if TEST then
+
+	bindKey('m', 'down', function() showCursor(not isCursorShowing()) end)
 	local panes = {}
 	addEventHandler( "onClientResourceStart", resourceRoot,
 		function()
