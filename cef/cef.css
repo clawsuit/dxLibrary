@@ -13,8 +13,20 @@
 
 textarea {
     resize: none;
+    overflow-y: auto;
 }
 
 textarea:focus { 
     outline: none !important;
+}
+
+textarea[readonly]{
+	user-select: text;
+}
+
+
+textarea::selection{
+	opacity: 1;
+	background-color: #3498db;
+	color: #ffffff;
 }

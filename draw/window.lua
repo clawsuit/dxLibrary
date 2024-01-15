@@ -8,6 +8,7 @@ function Render.dxWindow(element)
 		end
 
 		local xw, xh = dxGetTextWidth( "✕", 1, self.font ), self.fontH
+		self.w, self.h = math.round(self.w), math.round(self.h)
 
 		if isElement(self.rendertarget) then
 			local width, height = dxGetMaterialSize( self.rendertarget )
@@ -18,15 +19,18 @@ function Render.dxWindow(element)
 		end
 
 		if not isElement(self.rendertarget) then
-			self.rendertarget = DxRenderTarget(self.w, self.h, true)
+			if self.w >= 1 and self.h >= 1 then
+				self.rendertarget = DxRenderTarget(self.w, self.h, true)
+			end
 		end
 
-		local postgui = true
-        -- if self.postgui then
-        --     if not isElement(self.parent) then
-        --         postgui = true
-        --     end
-        -- end
+		if not isElement(self.rendertarget) then return end;
+		local postgui = false
+        if self.postgui then
+            if not isElement(self.parent) then
+                postgui = true
+            end
+        end
 
 		-- if isElement(self.svg) then
 		-- 	local alpha = bitExtract(self.colorbackground,24,8)
@@ -54,7 +58,7 @@ function Render.dxWindow(element)
 					self.rendertarget2 = DxRenderTarget(self.w, self.h, true)
 				end
 
-				self.rendertarget2:setAsTarget(false)
+				self.rendertarget2:setAsTarget(true)
 				--	
 				--dxSetBlendMode( 'modulate_add' )
 					if isElement(self.svg) then
@@ -76,7 +80,9 @@ function Render.dxWindow(element)
 			end
 
 			if isElement(self.rendertarget2) then
-				dxDrawImage(0, 0, self.w, self.h, self.rendertarget2, 0, 0, 0, -1, false)
+				--dxSetBlendMode("add")
+					dxDrawImage(0, 0, self.w, self.h, self.rendertarget2, 0, 0, 0, -1, false)
+				--dxSetBlendMode("blend")
 			end
 			--]]
 
@@ -95,7 +101,7 @@ function Render.dxWindow(element)
 		
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(self.x, self.y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
+				dxDrawImage(math.round(self.x), math.round(self.y), self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
 			dxSetBlendMode("blend")
 		end
 
@@ -126,16 +132,7 @@ function Render.dxWindow(element)
 
 		end
 
-		-- if self.closebutton and isCursorOver(self.x+self.w-xw*2, self.y, xw*2, xh) then
-		-- 	if getKeyState( 'mouse1' ) and not self.click then
-
-		-- 		triggerEvent('onClose', element)
-		-- 		if not wasEventCancelled(  ) then
-		-- 			self.isVisible = false
-		-- 		end
-				
-		-- 	end
-		-- end
+		
 
 		self.click = getKeyState( 'mouse1' )
 	end

@@ -63,7 +63,7 @@ function Render.dxLabel(element, parent, offX, offY)
 
 			if isElement(self.rendertarget) then
 				dxSetBlendMode("add")
-					dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
+					dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
 				dxSetBlendMode("blend")
 			end
 
@@ -73,10 +73,13 @@ function Render.dxLabel(element, parent, offX, offY)
 			end
 			--
 			dxSetBlendMode( 'modulate_add' )
+				local R,G,B,A = colorToRgba(self.colortext)
+        		A = A * (self.alpha/255)
+
 				if self.border then
-					dxDrawBorderedText (self.border, self.text, x, y, self.w+x, self.h+y, self.colortext, (self.colorborder or self.colortext), 1, self.font, self.alignX, self.alignY, true, true, false, false, false)
+					dxDrawBorderedText (self.border, self.text, x, y, self.w+x, self.h+y, tocolor(R,G,B,A), (self.colorborder or tocolor(R,G,B,A)), 1, self.font, self.alignX, self.alignY, true, true, false, false, false)
 				else
-					dxDrawText2(self.text, x, y, self.w, self.realY, self.colortext, 1, self.font, self.alignX, self.alignY, true, true, false, false, false)
+					dxDrawText2(self.text, x, y, self.w, self.realY, tocolor(R,G,B,A), 1, self.font, self.alignX, self.alignY, true, true, false, false, false)
 				end
 			dxSetBlendMode("blend")
 		end

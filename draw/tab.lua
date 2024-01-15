@@ -39,7 +39,7 @@ function Render.dxTabPanel(element, parent, offX, offY)
             end
         end
 
-        local click = getKeyState( 'mouse1' ) and not self._click and not guiGetInputEnabled(  )
+        local click = getKeyState( 'mouse1' ) and not self._click-- and not guiGetInputEnabled(  )
         self._click = getKeyState( 'mouse1' )
 
         -- if click and isCursorOver(x2, y2, self.w, self.h) then
@@ -104,7 +104,10 @@ function Render.dxTabPanel(element, parent, offX, offY)
 
                         if isCursorOver(x2+cx, y2, w, self.fontH*2) then
                             if click then
-                                self.selected = v
+                                triggerEvent('onTabChange', element, v)
+                                if not wasEventCancelled(  ) then
+                                    self.selected = v
+                                end
                             end
                         end
 
@@ -130,7 +133,10 @@ function Render.dxTabPanel(element, parent, offX, offY)
 
                         if isCursorOver(x2+4*sw, y2+cy, self.columnWidth-8*sw, self.fontH * 1.8) then
                             if click and not child.section then
-                                self.selected = v
+                                triggerEvent('onTabChange', element, v)
+                                if not wasEventCancelled(  ) then
+                                    self.selected = v
+                                end
                             end
                         end
 
@@ -165,7 +171,7 @@ function Render.dxTabPanel(element, parent, offX, offY)
             
         if isElement(self.rendertarget) then
             dxSetBlendMode("add")
-                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
+                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
             dxSetBlendMode("blend")
         end
     end

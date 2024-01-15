@@ -10,12 +10,14 @@ function createElement(type, parent, resource)
     if isElement( element ) then
 
         Cache[element] = {}
+        Cache[element].element = element
         Cache[element].type = type
         Cache[element].isVisible = true
         Cache[element].isDisabled = false
         Cache[element].isMoved = true
         Cache[element].resource = resource
         Cache[element].postgui = true
+        Cache[element].alpha = 255
 
         table.insert(Order, element)
 
@@ -33,12 +35,8 @@ function createElement(type, parent, resource)
 
                         if parentCache.childs then
 
-                            --print(parentCache.type, '>', type)
-
                             Cache[element].parent = parent
                             Cache[element].rootParent = dxGetRootParent(parent) or parent
-
-                            --print(getElementType(Cache[element].rootParent), type)
                             table.insert(parentCache.childs, element)
 
                         end
@@ -77,9 +75,8 @@ function dxDelete(element, check)
                 dxDelete(child, true)
             end
             self.childs = {}
-           -- print(inspect(#self.childs))
         end
-        --print(inspect(element))
+
         if isElement(self.parent) and not check then
 
             local selfParent = Cache[self.parent]
@@ -159,9 +156,21 @@ function dxSetProperty(element, key, value)
             else
                 self[key] = value
             end
-        elseif elementType:find('color') or key == 'border' then
-            self[key] = value
-            dxCreateRoundedSVG(element)
+        elseif key:find('color') or key == 'border' then
+
+            if elementType == 'dxMemo' then
+
+                if key == 'colorbackground' then
+                    cefSetStyleProperty(element, 'background', 'rgba('..table.concat({colorToRgba(value)}, ', ')..')')
+                elseif key == 'colortext' then
+                    cefSetStyleProperty(element, 'color', 'rgba('..table.concat({colorToRgba(value)}, ', ')..')')
+                end
+
+            else
+                self[key] = value
+                dxCreateRoundedSVG(element)
+            end
+
         elseif elementType == 'dxMemo' and key == 'title' then
 
             cefSetProperty(element, 'placeholder', value)
@@ -211,27 +220,27 @@ function dxSetText(element, text)
            -- self.webBrowser:executeJavascript("cefSetProperty('"..toJSON({key=tostring(element), property='value', value = text}).."')")
            self.text = text
 
-            -- if self.readonly then
-            --     self.webBrowser:executeJavascript(([[
-            --     document.getElementById('%s').readonly = "false";
-            --     ]]):format(tostring(element)) )
-            -- end
+            if self.readonly then
+                self.webBrowser:executeJavascript(([[
+                document.getElementById('%s').readonly = "false";
+                ]]):format(tostring(element)) )
+            end
 
-            -- self.webBrowser:executeJavascript(([[
-            --     document.getElementById('%s').innerHTML = `%s`;
-            -- ]]):format(tostring(element), tostring(text)))
+            self.webBrowser:executeJavascript(([[
+                document.getElementById('%s').value = `%s`;
+            ]]):format(tostring(element), tostring(text)))
 
-            -- if self.readonly then
-            --     self.webBrowser:executeJavascript(([[
-            --     document.getElementById('%s').readonly = "true";
-            --     ]]):format(tostring(element)) )
-            -- end
+            if self.readonly then
+                self.webBrowser:executeJavascript(([[
+                document.getElementById('%s').readonly = "true";
+                ]]):format(tostring(element)) )
+            end
 
-            cefSetPropertyMulti(element, {
-                readonly = 'false',
-                innerHTML = tostring(text),
-                readonly = 'true'
-            })
+            -- cefSetPropertyMulti(element, {
+            --     readonly = 'false',
+            --     innerHTML = tostring(text),
+            --     readonly = 'true'
+            -- })
  
         else
             self.text = text
@@ -315,12 +324,9 @@ function dxSetParent(element, parent)
 
                                 if parentCache.childs then
 
-                                    --print(parentCache.type, '>', type)
-
                                     Cache[element].parent = parent
                                     Cache[element].rootParent = dxGetRootParent(parent) or parent
 
-                                    --print(getElementType(Cache[element].rootParent), type)
                                     table.insert(parentCache.childs, element)
 
                                 end
@@ -524,6 +530,17 @@ function dxCreateRoundedSVG(element)
 
             elseif self.type == 'dxTabPanel' and (not self.columnWidth or self.columnWidth == 0) then
                 rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
+
+            elseif self.type == 'dxScroll' then
+                rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
+
+                if self.vertical then
+                    local rawSvgData = svgCreateRoundedRectangle(self.w, self.h/3, self.rounded, self.colorboton)
+                    self.svg2 = svgCreate(self.w, self.h/3, rawSvgData, function() self.update = true end)
+                else
+                    local rawSvgData = svgCreateRoundedRectangle(self.w/3, self.h, self.rounded, self.colorboton)
+                    self.svg2 = svgCreate(self.w/3, self.h, rawSvgData, function() self.update = true end)
+                end
             else
                 rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, color, self.border,  self.border and self.colorborder or false)
             end
@@ -862,4 +879,54 @@ function cefSetStylePropertyMulti(element, propertys)
 
         self.webBrowser:executeJavascript(code)
     end
+end
+
+local preDefined = [[
+	local element, progress = ...
+	local self = Cache[element]
+]]
+
+--[[
+	extras = {
+		cancelCloseButton = true,
+		postFun = function,
+
+		args...
+	}
+]]
+
+function dxAddAnimation(element, easing, time, string, reverse, extras)
+	local self = Cache[element]
+	if self then
+
+		local fn, err = loadstring(preDefined..string)
+		if not fn then return print(err) end;
+
+		local anim = {
+			fun = fn,
+			easing = easing or 'Linear',
+			time = tonumber(time),
+			tick = getTickCount(),
+			reverse = reverse,
+			postFun = postFun,
+			
+		}
+
+		if type(extras) == 'table' then
+			for k, v in pairs(extras) do
+				anim[k] = v
+				if k == 'cancelCloseButton' then
+					if v then
+						anim.tick = nil
+					end
+				end
+			end
+		end
+
+		setTimer(
+			function()
+				self.anim = anim
+			end,
+		50,1)
+	end
 end

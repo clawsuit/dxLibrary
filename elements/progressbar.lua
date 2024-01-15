@@ -18,9 +18,9 @@ function dxProgressBar(x, y, w, h, parent, rounded, colorbackground, colorprogre
 		self.colortext = colortext or back.progressbartext
 		--
 		self.from = 0
-		self.to = 50
+		self.to = 0
 		--
-		self.progress = 50
+		self.progress = 0
 		self.font = Files['font']['Basic-Regular'][10]
 		self.fontH = dxGetFontHeight( 1, self.font )
 		--

@@ -31,9 +31,10 @@ function dxGridList( x, y, w, h, parent, colorback, colortext, colorselected, co
   		Cache[self.scrollH].isVisible = false
   		Cache[self.scrollV].isVisible = false
   		Cache[self.scrollV].attached = element
+  		Cache[self.scrollH].attached = element
 
-  		Cache[self.scrollH].subParent = element
-  		Cache[self.scrollV].subParent = element
+  		-- Cache[self.scrollH].subParent = element
+  		-- Cache[self.scrollV].subParent = element
 
         self.from = nil
         self.to = nil
@@ -96,6 +97,25 @@ function dxGridSetItemColor(element, row, r, g, b)
 			self.colorItems[row] = {r,g,b}
 		end
 	end
+end
+
+function dxGridListSetItemData(element, row, key, value)
+	local self = Cache[element]
+	if self then
+		if self.items[row] then
+			self.items[row][key] = value
+		end
+	end
+end
+
+function dxGridListGetItemData(element, row, key)
+	local self = Cache[element]
+	if self then
+		if self.items[row] then
+			return self.items[row][key]
+		end
+	end
+	return false
 end
 
 function dxGridListRemoveItem(element, index)

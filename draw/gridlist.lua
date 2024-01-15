@@ -130,11 +130,14 @@ function Render.dxGridList( element, parent, offX, offY)
 
 			if isElement( self.rendertarget ) then
 				dxSetBlendMode("add")
-					dxDrawImage(math.round(x), math.round(y), math.round(self.w-mw), self.fontH, self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), postgui)
+					dxDrawImage(math.round(x), math.round(y), math.round(self.w-mw), self.fontH, self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, self.alpha ), postgui)
 				dxSetBlendMode("blend")
 			end
 
-			dxDrawLine( x+5*sw, y+self.fontH, (x+self.w-mw)-5*sw, y+self.fontH, self.colorLine, 1, postgui)
+			local R,G,B,A = colorToRgba(self.colorLine)
+       		A = A * (self.alpha/255)
+
+			dxDrawLine( x+5*sw, y+self.fontH, (x+self.w-mw)-5*sw, y+self.fontH, tocolor(R,G,B,A), 1, postgui)
 
 		end
 
@@ -227,7 +230,7 @@ function Render.dxGridList( element, parent, offX, offY)
 
 			if isElement( self.rendertarget2 ) then
 				dxSetBlendMode("add")
-					dxDrawImage(math.round(x), math.round(y+self.fontH+2), math.round(self.w-mw), math.round(self.h-mh-2), self.rendertarget2, 0, 0, 0, tocolor( 255, 255, 255, 255 ), postgui)
+					dxDrawImage(math.round(x), math.round(y+self.fontH+2), math.round(self.w-mw), math.round(self.h-mh-2), self.rendertarget2, 0, 0, 0, tocolor( 255, 255, 255, self.alpha ), postgui)
 				dxSetBlendMode("blend")
 			end
 

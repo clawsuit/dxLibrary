@@ -102,6 +102,7 @@
         <export function="dxIsElementParent" type="client" />
         <export function="dxSetParent" type="client" />
         <export function="dxDuplicateElement" type="client" />
+        <export function="dxAddAnimation" type="client" />
 
 
     <!--         -->
@@ -140,6 +141,8 @@
         <export function="dxGridListRemoveColumn" type="client" />
         <export function="dxGridListGetItemSelected" type="client" />
         <export function="dxGridListSetItemSelected" type="client" />
+        <export function="dxGridListSetItemData" type="client" />
+        <export function="dxGridListGetItemData" type="client" />
         <export function="dxGridListGetScrollHV" type="client" />
         <export function="dxGridListClear" type="client" />
         <export function="dxGridListFindItem" type="client" />

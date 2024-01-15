@@ -5,7 +5,7 @@ if TEST then
 	local panes = {}
 	addEventHandler( "onClientResourceStart", resourceRoot,
 		function()
-			local sx, sx, x, y = dxGetScreen(1366, 768)
+			local sx, sy, x, y = dxGetScreen(1366, 768)
 
 			dxSetTheme(2, 2)
 
@@ -13,7 +13,43 @@ if TEST then
 		 	
 			--showCursor(true)
 			--win = dxScrollPane(251*x, 21*y, 783*x, 635*y)
-			win = dxWindow(251*x, 21*y, 783*x, 635*y, 'Window DEMO', false, true)
+			win = dxWindow(251, 21*y, 783*x, 635*y, 'Window DEMO', true, true)
+
+			do
+
+				local x, w = sx/2, 783
+				local y, h = sy/2, 635
+		
+				dxAddAnimation(win, 'Linear', 2000, [[
+		
+					local x,w = ]]..x..[[, ]]..w..[[
+		
+					-- self.w = w * progress
+					-- self.x = interpolateBetween(x, 0, 0, 251, 0, 0, progress, 'Linear')
+					self.alpha = 255 * progress
+	
+		
+				]]
+				, false, {
+					postFun = function(ele)
+						dxAddAnimation(ele, 'Linear', 2000, [[
+		
+							local x,w = ]]..x..[[, ]]..w..[[
+							
+							-- self.w = w * progress
+							-- self.x = interpolateBetween(x, 0, 0, 251, 0, 0, progress, 'Linear')
+							self.alpha = 255 * progress
+				
+						]], true, {
+								cancelCloseButton = true,
+								postFun = dxSetVisible,
+								false
+							}
+						)
+					end,
+				}
+				)
+			end
 
 			--tabpanel = dxTabPanel(281*x, 170*y, 500*x, 400*y, win, true, false, 80*x)
 			tabpanel = dxTabPanel(281*x, 170*y, 500*x, 400*y, win, true, false, 100*x)
@@ -51,7 +87,7 @@ if TEST then
 			edit2 = dxEdit(400*x, 100*y, 150*x, 35*y, 'edit demo 2', win, false)
 
 			list1 = dxList( 392*x, 347*y, 250*x, 203*y, panes[3])
-			dxTabPanelSetSelected(tabpanel, panes[3])
+			--dxTabPanelSetSelected(tabpanel, panes[3])
 
 
 			bar = dxProgressBar(283*x, 596*y, 270*x, 38*y, win, true)
@@ -66,23 +102,30 @@ if TEST then
 	        img1 = dxImage(439*x, 186*y, 222*x, 132*y, ":admin/client/images/map.png", panes[4])
 			img2 = dxImage(439*x, 419*y, 222*x, 132*y, ":admin/client/images/map.png", panes[4])
 
-			addEventHandler( "onClick", root, sexo )
+			addEventHandler( "onClick", root, _fEvent )
 
 			dxSwitchButton(570*x, 600*y, 50*x, 26*y, win)
 
-			if true then return end
+			--if true then return end
 			
 
-			scrollH = dxScroll(302*x, 317*y, 677*x, false, win, true)
-			scrollV = dxScroll(277*x, 317*y, 317*y, true, win, false)	
+			scrollH = dxScroll(302*x, 317*y, 317*x, false, win, true)
+			scrollV = dxScroll(277*x, 317*y, 317*x, true, win, false)	
 
+		end
+	)
+
+	local lala = false
+	bindKey('k', 'down',
+		function()
+			lala = not lala
+			dxSetRounded(scrollV, lala and 10 or false)
 		end
 	)
 
 
 
-
-	function sexo()
+	function _fEvent()
 		if source == sex then
 		 	if dxGet(source, 'state') then
 		 		dxSet(edit1, 'text', math.random(100000, 999999)..'')
@@ -104,5 +147,27 @@ if TEST then
 	end
 
 end
+
+-- addEventHandler('onClientResourceStart', resourceRoot,
+-- 	function()
+		
+-- 		local x, w = sx/2, 783
+-- 		local y, h = sy/2, 635
+-- 		--local win = dxWindow(x, x, w, h, 'Window DEMO', false, true)
+
+-- 		dxAddAnimation(win, 'Linear', 2000, [[
+
+-- 			local x,w = ]]..x..[[, ]]..w..[[
+-- 			local y,h = ]]..y..[[, ]]..h..[[
+
+-- 			self.w = w * progress
+-- 			self.x = x - (w * progress)/2
+
+-- 			self.h = h * progress
+-- 			self.y = y - (h * progress)/2
+
+-- 		]])
+-- 	end
+-- )
 
 
