@@ -1,6 +1,6 @@
 memoCreated = {}
 
-function dxMemo(x, y, w, h, title, parent, rounded, readonly, colorbackground, colortext)
+function dxMemo(x, y, w, h, title, parent, rounded, readonly)
 
 	local self, element = createElement('dxMemo', parent, sourceResource)
 	if self then
@@ -23,7 +23,7 @@ function dxMemo(x, y, w, h, title, parent, rounded, readonly, colorbackground, c
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
 		self.colorbackground = colorbackground or back.editbackground
-		self.colortext = colortext or back.edittitle
+		self.colortitle = colortile or back.edittitle
 		--
 		self.readonly = readonly or false
 		self.maxCharacters = nil
@@ -53,8 +53,6 @@ function dxMemo(x, y, w, h, title, parent, rounded, readonly, colorbackground, c
 			rounded = rounded,
 			readonly = readonly,
 			text = self.text,
-			background = 'rgba('..table.concat({colorToRgba(self.colorbackground)}, ', ')..')',
-			colortext = 'rgba('..table.concat({colorToRgba(self.colortext)}, ', ')..')',
 		}
 
         addEventHandler("onClientBrowserDocumentReady", self.webBrowser,
@@ -83,7 +81,7 @@ end
 
 -- addEventHandler('onClientResourceStart', root,
 -- 	function()
--- 		memo1 = dxMemo(451, 80, 300, 300, 'escribe aqui tus notas !!!', win, 10, true, tocolor(20,20,20), tocolor(255,255,255))
+-- 		memo1 = dxMemo(451, 80, 300, 300, 'escribe aqui tus notas !!!', win, 10, true)
 -- 		dxSetText(memo1, 'holanda')
 -- 	end
 -- )
@@ -91,11 +89,9 @@ end
 -- local bool = true
 -- bindKey('k', 'down',
 -- 	function()
--- 		-- bool = not bool
--- 		-- dxMemoSetReadOnly(memo1, bool)
--- 		-- print(bool, 'ola', math.random(999))
-
--- 		dxSetProperty(memo1, 'colortext', tocolor(math.random(255),math.random(255),math.random(255)))
+-- 		bool = not bool
+-- 		dxMemoSetReadOnly(memo1, bool)
+-- 		print(bool, 'ola', math.random(999))
 -- 	end
 -- )
 -- --

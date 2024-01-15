@@ -96,27 +96,20 @@ function Render.dxEdit(element, parent, offX, offY)
 
 		if isElement(self.rendertarget) then
 			dxSetBlendMode("add")
-				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 			dxSetBlendMode("blend")
 		end
 
 		
 		if self.text:len() == 0 then
-			local R,G,B,A = colorToRgba(self.colortitle)
-       		A = A * (self.alpha/255)
-			--
-			dxDrawText(self.title, x, y, self.w+x, self.h+y, tocolor(R,G,B,A), 1, self.font, 'center', 'center', true, true, postgui, false)
+			dxDrawText(self.title, x, y, self.w+x, self.h+y, self.colortitle, 1, self.font, 'center', 'center', true, true, postgui, false)
 		else
 
 			local text = self.text:sub(self.caretA, self.caretB)
 			if self.masked then
 				text = text:gsub('.', '●')
 			end
-
-			local R,G,B,A = colorToRgba(self.colortext or tocolor(255,255,255,255))
-       		A = A * (self.alpha/255)
-
-			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, tocolor(R,G,B,A), 1, self.font, 'left', 'center', false, false, postgui, false)
+			dxDrawText(text, x+5, y, self.w+x+5, self.h+y, self.colortitle, 1, self.font, 'left', 'center', false, false, postgui, false)
 		end
 
 
@@ -139,7 +132,7 @@ function Render.dxEdit(element, parent, offX, offY)
 
 			local m = #self.text == 0 and 0 or dxGetTextWidth(self.text:sub(self.caretA, math.min(self.caretB, self.caretC)), 1, self.font )
 
-			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(90,90,90,(255*a) * (self.alpha/255)), postgui)
+			dxDrawRectangle(x+m+5, y+5, 1, self.h-10, tocolor(90,90,90,255*a), postgui)
 
 			if getKeyState( 'arrow_l' ) and not self.arrow_l then
 

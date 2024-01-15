@@ -102,7 +102,6 @@
         <export function="dxIsElementParent" type="client" />
         <export function="dxSetParent" type="client" />
         <export function="dxDuplicateElement" type="client" />
-        <export function="dxAddAnimation" type="client" />
 
 
     <!--         -->

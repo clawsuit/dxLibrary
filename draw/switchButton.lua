@@ -73,7 +73,7 @@ function Render.dxSwitchButton(element, parent, offX, offY)
 
 		if isElement( self.rendertarget ) then
 			dxSetBlendMode("add")
-				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+				dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
 			dxSetBlendMode("blend")
 		end
 

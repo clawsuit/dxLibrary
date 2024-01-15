@@ -39,7 +39,7 @@ function Render.dxTabPanel(element, parent, offX, offY)
             end
         end
 
-        local click = getKeyState( 'mouse1' ) and not self._click
+        local click = getKeyState( 'mouse1' ) and not self._click and not guiGetInputEnabled(  )
         self._click = getKeyState( 'mouse1' )
 
         -- if click and isCursorOver(x2, y2, self.w, self.h) then
@@ -165,7 +165,7 @@ function Render.dxTabPanel(element, parent, offX, offY)
             
         if isElement(self.rendertarget) then
             dxSetBlendMode("add")
-                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+                dxDrawImage(x, y, self.w, self.h, self.rendertarget, 0, 0, 0, -1, postgui)
             dxSetBlendMode("blend")
         end
     end

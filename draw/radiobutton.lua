@@ -40,22 +40,20 @@ function Render.dxRadioButton(element, parent, offX, offY)
         end
         
         dxSetBlendMode("add")
+            local alpha = bitExtract(self.colorbackground,24,8)
             if (isElement(self.parent) and radioButtonSelected[self.parent] == element) or (not isElement(self.parent) and radioButtonSelected.noParent and radioButtonSelected.noParent == element) then 
                 if isElement(self.svg2) then
-                    dxDrawImage(x, y, self.w, self.h, self.svg2, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+                    dxDrawImage(x, y, self.w, self.h, self.svg2, 0, 0, 0, tocolor(255,255,255,alpha), postgui)
                 end
             else
                 if isElement(self.svg) then
-                    dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+                    dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, tocolor(255,255,255,alpha), postgui)
                 end
             end
         dxSetBlendMode("blend")
 
-        local R,G,B,A = colorToRgba(self.colortext)
-        A = A * (self.alpha/255)
-
         dxSetBlendMode( 'modulate_add' )
-            dxDrawText2( self.text, x+self.w+5, y, self.w, self.h, tocolor(R,G,B,A), 1, self.font, 'left', 'center', false, false, postgui, false)
+            dxDrawText2( self.text, x+self.w+5, y, self.w, self.h, self.colortext, 1, self.font, 'left', 'center', false, false, postgui, false)
         dxSetBlendMode("blend")
 
     end

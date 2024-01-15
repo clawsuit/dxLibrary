@@ -32,34 +32,26 @@ function Render.dxProgressBar(element, parent, offX, offY)
 
 		local fx, fy = 4*sw, 4*sh
 
-		local R,G,B,A = colorToRgba(self.colorbackground)
-        A = A * (self.alpha/255)
-
-		local R2,G2,B2,A2 = colorToRgba(self.colorprogress)
-        A2 = A2 * (self.alpha/255)
-
 		dxSetBlendMode( 'modulate_add' )
 		if self.svg then
-			dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, tocolor(R,G,B,A), postgui)
+			dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, self.colorbackground, postgui)
 
 			if self.progress > 0 then
 				if isElement(self.svg) then
-					dxDrawImage(x+fx, y+fy, (self.w-fx*2)*(self.progress/100), self.h-fy*2, self.svg, 0, 0, 0, tocolor(R2,G2,B2,A2), postgui)
+					dxDrawImage(x+fx, y+fy, (self.w-fx*2)*(self.progress/100), self.h-fy*2, self.svg, 0, 0, 0, self.colorprogress, postgui)
 				end
 			end
 
 		else
-			dxDrawRectangle(x, y, self.w, self.h, tocolor(R,G,B,A), postgui)
+			dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, postgui)
 
 			if self.progress > 0 then
-				dxDrawRectangle(x+fx, y+fy, (self.w-fx*2)*(self.progress/100), self.h-fy*2, tocolor(R2,G2,B2,A2), postgui)
+				dxDrawRectangle(x+fx, y+fy, (self.w-fx*2)*(self.progress/100), self.h-fy*2, self.colorprogress, postgui)
 			end
+
 		end
 
-		local R,G,B,A = colorToRgba(self.colortext)
-        A = A * (self.alpha/255)
-		--
-		dxDrawText(math.floor(self.progress)..'%', x, y, self.w+x, self.h+y, tocolor(R,G,B,A), 1, self.font, 'center', 'center', true, true, postgui, false)
+		dxDrawText(math.floor(self.progress)..'%', x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, postgui, false)
 		dxSetBlendMode("blend")
 	end
 

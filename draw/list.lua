@@ -48,8 +48,7 @@ function Render.dxList( element, parent, offX, offY)
 			end
 		end
 
-		local R,G,B,A = colorToRgba(self.colorbackground)
-		dxDrawRectangle(x, y, self.w, self.h, tocolor(R,G,B,A * (self.alpha/255)), postgui)
+		dxDrawRectangle(x, y, self.w, self.h, self.colorbackground, postgui)
 
 		if self.w-20*sw >= 1 and self.h-20*sh >= 1 then
 			if self.update or CLIENT_RESTORE then
@@ -127,7 +126,7 @@ function Render.dxList( element, parent, offX, offY)
 
 			if isElement( self.rendertarget ) then
 				dxSetBlendMode("add")
-					dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, self.alpha ), postgui)
+					dxDrawImage(x+math.round(10*sw), y+math.round(10*sh), self.w-math.round(20*sw), self.h-math.round(20*sh), self.rendertarget, 0, 0, 0, tocolor( 255, 255, 255, 255 ), postgui)
 				dxSetBlendMode("blend")
 			end
 		end
@@ -143,18 +142,19 @@ function Render.dxList( element, parent, offX, offY)
 					if isKeyPressed('mouse_wheel_up') or getKeyState( 'arrow_u' ) then
 						self.from = self.from or self.mul
 						if not self.to then
-							self.to = math.max(0, self.mul-(self.scroll/(self.h/5)))--(15*sh)
+							self.to = math.max(0, self.mul-(15*sh))
 						else
-							self.to = math.max(0, self.to-(self.scroll/(self.h/5)))--(15*sh)
+							self.to = math.max(0, self.to-(15*sh))
 						end
+
 					end
 					--
 					if isKeyPressed('mouse_wheel_down') or getKeyState( 'arrow_d' ) then
 						self.from = self.from or self.mul
 						if not self.to then
-							self.to = math.min(self.scroll, self.mul+(self.scroll/(self.h/5)))--(15*sh)
+							self.to = math.min(self.scroll, self.mul+(15*sh))
 						else
-							self.to = math.min(self.scroll, self.to+(self.scroll/(self.h/5)))--(15*sh)
+							self.to = math.min(self.scroll, self.to+(15*sh))
 						end
 					end
 

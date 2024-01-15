@@ -1,4 +1,4 @@
-function dxButton(x, y, w, h, text, parent, rounded, colorbackground, colortext, colorselected)
+function dxButton(x, y, w, h, text, parent, rounded, colorback, colortext, colorselected)
 
 	local self, element = createElement('dxButton', parent, sourceResource)
 	if self then
@@ -17,7 +17,7 @@ function dxButton(x, y, w, h, text, parent, rounded, colorbackground, colortext,
 		local back = dxLibraryThemes['back'][dxLibraryThemeBackSelected]
         local front = dxLibraryThemes['front'][dxLibraryThemeFrontSelected]
 
-		self.colorbackground = colorbackground or back.buttonbackground
+		self.colorbackground = colorback or back.buttonbackground
 		self.colortext = colortext or back.buttontext
 		self.colorselected = colorselected or front.buttonselected
 		
@@ -45,4 +45,3 @@ function dxButtonSetFont( element, font )
 		self.font = font
 	end
 end
-

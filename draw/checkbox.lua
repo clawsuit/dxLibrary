@@ -39,26 +39,18 @@ function Render.dxCheckBox( element, parent, offX, offY )
 		end
 
 		dxSetBlendMode("add")
-			local R,G,B,A = colorToRgba(self.colorbackground)
-        	A = A * (self.alpha/255)
-
+			local alpha = bitExtract(self.colorbackground,24,8)
 			if isElement(self.svg) then 
-				dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, tocolor( 255, 255, 255, A ), postgui)
+				dxDrawImage(x, y, self.w, self.h, self.svg, 0, 0, 0, tocolor( 255, 255, 255, alpha ), postgui)
 			end
 		dxSetBlendMode("blend")
 
 		dxSetBlendMode( 'modulate_add' )
 			if self.state then
-				local R,G,B,A = colorToRgba(self.colorchecker)
-        		A = A * (self.alpha/255)
-				--
-				dxDrawText2('✓', x, y, self.w, self.h, tocolor(R,G,B,A), 1, self.font, 'center', 'center', false, false, postgui)
+				dxDrawText2('✓', x, y, self.w, self.h, self.colorchecker, 1, self.font, 'center', 'center', false, false, postgui)
 			end
 
-			local R,G,B,A = colorToRgba(self.colortext)
-        	A = A * (self.alpha/255)
-
-			dxDrawText2(self.text, x+self.w+4, y, self.w, self.h-2, tocolor(R,G,B,A), 1, self.font, 'left', 'center', false, false, postgui)
+			dxDrawText2(self.text, x+self.w+4, y, self.w, self.h-2, self.colortext, 1, self.font, 'left', 'center', false, false, postgui)
 		dxSetBlendMode("blend")
 		
 		self.click = getKeyState( 'mouse1' )

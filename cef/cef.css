@@ -13,7 +13,6 @@
 
 textarea {
     resize: none;
-    overflow-y: auto;
 }
 
 textarea:focus { 

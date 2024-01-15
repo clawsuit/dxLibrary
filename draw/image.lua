@@ -28,11 +28,7 @@ function Render.dxImage(element, parent, offX, offY)
 		
 		if isElement( self.texture ) then
 			dxSetBlendMode("add")
-
-				local R,G,B,A = colorToRgba(self.colorbackground)
-        		A = A * (self.alpha/255)
-
-				dxDrawImage(x, y, self.w, self.h, (self.shader or self.texture), 0, 0, 0, tocolor(R,G,B,A), postgui)
+				dxDrawImage(x, y, self.w, self.h, (self.shader or self.texture), 0, 0, 0, self.colorbackground, postgui)
 			dxSetBlendMode("blend")
 		end
 

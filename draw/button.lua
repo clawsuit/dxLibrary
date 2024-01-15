@@ -84,19 +84,13 @@ function Render.dxButton(element, parent, offX, offY)
 		end
 
 		if isElement(self.rendertarget) then
-			local R,G,B,A = colorToRgba(color)
-        	A = A * (self.alpha/255)
-
 			dxSetBlendMode("add")
-				dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, tocolor(R,G,B,A), postgui)
+				dxDrawImage(x+self.r, y+self.r, self.w-self.r*2, self.h-self.r*2, self.rendertarget, 0, 0, 0, color, postgui)
 			dxSetBlendMode("blend")
 		end
 
-		local R,G,B,A = colorToRgba(self.colortext)
-        A = A * (self.alpha/255)
-
 		dxSetBlendMode( 'modulate_add' )
-			dxDrawText(self.text, x, y, self.w+x, self.h+y, tocolor(R,G,B,A), 1, self.font, 'center', 'center', true, true, postgui, false)
+			dxDrawText(self.text, x, y, self.w+x, self.h+y, self.colortext, 1, self.font, 'center', 'center', true, true, postgui, false)
 		dxSetBlendMode("blend")
 
 		self.click = getKeyState( 'mouse1' )

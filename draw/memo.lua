@@ -31,7 +31,7 @@ function Render.dxMemo(element, parent, offX, offY)
         --self.webBrowser:executeJavascript("cefSetMemoState('"..toJSON({key=tostring(element), property='top', value = y2..'px'}).."')")
 
 
-        dxDrawImage(x, y, self.w, self.h, self.webBrowser, 0, 0, 0, tocolor(255,255,255,self.alpha), postgui)
+        dxDrawImage(x, y, self.w, self.h, self.webBrowser, 0, 0, 0, -1, postgui)
     end 
 end
 
@@ -40,13 +40,11 @@ addEventHandler("onClientClick", root,
 	function(button, state)
 		if not isElement(onMemo) then return end
 		local self = Cache[onMemo]
-		if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.rootParent) or Cache[self.rootParent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
-			if self.webBrowser:isFocused() and isCursorShowing() then
-				if state == "down" then
-					self.webBrowser:injectMouseDown(button)
-				else
-					self.webBrowser:injectMouseUp(button)
-				end
+		if self.webBrowser:isFocused() and isCursorShowing() then
+			if state == "down" then
+				self.webBrowser:injectMouseDown(button)
+			else
+				self.webBrowser:injectMouseUp(button)
 			end
 		end
 	end
@@ -56,10 +54,8 @@ addEventHandler("onClientCursorMove", root,
 	function (relativeX, relativeY, absoluteX, absoluteY)
 		if not isElement(onMemo) then return end
 		local self = Cache[onMemo]
-		if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.rootParent) or Cache[self.rootParent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
-			if self.webBrowser:isFocused() and isCursorShowing() then
-				self.webBrowser:injectMouseMove(absoluteX-self.x, absoluteY-self.y)
-			end
+		if self.webBrowser:isFocused() and isCursorShowing() then
+			self.webBrowser:injectMouseMove(absoluteX-self.x, absoluteY-self.y)
 		end
 	end
 )
@@ -68,15 +64,13 @@ addEventHandler("onClientKey", root,
 	function(button)
 		if not isElement(onMemo) then return end
 		local self = Cache[onMemo]
-		if not self.isDisabled and self.isVisible and (not isElement(self.parent) or Cache[self.parent].isVisible) and (not isElement(self.rootParent) or Cache[self.rootParent].isVisible) and (not isElement(self.attached) or Cache[self.attached].isVisible) then
-			if self.webBrowser:isFocused() and isCursorShowing() then
-				if button == "mouse_wheel_down" then
-					self.webBrowser:injectMouseWheel(-50, 0)
-				elseif button == "mouse_wheel_up" then
-					self. webBrowser:injectMouseWheel(50, 0)
-				end
+		if self.webBrowser:isFocused() and isCursorShowing() then
+			if button == "mouse_wheel_down" then
+				self.webBrowser:injectMouseWheel(-50, 0)
+			elseif button == "mouse_wheel_up" then
+				self. webBrowser:injectMouseWheel(50, 0)
 			end
-		end
+		end 
 	end
 )
 
@@ -89,10 +83,7 @@ addEventHandler('onGeneralEvent', root,
             local memo = memoCreated[key]
             if isElement(memo) then
                 if Cache[memo].webBrowser:isFocused() then
-					if not Cache[memo].isDisabled and Cache[memo].isVisible and (not isElement(Cache[memo].parent) or Cache[Cache[memo].parent].isVisible) and (not isElement(Cache[memo].rootParent) or Cache[Cache[memo].rootParent].isVisible) and (not isElement(Cache[memo].attached) or Cache[Cache[memo].attached].isVisible) then
-
-                		Cache[memo].text = arg[1]
-                	end
+                	Cache[memo].text = arg[1]
 				end
             end
 		end

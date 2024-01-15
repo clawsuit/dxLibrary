@@ -10,13 +10,15 @@ function dxScroll(x, y, wh, vertical, parent, rounded, colorbackground, colorbot
 		self.fontH = dxGetFontHeight( 1, self.font )
 
 		self.vertical = vertical
-		self.rounded = tonumber(rounded) or rounded == true and 10 or false
+		self.rounded = tonumber(rounded) or rounded == true and 4 or false
 		self.wh = math.round(wh)
 
 		if self.vertical then
+			self.pos = self.y + self.fontH
 			self.w = math.round(17*sh)
 			self.h = self.wh
 		else
+			self.pos = self.x + dxGetTextWidth( "▲", 1, self.font )*2
 			self.w = self.wh
 			self.h = math.round(17*sh)
 		end
@@ -32,26 +34,22 @@ function dxScroll(x, y, wh, vertical, parent, rounded, colorbackground, colorbot
 		--
 		self.cursorY = 0
 		self.cursorX = 0
-
-		self.scrollPosition = 0
 		self.current = 0
 		
 		if self.parent then
 			self.offsetX = self.x - Cache[self.parent].x
         	self.offsetY = self.y - Cache[self.parent].y
+
+        	if not vertical then
+        		self.posOff = self.pos - Cache[self.parent].x
+        	else
+        		self.posOff = self.pos - Cache[self.parent].y
+        	end
         end
 
         if tonumber(self.rounded) then
         	local rawSvgData = svgCreateRoundedRectangle(self.w, self.h, self.rounded, self.colorbackground)
         	self.svg = svgCreate(self.w, self.h, rawSvgData, function() self.update = true end)
-
-			if self.vertical then
-				local rawSvgData = svgCreateRoundedRectangle(self.w, self.h/3, self.rounded, self.colorboton)
-        		self.svg2 = svgCreate(self.w, self.h/3, rawSvgData, function() self.update = true end)
-			else
-				local rawSvgData = svgCreateRoundedRectangle(self.w/3, self.h, self.rounded, self.colorboton)
-        		self.svg2 = svgCreate(self.w/3, self.h, rawSvgData, function() self.update = true end)
-			end
         else
         	self.update = true
         end
